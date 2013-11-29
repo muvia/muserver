@@ -1,4 +1,2 @@
-muserver
-========
-
-server for muvia project
+# muserver
+### a Sails application
