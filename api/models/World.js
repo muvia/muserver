@@ -8,8 +8,19 @@
 
 module.exports = {
 
+	_regions: null,
+
   attributes: {
   	 name: 'string',
-	 status: 'string'
+	 status: 'string',
+
+	 //initialize regions
+	 getRegions: function(){
+		if (_regions == null){
+		  _regions = [];
+		}
+		return _regions;
+	 }
   }
+
 };
