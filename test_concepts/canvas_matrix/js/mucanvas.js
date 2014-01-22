@@ -21,6 +21,24 @@ MuEngine  = (function(){
 	//--- CONSTRUCTORS AND METHODS ---
 
 
+	//-----  TRANSFORM CLASS ---------
+	/**
+	 * represents a transformation in mu-space (that, btw, is 
+	 * a simplified version of a semi-3d space.. )
+	 * in other words, it handle 2d translation, 2d-uniform scale, 
+	 * no-rotation (over floor plane). but it add a 3rd dimension for 
+	 * camera and basic  perspective correction with simple painter algorithm z-ordering.
+	 */ 	
+	MuEngine.Transform = function(tx=0, ty=0, s=1.0, parent=null){
+		this.tx = tx;
+		this.ty = ty;
+		this.s = s;	
+		this.parent = null;
+	};
+
+
+
+
 	//------- OBJECT CLASS ------------
 
 	/**
@@ -58,6 +76,8 @@ MuEngine  = (function(){
 				for(var j=0; j< this.height; ++j)
 					this.cells[(i*this.width)+j] = new Cell(i, j);
 		};
+		//model-world matrix
+		this.transform = new MuEngine.Transform();
 	};
 
 	/**
@@ -80,7 +100,10 @@ MuEngine  = (function(){
 	 */
 	MuEngine.Camera = function(canvas){
 		this.canvas = canvas;
-		
+		//view matrix
+		this.transform = new MuEngine.Transform();
+		//projection matrix
+		this.transform = new MuEngine.Transform();
 	};
 	
 
