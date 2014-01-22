@@ -7,6 +7,17 @@ MuEngine  = (function(){
 	//active grid
 	var g_grid = null;
 
+	//active camera
+	var g_camera = null;
+
+	//target fps
+	var g_fps = 2;
+
+	//the interval for the event loop
+	var g_interval = null;
+
+	var g_start_time = null;
+
 	//--- CONSTRUCTORS AND METHODS ---
 
 
@@ -61,8 +72,17 @@ MuEngine  = (function(){
 
 	//-------- CAMERA CLASS -------------
 	
-
-
+	/**
+	 * Camera constructor. 
+	 * a camera is always attached to a cell. 
+	 * it is a polar camera, whose focus is its parent cell.
+	 * it performs basic perspective transformation. 
+	 */
+	MuEngine.Camera = function(canvas){
+		this.canvas = canvas;
+		
+	};
+	
 
 	/**
 	 * set the current grid to be rendered by the engine
@@ -71,8 +91,65 @@ MuEngine  = (function(){
 		this.g_grid = grid;
 	}; 
 
+	/**
+	 * set the active camera to be used to render the world
+	 */ 
+	MuEngine.setActiveCamera = function(camera){
+		this.g_camera = camera;
+	};
 
 
+	/**
+	 * set the target fps for running the engine
+	 */ 
+	MuEngine.setTargetFps = function(fps){
+		this.g_fps = fps;
+	};
+
+	/**
+	 * starts the gameloop with the given fps.
+	 * @see MuEngine.setTargetFps to change fps,
+	 * @see MuEngine.stop to terminate the loop.
+	 */ 
+	MuEngine.start = function(){
+		if(this.g_interval != null) return false;
+		this.g_interval = setInterval(tick, 1000.0 / this.g_fps);
+		this.g_start_time = Date.now();
+		return true;	
+	};
+
+	/**
+	 * stops the game loop (if it is running) and clear the interval
+	 */ 
+	MuEngine.stop = function(){
+	 if(this.g_interval == null) return false;
+	 clearInterval(this.g_interval);
+	 this.g_interval = null;
+	 return true;
+	};
+	
+	/**
+	 *
+	 */ 
+	update = function(dt){
+	};
+
+	/**
+	 *
+	 */ 
+	render = function(){
+
+	};
+
+	/**
+	 * compute the elapsed time and invoke update and render methods
+	 */ 
+	tick = function(){
+		var dt = Date.now() - MuEngine.g_start_time;
+		console.log("tick! "+ dt);
+		update(dt);
+		render();
+	};
 
 	return MuEngine;
 }());

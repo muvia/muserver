@@ -1,7 +1,5 @@
 var g_current_user = null;
 var g_canvas = null;
-var g_ctx = null;
-var g_engine = null;
 
 //--- welcome (index) page
 $( "div#welcome-page" ).on( "pagecreate", function( event, ui ) {
@@ -10,9 +8,8 @@ $( "div#welcome-page" ).on( "pagecreate", function( event, ui ) {
 	
 	g_canvas = $("canvas#c").get(0);
 	console.log(g_canvas);
-	g_ctx = g_canvas.getContext('2d');
-  g_engine = MuEngine.init(
 
+	MuEngine.start();
 
 });
 
