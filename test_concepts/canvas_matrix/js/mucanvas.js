@@ -161,15 +161,24 @@ MuEngine  = (function(){
 	 *
 	 */ 
 	render = function(){
-
-	};
+		ctx = this.g_camera.canvas.getContext('2d');
+      	 	ctx.beginPath();
+		ctx.moveTo(10, 10);
+		ctx.moveTo(110, 10);
+		ctx.stroke();
+ctx.beginPath();
+      	ctx.moveTo(100, 150);
+      	ctx.lineTo(450, 50);		
+      	ctx.stroke();	
+		
+     	};
 
 	/**
 	 * compute the elapsed time and invoke update and render methods
 	 */ 
 	tick = function(){
 		var dt = Date.now() - MuEngine.g_start_time;
-		console.log("tick! "+ dt);
+		//console.log("tick! "+ dt);
 		update(dt);
 		render();
 	};
