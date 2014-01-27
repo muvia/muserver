@@ -33,6 +33,15 @@ MuEngine  = (function(){
 	};
 
 
+	//------- LINE CLASS -------------------
+	
+
+	MuEngine.Line	= function(){
+		this.ori = V3.$(0, 0, 0);
+	  this.end = V3.$(100.0, 100.0, 100.0);
+	};
+
+
 	//-------- CELL CLASS -----------------
 
 	/**
@@ -60,8 +69,6 @@ MuEngine  = (function(){
 				for(var j=0; j< this.height; ++j)
 					this.cells[(i*this.width)+j] = new Cell(i, j);
 		};
-		//model-world matrix
-		this.transform = new MuEngine.Transform();
 	};
 
 	/**
@@ -85,9 +92,6 @@ MuEngine  = (function(){
 	MuEngine.Camera = function(canvas){
 		this.canvas = canvas;
 		//view matrix
-		this.transform = new MuEngine.Transform();
-		//projection matrix
-		this.transform = new MuEngine.Transform();
 	};
 	
 
@@ -150,7 +154,7 @@ MuEngine  = (function(){
 		ctx.moveTo(10, 10);
 		ctx.moveTo(110, 10);
 		ctx.stroke();
-ctx.beginPath();
+		ctx.beginPath();
       	ctx.moveTo(100, 150);
       	ctx.lineTo(450, 50);		
       	ctx.stroke();	

@@ -2,6 +2,7 @@ var g_current_user = null;
 var g_canvas = null;
 var g_grid = null;
 var g_camera = null; 
+var g_line = null;
 
 //--- welcome (index) page
 $( "div#welcome-page" ).on( "pagecreate", function( event, ui ) {
@@ -15,8 +16,7 @@ $( "div#welcome-page" ).on( "pagecreate", function( event, ui ) {
 
   MuEngine.setActiveCamera(g_camera);
   MuEngine.setActiveGrid(g_grid);  
-	//MuEngine.start();
-
+  //MuEngine.start();
 });
 
 
