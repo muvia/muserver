@@ -18,6 +18,21 @@ MuEngine  = (function(){
 
 	var g_start_time = null;
 
+
+	/**
+	 * last result of invoking MuEngine.transformPoint.
+	 * it is also used to store the first coord when
+	 * invoking MuEngine.transformLine. 
+	 */ 
+	var pt = $V(0.0, 0.0, 0.0);
+	/**
+	 * when invoking MuEngine.transformLine, pt will store
+	 * the first coord of the line, and pt2 the last one. 
+	 */
+	var pt2 = $V(0.0, 0.0, 0.0);
+	
+
+
 	//--- CONSTRUCTORS AND METHODS ---
 
 
@@ -139,6 +154,26 @@ MuEngine  = (function(){
 	 return true;
 	};
 	
+	/**
+	 * transform a point p into pt, using the current grid as world transform,
+	 * current camera as view transform. 
+	 * pt is optional, to store the transformed point. result is always applied
+	 * to local variable MuEngine.pt 
+	 */
+	MuEngine.transformPoint(p, pt){
+			
+	};
+
+	/**
+	 * transform a line l into lt, using the current  grid and camera for world and 
+	 * view transform. 
+	 * lt is optional, to store the transformed line. result is always applied 
+	 * to local variable MuEngine.pt and MuEngine.pt2. 
+	 */  
+	MuEngine.transformLine(l, lt){
+	
+	};
+
 	/**
 	 *
 	 */ 
