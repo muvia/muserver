@@ -24,38 +24,66 @@ MuEngine  = (function(){
 	 * it is also used to store the first coord when
 	 * invoking MuEngine.transformLine. 
 	 */ 
-	var pt = $V(0.0, 0.0, 0.0);
+	var pt = vec3.create();
 	/**
 	 * when invoking MuEngine.transformLine, pt will store
 	 * the first coord of the line, and pt2 the last one. 
 	 */
-	var pt2 = $V(0.0, 0.0, 0.0);
+	var pt2 = vec3.create();
 	
 
 
 	//--- CONSTRUCTORS AND METHODS ---
 
-
-
-
-	//------- OBJECT CLASS ------------
+    //------- TRANSFORM CLASS --------
+	
+	MuEngine.Transform = function(){
+		this.pos = vec3.create();
+		this.rot = quat.create();
+		this.mat = mat4.create();
+		this.update();
+	};
 
 	/**
-	 * Object constructor. 
-	 * Objects are attached to cells in order to be rendered.
-	 */ 
-	MuEngine.Object = function(){
+	 * call whenever pos or rot changes to update matrix
+	 */
+	MuEngine.Transform.update = function(){
+		mat4.fromRotationTranslation(this.mat, this.rot, this.pos);
+	};
+
+
+	//------- NODE CLASS ------------
+
+	/**
+	 * Node Constructor
+	 * implements scene graph.
+	 * a node has a transform, a primitive and a list of children nodes.  
+	  */ 
+	MuEngine.Node = function(primitive){
+		this.transform = new MuEngine.transform();	
+		this.primitive = primitive; 
 	};
 
 
 	//------- LINE CLASS -------------------
 	
 
-	MuEngine.Line	= function(){
-		this.ori = V3.$(0, 0, 0);
-	  this.end = V3.$(100.0, 100.0, 100.0);
-	};
+	/**
+	 * Line is a primitive. it holds two points of type Vector3. 
+	 */
+	MuEngine.Line	= function(ori, end){
+		this.ori =ori;
+	  this.end = end;
+ 	};
 
+	/*
+	 * renders the primitive (line)
+	 * @param ctx: drawing context
+	 * @param wm: modelview matrix (with parent node transformations applied if it is the case)
+	 */
+	MuEngine.Line.render = function(ctx, wm){
+		
+	};
 
 	//-------- CELL CLASS -----------------
 
@@ -106,7 +134,21 @@ MuEngine  = (function(){
 	 */
 	MuEngine.Camera = function(canvas){
 		this.canvas = canvas;
-		//view matrix
+		this.eye = vec3.create();
+		vec3.set(this.eye, 0, 0, -10);
+		this.center = vec3.create();
+		vec3.set(this.center, 0, 0, 0);
+		this.up = vec3.create();
+		vec3.set(this.up, 0, 1, 0);
+		this.view_mat = mat4.create();
+		mat4.lookAt(this.view_mat, this.eye, this.center, this.up); 
+		this.proj_mat = mat4.create();
+		this.fovy = Math.PI / 180.0;
+	    this.aspect = this.canvas.width / this.canvas.height;
+		this.near = 0.0; 
+		this.far = 10000.0;
+		mat4.perspective(this.proj_mat, this.fovy, this.aspect, this.near, this.far);
+		
 	};
 	
 
@@ -160,18 +202,30 @@ MuEngine  = (function(){
 	 * pt is optional, to store the transformed point. result is always applied
 	 * to local variable MuEngine.pt 
 	 */
-	MuEngine.transformPoint(p, pt){
+	MuEngine.transformPoint = function(p, pt){
 			
 	};
 
 	/**
-	 * transform a line l into lt, using the current  grid and camera for world and 
+	 * transform a line pt-pt2 into ptt-pt2t, using the current  grid and camera for world and 
 	 * view transform. 
-	 * lt is optional, to store the transformed line. result is always applied 
-	 * to local variable MuEngine.pt and MuEngine.pt2. 
+	 * pt, pt2 are assumed in world coordinates.
+	 * if ptt or pt2t are null or undefined, result will be stored in MuEngine.pt and MuEngine pt2  
 	 */  
-	MuEngine.transformLine(l, lt){
-	
+	MuEngine.transformLine = function(pt, pt2, ptt, pt2t){
+	    if(ptt == undefined || ptt == null){
+			ptt = this.pt;
+			pt2t = this.pt2;
+		}
+		//multiply by view matrix (or inverse view matrix?)
+
+		//multiply by projection matrix
+
+		//multiply by device-to screen matrix
+
+		//store results		
+
+
 	};
 
 	/**
