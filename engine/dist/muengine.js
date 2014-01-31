@@ -1,3 +1,94 @@
+MuEngine  = (function(){
+	
+	MuEngine = {};
+
+	//--- INTERNAL ATTRIBUTES ----
+	
+	//active grid
+	var g_grid = null;
+
+	//active camera
+	var g_camera = null;
+
+	//target fps
+	var g_fps = 2;
+
+	//the interval for the event loop
+	var g_interval = null;
+
+	var g_start_time = null;
+
+
+	/**
+	 * last result of invoking MuEngine.transformPoint.
+	 * it is also used to store the first coord when
+	 * invoking MuEngine.transformLine. 
+	 */ 
+	var pt = vec3.create();
+	/**
+	 * when invoking MuEngine.transformLine, pt will store
+	 * the first coord of the line, and pt2 the last one. 
+	 */
+	var pt2 = vec3.create();
+	
+
+
+	//--- CONSTRUCTORS AND METHODS ---
+
+ 
+    
+	//------- TRANSFORM CLASS --------
+	
+	MuEngine.Transform = function(){
+		this.pos = vec3.create();
+		this.rot = quat.create();
+		this.mat = mat4.create();
+		this.update();
+	};
+
+	/**
+	 * call whenever pos or rot changes to update matrix
+	 */
+	MuEngine.Transform.update = function(){
+		mat4.fromRotationTranslation(this.mat, this.rot, this.pos);
+	};
+
+	/**
+	 * multiply given matrix by this.mat, store result in out
+	 */
+	MuEngine.Transform.multiply = function(mat, out){
+		
+	};
+	//-------- CELL CLASS -----------------
+
+	/**
+	 * Cell constructor. 
+	 * it is private to the module, only Grid is able to 
+	 * instantiate cells.
+	 */ 
+	Cell = function(row, col){
+		this.row = row;
+		this.col = col;
+		this.objects = {};
+	};
+
+
+
+//------- NODE CLASS ------------
+
+/**
+ * Node Constructor
+ * implements scene graph.
+ * a node has a transform, a primitive and a list of children nodes.  
+  */ 
+MuEngine.Node = function(primitive){
+	this.transform = new MuEngine.transform();	
+	this.primitive = primitive; 
+	this.children = [ ];
+};
+
+
+
 	
 //-------- CAMERA CLASS -------------
 	
@@ -26,17 +117,51 @@
 		
 	};
 	
-	//-------- CELL CLASS -----------------
+	//------- GRID CLASS ------------------
 
 	/**
-	 * Cell constructor. 
-	 * it is private to the module, only Grid is able to 
-	 * instantiate cells.
+	 * Grid constructor 
+	 * width x height
+	 */
+	MuEngine.Grid = function(width, height){
+		this.width = width;
+		this.height = height;
+		this.cells = new Array(width * height);
+		for(var i=0; i<this.width; ++i){
+				for(var j=0; j< this.height; ++j)
+					this.cells[(i*this.width)+j] = new Cell(i, j);
+		};
+	};
+
+	/**
+	 * return a Cell object for the given i,j coordinate.
+	 * null if wrong coords. 
 	 */ 
-	Cell = function(row, col){
-		this.row = row;
-		this.col = col;
-		this.objects = {};
+	MuEngine.Grid.prototype.getCell = function(i, j){
+		if(i < 0 || j < 0 || i >= this.width || j >= this.height) 
+			return null;
+		return this.cells[i*this.width+ j];	
+	};
+
+
+	//------- LINE CLASS -------------------
+	
+
+	/**
+	 * Line is a primitive. it holds two points of type Vector3. 
+	 */
+	MuEngine.Line	= function(ori, end){
+		this.ori =ori;
+	  this.end = end;
+ 	};
+
+	/*
+	 * renders the primitive (line)
+	 * @param ctx: drawing context
+	 * @param wm: modelview matrix (with parent node transformations applied if it is the case)
+	 */
+	MuEngine.Line.render = function(mat, cam){
+		
 	};
 
 
@@ -45,14 +170,14 @@
  * set the current grid to be rendered by the engine
  */
 MuEngine.setActiveGrid = function(grid){
-	this.g_grid = grid;
+	g_grid = grid;
 }; 
 
 /**
  * set the active camera to be used to render the world
  */ 
 MuEngine.setActiveCamera = function(camera){
-	this.g_camera = camera;
+	g_camera = camera;
 };
 
 
@@ -60,7 +185,7 @@ MuEngine.setActiveCamera = function(camera){
  * set the target fps for running the engine
  */ 
 MuEngine.setTargetFps = function(fps){
-	this.g_fps = fps;
+	g_fps = fps;
 };
 
 /**
@@ -137,7 +262,7 @@ _renderNode = function(node, mat, mat_aux){
   //mat will store mat_parent * node.transform.mat
   node.transform.multiply(mat, mat_aux);	
 	if(node.primitive != null){
-  	//@todo: render the primitive, using mat_aux!
+			node.primitive.render(mat_aux, g_camera);
 	};
 	for(var i=0; i<node.children.length; ++i){
 		//we flip the matrix to avoid the need to copy mat_aux in mat. 			
@@ -178,128 +303,3 @@ tick = function(){
 
 return MuEngine;
 }());
-	//------- GRID CLASS ------------------
-
-	/**
-	 * Grid constructor 
-	 * width x height
-	 */
-	MuEngine.Grid = function(width, height){
-		this.width = width;
-		this.height = height;
-		this.cells = new Array(width * height);
-		for(var i=0; i<this.width; ++i){
-				for(var j=0; j< this.height; ++j)
-					this.cells[(i*this.width)+j] = new Cell(i, j);
-		};
-	};
-
-	/**
-	 * return a Cell object for the given i,j coordinate.
-	 * null if wrong coords. 
-	 */ 
-	MuEngine.Grid.prototype.getCell = function(i, j){
-		if(i < 0 || j < 0 || i >= this.width || j >= this.height) 
-			return null;
-		return this.cells[i*this.width+ j];	
-	};
-
-
-MuEngine  = (function(){
-	
-	MuEngine = {};
-
-	//--- INTERNAL ATTRIBUTES ----
-	
-	//active grid
-	var g_grid = null;
-
-	//active camera
-	var g_camera = null;
-
-	//target fps
-	var g_fps = 2;
-
-	//the interval for the event loop
-	var g_interval = null;
-
-	var g_start_time = null;
-
-
-	/**
-	 * last result of invoking MuEngine.transformPoint.
-	 * it is also used to store the first coord when
-	 * invoking MuEngine.transformLine. 
-	 */ 
-	var pt = vec3.create();
-	/**
-	 * when invoking MuEngine.transformLine, pt will store
-	 * the first coord of the line, and pt2 the last one. 
-	 */
-	var pt2 = vec3.create();
-	
-
-
-	//--- CONSTRUCTORS AND METHODS ---
-
- 
-	//------- LINE CLASS -------------------
-	
-
-	/**
-	 * Line is a primitive. it holds two points of type Vector3. 
-	 */
-	MuEngine.Line	= function(ori, end){
-		this.ori =ori;
-	  this.end = end;
- 	};
-
-	/*
-	 * renders the primitive (line)
-	 * @param ctx: drawing context
-	 * @param wm: modelview matrix (with parent node transformations applied if it is the case)
-	 */
-	MuEngine.Line.render = function(ctx, wm){
-		
-	};
-
-
-
-//------- NODE CLASS ------------
-
-/**
- * Node Constructor
- * implements scene graph.
- * a node has a transform, a primitive and a list of children nodes.  
-  */ 
-MuEngine.Node = function(primitive){
-	this.transform = new MuEngine.transform();	
-	this.primitive = primitive; 
-	this.children = [ ];
-};
-
-
-
-    
-	//------- TRANSFORM CLASS --------
-	
-	MuEngine.Transform = function(){
-		this.pos = vec3.create();
-		this.rot = quat.create();
-		this.mat = mat4.create();
-		this.update();
-	};
-
-	/**
-	 * call whenever pos or rot changes to update matrix
-	 */
-	MuEngine.Transform.update = function(){
-		mat4.fromRotationTranslation(this.mat, this.rot, this.pos);
-	};
-
-	/**
-	 * multiply given matrix by this.mat, store result in out
-	 */
-	MuEngine.Transform.multiply = function(mat, out){
-		
-	};

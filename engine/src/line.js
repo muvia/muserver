@@ -14,7 +14,7 @@
 	 * @param ctx: drawing context
 	 * @param wm: modelview matrix (with parent node transformations applied if it is the case)
 	 */
-	MuEngine.Line.render = function(ctx, wm){
+	MuEngine.Line.render = function(mat, cam){
 		
 	};
 

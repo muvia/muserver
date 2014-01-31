@@ -3,14 +3,14 @@
  * set the current grid to be rendered by the engine
  */
 MuEngine.setActiveGrid = function(grid){
-	this.g_grid = grid;
+	g_grid = grid;
 }; 
 
 /**
  * set the active camera to be used to render the world
  */ 
 MuEngine.setActiveCamera = function(camera){
-	this.g_camera = camera;
+	g_camera = camera;
 };
 
 
@@ -18,7 +18,7 @@ MuEngine.setActiveCamera = function(camera){
  * set the target fps for running the engine
  */ 
 MuEngine.setTargetFps = function(fps){
-	this.g_fps = fps;
+	g_fps = fps;
 };
 
 /**
@@ -95,7 +95,7 @@ _renderNode = function(node, mat, mat_aux){
   //mat will store mat_parent * node.transform.mat
   node.transform.multiply(mat, mat_aux);	
 	if(node.primitive != null){
-  	//@todo: render the primitive, using mat_aux!
+			node.primitive.render(mat_aux, g_camera);
 	};
 	for(var i=0; i<node.children.length; ++i){
 		//we flip the matrix to avoid the need to copy mat_aux in mat. 			
