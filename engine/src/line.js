@@ -15,12 +15,14 @@
 	 * @param wm: modelview matrix (with parent node transformations applied if it is the case)
 	 */
 	MuEngine.Line.prototype.render = function(mat, cam){
-
-		cam.project(this.ori, MuEngine.pt);
-		cam.project(this.end, MuEngine.pt2);
-		//@TODO: make sure the context is safe to reuse between render calls
-		cam.ctx = cam.getContext('2d');
-
+		cam.project(this.ori,pt);
+		cam.project(this.end,pt2);
+		console.log("line: ",pt,pt2);
+		cam.ctx.beginPath();
+		cam.ctx.moveTo(pt.x,pt.y);
+		cam.ctx.lineTo(pt2.x,pt2.y);
+		cam.ctx.closePath();
+		cam.ctx.stroke();
 	};
 
 
