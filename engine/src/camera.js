@@ -23,6 +23,15 @@
 		this.near = 0.0; 
 		this.far = 10000.0;
 		mat4.perspective(this.proj_mat, this.fovy, this.aspect, this.near, this.far);
-		
+		//store the view and proj matrix product to avoid constant multiplication of them.
+		this.view_proj_mat = mat4.create();
+		mat4.multiply(this.view_proj_mat, this.view_mat, this.proj_mat)Ã;		
 	};
-	
+
+  /**
+	 * given a point in world space, multiply by view_mat and proj_mat and store 
+	 * result in pointout
+	 */ 
+	MuEngine.Camera.prototype.project(point, pointout){
+		point.transformMat4(pointout, point, this.view_proj_mat);  
+	};

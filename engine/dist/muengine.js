@@ -49,14 +49,14 @@ MuEngine  = (function(){
 	/**
 	 * call whenever pos or rot changes to update matrix
 	 */
-	MuEngine.Transform.update = function(){
+	MuEngine.Transform.prototype.update = function(){
 		mat4.fromRotationTranslation(this.mat, this.rot, this.pos);
 	};
 
 	/**
 	 * multiply given matrix by this.mat, store result in out
 	 */
-	MuEngine.Transform.multiply = function(mat, out){
+	MuEngine.Transform.prototype.multiply = function(mat, out){
 		
 	};
 	//-------- CELL CLASS -----------------
@@ -82,7 +82,7 @@ MuEngine  = (function(){
  * a node has a transform, a primitive and a list of children nodes.  
   */ 
 MuEngine.Node = function(primitive){
-	this.transform = new MuEngine.transform();	
+	this.transform = new MuEngine.Transform();	
 	this.primitive = primitive; 
 	this.children = [ ];
 };
@@ -114,9 +114,18 @@ MuEngine.Node = function(primitive){
 		this.near = 0.0; 
 		this.far = 10000.0;
 		mat4.perspective(this.proj_mat, this.fovy, this.aspect, this.near, this.far);
-		
+		//store the view and proj matrix product to avoid constant multiplication of them.
+		this.view_proj_mat = mat4.create();
+		mat4.multiply(this.view_proj_mat, this.view_mat, this.proj_mat)�;		
 	};
-	
+
+  /**
+	 * given a point in world space, multiply by view_mat and proj_mat and store 
+	 * result in pointout
+	 */ 
+	MuEngine.Camera.prototype.project(point, pointout){
+		point.transformMat4(pointout, point, this.view_proj_mat);  
+	};
 	//------- GRID CLASS ------------------
 
 	/**
@@ -160,9 +169,15 @@ MuEngine.Node = function(primitive){
 	 * @param ctx: drawing context
 	 * @param wm: modelview matrix (with parent node transformations applied if it is the case)
 	 */
-	MuEngine.Line.render = function(mat, cam){
-		
+	MuEngine.Line.prototype.render = function(mat, cam){
+
+		cam.project(this.ori, MuEngine.pt);
+		cam.project(this.end, MuEngine.pt2);
+		//@TODO: make sure the context is safe to reuse between render calls
+		cam.ctx = cam.getContext('2d');
+
 	};
+
 
 
 

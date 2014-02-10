@@ -11,13 +11,13 @@
 	/**
 	 * call whenever pos or rot changes to update matrix
 	 */
-	MuEngine.Transform.update = function(){
+	MuEngine.Transform.prototype.update = function(){
 		mat4.fromRotationTranslation(this.mat, this.rot, this.pos);
 	};
 
 	/**
 	 * multiply given matrix by this.mat, store result in out
 	 */
-	MuEngine.Transform.multiply = function(mat, out){
+	MuEngine.Transform.prototype.multiply = function(mat, out){
 		
 	};

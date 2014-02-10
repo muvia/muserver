@@ -7,7 +7,7 @@
  * a node has a transform, a primitive and a list of children nodes.  
   */ 
 MuEngine.Node = function(primitive){
-	this.transform = new MuEngine.transform();	
+	this.transform = new MuEngine.Transform();	
 	this.primitive = primitive; 
 	this.children = [ ];
 };
