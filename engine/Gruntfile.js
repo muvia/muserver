@@ -28,14 +28,13 @@ module.exports = function(grunt) {
 			tasks: ['concat:dist']
 		},
 		jasmine: {
-		  src : 'src/**/*.js',
 			test:{										 
-		  	specs : 'specs/**/*spec.js',
-		  	helpers : 'specs/helpers/*.js',
-			  timeout : 10000,
-  			junit : {
-	    		output : 'junit/'
-			  	}
+		  	src :[ '../lib/gl-matrix.js', 'dist/*.js'],
+		  	options: {
+				specs : 'specs/**/*spec.js',
+		  		helpers : 'specs/helpers/*.js',
+			  	timeout : 10000
+				}
 	 		}
 		}	
 	});
