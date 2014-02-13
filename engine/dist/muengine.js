@@ -59,6 +59,13 @@ MuEngine  = (function(){
 	MuEngine.Transform.prototype.multiply = function(mat, out){
 		
 	};
+
+ /**
+	* multiply a given point for this.mat, store the result in out
+	*/
+	MuEngine.Transform.prototype.multP = function(p, out){
+		vec3.transformMat4(out, p, this.mat); 
+	};
 	//-------- CELL CLASS -----------------
 
 	/**
@@ -186,6 +193,23 @@ MuEngine.Node = function(primitive){
 
 
 
+
+/**
+* common utilities.
+* added as static methods to MuEngine module
+*/
+
+/**
+ * utility method to check for vector equality.
+ */
+MuEngine.vec3equ = function(a, b){
+	return vec3.squaredDistance(a, b) < 0.0001;
+};
+
+
+MuEngine.vec3log = function(label, p){
+	console.info("MuEngine.vec3log: "+label+":"+p[0].toFixed(2)+", "+p[1].toFixed(2)+", "+p[2].toFixed(2));
+};
 
 /**
  * set the current grid to be rendered by the engine

@@ -21,3 +21,10 @@
 	MuEngine.Transform.prototype.multiply = function(mat, out){
 		
 	};
+
+ /**
+	* multiply a given point for this.mat, store the result in out
+	*/
+	MuEngine.Transform.prototype.multP = function(p, out){
+		vec3.transformMat4(out, p, this.mat); 
+	};
