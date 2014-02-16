@@ -18,20 +18,36 @@ it("says two vectors 3 are equals", function(){
 			expect(MuEngine.vec3equ(p3, p2)).toBe(false);
 	});	
 				
-it("identity transform a point as expected ", function() {
+it("identity keeps a point untouched", function() {
 			
 			var p_equal = vec3.fromValues(1, 2, 3);
 			transform.multP(p, out);
 			expect(MuEngine.vec3equ(p_equal, out)).toBe(true);
+ 	});
 	
-			//test a translate transform			
+it("translation transforms a point as expected ", function() {
+			var p_equal = vec3.fromValues(1, 2, 3);
 			vec3.set(p_equal, 1.5, 2.6, 3.7);
 			vec3.set(transform.pos, 0.5, 0.6, 0.7);
 			transform.update();
 			transform.multP(p, out);
-			expect(MuEngine.vec3equ(p_equal, out)).toBe(true);
+			console.info("translation: ");
 			MuEngine.vec3log("p_equal", p_equal);
 			MuEngine.vec3log("p",  p);
 			MuEngine.vec3log("out",  out);
+			expect(MuEngine.vec3equ(p_equal, out)).toBe(true);
+ 	});
+
+it("rotation transforms a point as expected ", function() {
+			var p_equal = vec3.fromValues(1, 2, 3);
+			vec3.set(p_equal, 1.5, 2.6, 3.7);
+			vec3.set(transform.pos, 0.5, 0.6, 0.7);
+			transform.update();
+			transform.multP(p, out);
+			console.info("rotation: ");
+			MuEngine.vec3log("p_equal", p_equal);
+			MuEngine.vec3log("p",  p);
+			MuEngine.vec3log("out",  out);
+			expect(MuEngine.vec3equ(p_equal, out)).toBe(true);
  	});
 });
