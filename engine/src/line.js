@@ -4,9 +4,10 @@
 	/**
 	 * Line is a primitive. it holds two points of type Vector3. 
 	 */
-	MuEngine.Line	= function(ori, end){
+	MuEngine.Line	= function(ori, end,  color){
 		this.ori =ori;
 	  this.end = end;
+		this.color = color || "#cccccc"; 
  	};
 
 	/*
@@ -22,6 +23,7 @@
 		cam.ctx.moveTo(pt[0],pt[1]);
 		cam.ctx.lineTo(pt2[0],pt2[1]);
 		cam.ctx.closePath();
+		cam.ctx.strokeStyle = this.color;
 		cam.ctx.stroke();
 	};
 

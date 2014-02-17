@@ -74,4 +74,5 @@ MuEngine.Transform.prototype.setScale = function(scale){
 	this.scale = scale; 
   this._dirty = true;
 };
- 
+
+

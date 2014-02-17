@@ -36,13 +36,15 @@ MuEngine  = (function(){
 	//--- CONSTRUCTORS AND METHODS ---
 
  
-    
+						
 	//------- TRANSFORM CLASS --------
 	
 	MuEngine.Transform = function(){
+		this._dirty = true;
 		this.pos = vec3.create();
 		this.rot = quat.create();
 		this.mat = mat4.create();
+		this.scale = 1.0; //we assume a uniform scale
 		this.update();
 	};
 
@@ -51,21 +53,67 @@ MuEngine  = (function(){
 	 */
 	MuEngine.Transform.prototype.update = function(){
 		mat4.fromRotationTranslation(this.mat, this.rot, this.pos);
+	
+	/*instead of using glmatrix scale method, we implement a direct transform
+  to take adventage of the uniform scale feature*/
+		this.mat[0] = this.mat[0] * this.scale;
+    this.mat[1] = this.mat[1] * this.scale;
+    this.mat[2] = this.mat[2] * this.scale;
+    this.mat[3] = this.mat[3] * this.scale;
+    this.mat[4] = this.mat[4] * this.scale;
+    this.mat[5] = this.mat[5] * this.scale;
+    this.mat[6] = this.mat[6] * this.scale;
+    this.mat[7] = this.mat[7] * this.scale;
+    this.mat[8] = this.mat[8] * this.scale;
+    this.mat[9] = this.mat[9] * this.scale;
+    this.mat[10] = this.mat[10] * this.scale;
+    this.mat[11] = this.mat[11] * this.scale;
+
+		this._dirty = false;
 	};
 
 	/**
 	 * multiply given matrix by this.mat, store result in out
 	 */
 	MuEngine.Transform.prototype.multiply = function(mat, out){
-		
 	};
 
  /**
 	* multiply a given point for this.mat, store the result in out
 	*/
 	MuEngine.Transform.prototype.multP = function(p, out){
-		vec3.transformMat4(out, p, this.mat); 
+		if(this._dirty) this.update();
+		vec3.transformMat4(out, p, this.mat); 		
 	};
+
+ /*
+ * 
+ */
+ MuEngine.Transform.prototype.setPos= function(x, y, z){
+ 	vec3.set(this.pos, x, y, z); 
+  this._dirty = true;
+ };
+
+ /**
+ * rotation over axis Z is the usual rotation used to 
+ * rotate in 2d. we expect it to be the most used (maybe the unique?)
+ * kind of rotation employed in this engine.
+ */
+ MuEngine.Transform.prototype.setRotZ= function(anglerad){
+ 	quat.rotateZ(this.rot, this.rot, anglerad); 
+
+	this._dirty = true; 
+};
+
+/**
+* we assume uniform scale
+*/
+MuEngine.Transform.prototype.setScale = function(scale){
+	this.scale = scale; 
+  this._dirty = true;
+};
+
+
 	//-------- CELL CLASS -----------------
 
 	/**
@@ -90,11 +138,13 @@ MuEngine  = (function(){
   */ 
 MuEngine.Node = function(primitive){
 	this.transform = new MuEngine.Transform();	
-	this.primitive = primitive; 
+	this.primitive = primitive || null; 
 	this.children = [ ];
 };
 
-
+MuEngine.Node.prototype.addChild = function(node){
+	this.children.push(node);
+};
 
 	
 //-------- CAMERA CLASS -------------
@@ -116,16 +166,22 @@ MuEngine.Node = function(primitive){
 		this.up = vec3.create();
 		vec3.set(this.up, 0, 1, 0);
 		this.view_mat = mat4.create();
+		console.log("camera: creating view_mat from eye: ", this.eye, ", center:  ", this.center, ", up: ", this.up);
 		mat4.lookAt(this.view_mat, this.eye, this.center, this.up); 
+		console.log("camera: view_mat: ", this.view_mat);
 		this.proj_mat = mat4.create();
 		this.fovy = Math.PI / 180.0;
-	    this.aspect = this.canvas.width / this.canvas.height;
+	  this.aspect = this.canvas.width / this.canvas.height;
 		this.near = 0.0; 
 		this.far = 10000.0;
+		console.log("camera: proj from: fovy: ", this.fovy, ", aspect: ", this.aspect, ", near: ", this.near, ", far:", this.far);
 		mat4.perspective(this.proj_mat, this.fovy, this.aspect, this.near, this.far);
 		//store the view and proj matrix product to avoid constant multiplication of them.
+		console.log("camera: proj_mat: ", this.proj_mat);
 		this.view_proj_mat = mat4.create();
 		mat4.multiply(this.view_proj_mat, this.view_mat, this.proj_mat);		
+		console.log("camera: view_proj_mat: ", this.view_proj_mat);
+		console.log("camera done!");
 	};
 
   /**
@@ -133,7 +189,14 @@ MuEngine.Node = function(primitive){
 	 * result in pointout
 	 */ 
 	MuEngine.Camera.prototype.project = function(point, pointout){
-		vec4.transformMat4(pointout, point, this.view_proj_mat);  
+		//transform from world space to normalized device coords..
+		vec3.transformMat4(pointout, point, this.view_proj_mat);  
+		//transform from normalized device coords to viewport coords..
+		//@todo: the zeroes at the end are the viewport origin coordinates
+		pointout[0] = (point[0]+1)*(this.canvas.width >> 1) + 0;
+		pointout[1] = (point[1]+1)*(this.canvas.height >> 1) + 0;
+		//invert Y!
+		pointout[1] = this.canvas.height - pointout[1];
 	};
 
 
@@ -170,9 +233,10 @@ MuEngine.Node = function(primitive){
 	/**
 	 * Line is a primitive. it holds two points of type Vector3. 
 	 */
-	MuEngine.Line	= function(ori, end){
+	MuEngine.Line	= function(ori, end,  color){
 		this.ori =ori;
 	  this.end = end;
+		this.color = color || "#cccccc"; 
  	};
 
 	/*
@@ -183,11 +247,12 @@ MuEngine.Node = function(primitive){
 	MuEngine.Line.prototype.render = function(mat, cam){
 		cam.project(this.ori,pt);
 		cam.project(this.end,pt2);
-		console.log("line: ",pt,pt2);
+		console.log("line.render: ", this.ori[0],",",this.ori[1],":",this.end[0],",",this.end[1]," to-> ",pt[0], ",",pt[1], ":",pt2[0],",",pt2[1]);
 		cam.ctx.beginPath();
-		cam.ctx.moveTo(pt.x,pt.y);
-		cam.ctx.lineTo(pt2.x,pt2.y);
+		cam.ctx.moveTo(pt[0],pt[1]);
+		cam.ctx.lineTo(pt2[0],pt2[1]);
 		cam.ctx.closePath();
+		cam.ctx.strokeStyle = this.color;
 		cam.ctx.stroke();
 	};
 
@@ -297,6 +362,15 @@ MuEngine.renderNode = function(node){
   mat_aux= mat4.create();
   _renderNode(node, mat, mat_aux);	
 };
+
+/**
+* utility method 
+*/
+MuEngine.deg2rad = function(deg){
+  //@todo: the division would be stored in a private static var
+  return  deg * (Math.PI / 180);
+};
+
 
 /**
  * recursive function used by MuEngine.renderNode

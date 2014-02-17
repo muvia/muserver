@@ -16,18 +16,29 @@
  	var canvas = document.getElementById("c");
 
 	var p0  = vec3.fromValues(0, 0, 0);
-	var p1 = vec3.fromValues(1, 1, 1);
+	var px = vec3.fromValues(1, 0, 0);
+	var py = vec3.fromValues(0, 1, 0);
+	var pz = vec3.fromValues(0, 0, 1);
 
-	var line = new MuEngine.Line(p0, p1);
+	var axis = new MuEngine.Node(); 
 
-	var node = new MuEngine.Node(line);
+	var linex = new MuEngine.Line(p0, px, "#ff0000");
+	axis.addChild( new MuEngine.Node(linex));
+
+	var liney = new MuEngine.Line(p0, py, "#00ff00");
+	axis.addChild( new MuEngine.Node(liney));
+
+
+	var linez= new MuEngine.Line(p0, pz, "#0000ff");
+	axis.addChild( new MuEngine.Node(linez));
+
 
 	//I don´t think the camera must have the canvas. 
 	var camera = new MuEngine.Camera(canvas);
 
 	MuEngine.setActiveCamera(camera);
 
-	MuEngine.renderNode(node);
+	MuEngine.renderNode(axis);
 
 </script>
 
