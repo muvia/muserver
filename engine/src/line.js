@@ -17,10 +17,10 @@
 	MuEngine.Line.prototype.render = function(mat, cam){
 		cam.project(this.ori,pt);
 		cam.project(this.end,pt2);
-		console.log("line: ",pt,pt2);
+		console.log("line.render: ", this.ori[0],",",this.ori[1],":",this.end[0],",",this.end[1]," to-> ",pt[0], ",",pt[1], ":",pt2[0],",",pt2[1]);
 		cam.ctx.beginPath();
-		cam.ctx.moveTo(pt.x,pt.y);
-		cam.ctx.lineTo(pt2.x,pt2.y);
+		cam.ctx.moveTo(pt[0],pt[1]);
+		cam.ctx.lineTo(pt2[0],pt2[1]);
 		cam.ctx.closePath();
 		cam.ctx.stroke();
 	};

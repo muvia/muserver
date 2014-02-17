@@ -87,6 +87,15 @@ MuEngine.renderNode = function(node){
 };
 
 /**
+* utility method 
+*/
+MuEngine.deg2rad = function(deg){
+  //@todo: the division would be stored in a private static var
+  return  deg * (Math.PI / 180);
+};
+
+
+/**
  * recursive function used by MuEngine.renderNode
  * mat_parent  is the previous (stacked) model transformation. this is read-only (locally)
  * mat is the current stacked transformation (after mat_parent). this will be the new parent in the next recursive call.
