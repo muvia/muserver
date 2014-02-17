@@ -18,22 +18,21 @@
 		this.up = vec3.create();
 		vec3.set(this.up, 0, 1, 0);
 		this.view_mat = mat4.create();
-		console.log("camera: creating view_mat from eye: ", this.eye, ", center:  ", this.center, ", up: ", this.up);
-		mat4.lookAt(this.view_mat, this.eye, this.center, this.up); 
-		console.log("camera: view_mat: ", this.view_mat);
 		this.proj_mat = mat4.create();
 		this.fovy = Math.PI / 180.0;
 	  this.aspect = this.canvas.width / this.canvas.height;
 		this.near = 0.0; 
 		this.far = 10000.0;
-		console.log("camera: proj from: fovy: ", this.fovy, ", aspect: ", this.aspect, ", near: ", this.near, ", far:", this.far);
-		mat4.perspective(this.proj_mat, this.fovy, this.aspect, this.near, this.far);
 		//store the view and proj matrix product to avoid constant multiplication of them.
-		console.log("camera: proj_mat: ", this.proj_mat);
 		this.view_proj_mat = mat4.create();
+		this.dirty = true;
+	};
+
+ 	MuEngine.Camera.prototype.update = function(){
+		mat4.lookAt(this.view_mat, this.eye, this.center, this.up); 
+		mat4.perspective(this.proj_mat, this.fovy, this.aspect, this.near, this.far);
 		mat4.multiply(this.view_proj_mat, this.view_mat, this.proj_mat);		
-		console.log("camera: view_proj_mat: ", this.view_proj_mat);
-		console.log("camera done!");
+		this.dirty = false;
 	};
 
   /**
@@ -41,6 +40,7 @@
 	 * result in pointout
 	 */ 
 	MuEngine.Camera.prototype.project = function(point, pointout){
+		if(this.dirty) this.update();
 		//transform from world space to normalized device coords..
 		vec3.transformMat4(pointout, point, this.view_proj_mat);  
 		//transform from normalized device coords to viewport coords..
