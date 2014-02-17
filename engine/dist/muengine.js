@@ -160,6 +160,7 @@ MuEngine.Node.prototype.addChild = function(node){
 		//@TODO: make sure the context is safe to reuse between render calls
 		this.ctx = canvas.getContext('2d');
 		this.eye = vec3.create();
+		this.fixed_eye = true; 
 		vec3.set(this.eye, 0, 0, -10);
 		this.center = vec3.create();
 		vec3.set(this.center, 0, 0, 0);
@@ -199,7 +200,19 @@ MuEngine.Node.prototype.addChild = function(node){
 		pointout[1] = this.canvas.height - pointout[1];
 	};
 
-
+  /**
+	 * set the center of the camera at the given point. 
+	 * if the eyefixed flag is false, the eye will be updated to keep his relative position to the center.
+	 */
+	MuEngine.Camera.prototype.setCenter = function(pos){
+		if(!this.fixed_eye){
+			diff = vec3.create();
+			vec3.substract(diff, this.center, this.eye);
+			vec3.add(this.eye, pos, diff);			
+		}
+		this.center = pos;
+		this.dirty = true;	
+	};
 	//------- GRID CLASS ------------------
 
 	/**
