@@ -66,6 +66,15 @@
 		this.dirty = true;	
 	};
 
+	/**
+	 * move the center of the camera using a delta vector
+	 */
+	MuEngine.Camera.prototype.moveCenter = function(delta){
+		var temp =  vec3.create();
+		vec3.add(temp, this.center, delta);
+		this.setCenter(temp);	
+	};
+
 	MuEngine.Camera.prototype.eyeFixed = function(flag){
 		this.fixed_eye = flag;
 	};

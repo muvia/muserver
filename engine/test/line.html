@@ -44,8 +44,20 @@
  	camera.setEye(vec3.fromValues(0.1, 0.1, 0.1));
 	camera.setCenter(vec3.fromValues(0, 0, 0));
  
+	window.addEventListener('keydown', onkeydown,false);
 
-	MuEngine.renderNode(axis);
+	function onkeydown(e){
+		var code = e.keyCode;
+	  switch (code) {
+	       case 37:console.log("Left");  camera.moveCenter(vec3.fromValues(0.1, 0, 0)); break; //Left key
+	       case 38: console.log("Up"); camera.moveCenter(vec3.fromValues(0, 0.1, 0));break; //Up key
+	       case 39: console.log("Right"); camera.moveCenter(vec3.fromValues(-0.1, 0, 0));break; //Right key
+	       case 40: console.log("Down"); camera.moveCenter(vec3.fromValues(0, -0.1, 0));break; //Down key
+	       default: console.log(code); //Everything else
+	  }
+		camera.ctx.clearRect(0, 0, canvas.width, canvas.height);
+		MuEngine.renderNode(axis);
+	};
 
 </script>
 

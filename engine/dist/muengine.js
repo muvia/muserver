@@ -146,9 +146,9 @@ MuEngine.Node.prototype.addChild = function(node){
 	this.children.push(node);
 };
 
-	
-//-------- CAMERA CLASS -------------
-	
+					
+	//-------- CAMERA CLASS -------------
+					
 	/**
 	 * Camera constructor. 
 	 * a camera is always attached to a cell. 
@@ -169,7 +169,7 @@ MuEngine.Node.prototype.addChild = function(node){
 		this.view_mat = mat4.create();
 		this.proj_mat = mat4.create();
 		this.fovy = Math.PI / 180.0;
-	  this.aspect = this.canvas.width / this.canvas.height;
+		this.aspect = this.canvas.width / this.canvas.height;
 		this.near = 0.0; 
 		this.far = 10000.0;
 		//store the view and proj matrix product to avoid constant multiplication of them.
@@ -177,25 +177,25 @@ MuEngine.Node.prototype.addChild = function(node){
 		this.dirty = true;
 	};
 
- 	MuEngine.Camera.prototype.update = function(){
+	MuEngine.Camera.prototype.update = function(){
 		mat4.lookAt(this.view_mat, this.eye, this.center, this.up); 
 		mat4.perspective(this.proj_mat, this.fovy, this.aspect, this.near, this.far);
 		mat4.multiply(this.view_proj_mat, this.view_mat, this.proj_mat);		
 		this.dirty = false;
 	};
 
-  /**
+	/**
 	 * given a point in world space, multiply by view_mat and proj_mat and store 
 	 * result in pointout
 	 */ 
 	MuEngine.Camera.prototype.project = function(point, pointout){
 		if(this.dirty) this.update();
 		//transform from world space to normalized device coords..
-		vec3.transformMat4(pointout, point, this.view_proj_mat);  
+		vec3.transformMat4(pointout, point, this.view_proj_mat); 
 		//transform from normalized device coords to viewport coords..
 		//@todo: the zeroes at the end are the viewport origin coordinates
-		pointout[0] = (point[0]+1)*(this.canvas.width >> 1) + 0;
-		pointout[1] = (point[1]+1)*(this.canvas.height >> 1) + 0;
+		pointout[0] = (pointout[0]+1)*(this.canvas.width >> 1) + 0;
+		pointout[1] = (pointout[1]+1)*(this.canvas.height >> 1) + 0;
 		//invert Y!
 		pointout[1] = this.canvas.height - pointout[1];
 	};
@@ -212,6 +212,24 @@ MuEngine.Node.prototype.addChild = function(node){
 		}
 		this.center = pos;
 		this.dirty = true;	
+	};
+
+	/**
+	 * move the center of the camera using a delta vector
+	 */
+	MuEngine.Camera.prototype.moveCenter = function(delta){
+		var temp =  vec3.create();
+		vec3.add(temp, this.center, delta);
+		this.setCenter(temp);	
+	};
+
+	MuEngine.Camera.prototype.eyeFixed = function(flag){
+		this.fixed_eye = flag;
+	};
+
+  MuEngine.Camera.prototype.setEye = function(pos){
+		this.eye = pos;
+		this.dirty = true;
 	};
 	//------- GRID CLASS ------------------
 
@@ -258,6 +276,7 @@ MuEngine.Node.prototype.addChild = function(node){
 	 * @param wm: modelview matrix (with parent node transformations applied if it is the case)
 	 */
 	MuEngine.Line.prototype.render = function(mat, cam){
+		/*@todo: MULTIPLY ori, end by mat before cam.project*/
 		cam.project(this.ori,pt);
 		cam.project(this.end,pt2);
 		console.log("line.render: ", this.ori[0],",",this.ori[1],":",this.end[0],",",this.end[1]," to-> ",pt[0], ",",pt[1], ":",pt2[0],",",pt2[1]);
