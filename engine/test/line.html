@@ -22,8 +22,10 @@
 
 	var axis = new MuEngine.Node(); 
 
+	
 	var linex = new MuEngine.Line(p0, px, "#ff0000");
-	axis.addChild( new MuEngine.Node(linex));
+	var nodex = new MuEngine.Node(linex);
+	axis.addChild(nodex);
 
 	var liney = new MuEngine.Line(p0, py, "#00ff00");
 	axis.addChild( new MuEngine.Node(liney));
@@ -38,7 +40,10 @@
 
 	MuEngine.setActiveCamera(camera);
 
-	camera.setCenter(vec3.fromValues(3, 3, 3));
+	camera.eyeFixed(true);
+ 	camera.setEye(vec3.fromValues(0.1, 0.1, 0.1));
+	camera.setCenter(vec3.fromValues(0, 0, 0));
+ 
 
 	MuEngine.renderNode(axis);
 
