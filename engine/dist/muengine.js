@@ -76,6 +76,7 @@ MuEngine  = (function(){
 	 * multiply given matrix by this.mat, store result in out
 	 */
 	MuEngine.Transform.prototype.multiply = function(mat, out){
+		mat4.multiply(out, this.mat, mat);
 	};
 
  /**
@@ -198,6 +199,7 @@ MuEngine.Node.prototype.addChild = function(node){
 		pointout[1] = (pointout[1]+1)*(this.canvas.height >> 1) + 0;
 		//invert Y!
 		pointout[1] = this.canvas.height - pointout[1];
+		console.log("Camera.project: ",point,"->", pointout);
 	};
 
   /**
@@ -205,11 +207,6 @@ MuEngine.Node.prototype.addChild = function(node){
 	 * if the eyefixed flag is false, the eye will be updated to keep his relative position to the center.
 	 */
 	MuEngine.Camera.prototype.setCenter = function(pos){
-		if(!this.fixed_eye){
-			diff = vec3.create();
-			vec3.substract(diff, this.center, this.eye);
-			vec3.add(this.eye, pos, diff);			
-		}
 		this.center = pos;
 		this.dirty = true;	
 	};
@@ -219,8 +216,11 @@ MuEngine.Node.prototype.addChild = function(node){
 	 */
 	MuEngine.Camera.prototype.moveCenter = function(delta){
 		var temp =  vec3.create();
-		vec3.add(temp, this.center, delta);
-		this.setCenter(temp);	
+		vec3.add(this.center, this.center, delta);
+		if(!this.fixed_eye){
+			vec3.add(this.eye, this.eye, delta);
+		}
+		this.dirty = true;
 	};
 
 	MuEngine.Camera.prototype.eyeFixed = function(flag){

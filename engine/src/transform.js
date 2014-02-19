@@ -38,6 +38,7 @@
 	 * multiply given matrix by this.mat, store result in out
 	 */
 	MuEngine.Transform.prototype.multiply = function(mat, out){
+		mat4.multiply(out, this.mat, mat);
 	};
 
  /**
