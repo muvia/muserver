@@ -210,29 +210,21 @@ MuEngine.Node.prototype.addChild = function(node){
 	 var aux = vec3.create();
 	 var aux2 = vec3.create();
 
+		/* this is a workable, unoptimized version
+		* it uses TWO separate matrix multiplication, and intermediate auxiliar points
 		vec3.transformMat4(aux, point, this.view_mat);		
-
-
 		console.log("Camera.project: view: ",point,"->",aux);
-		
-	
 		vec3.transformMat4(aux2, aux, this.proj_mat);		
-
 		console.log("Camera.project: proj: ",aux,"->",aux2);
+		*/
 
 		//transform from world space to normalized device coords..
-		//vec3.transformMat4(pointout, point, this.view_proj_mat); 
-		
+		vec3.transformMat4(pointout, point, this.view_proj_mat); 
 
 		//transform from normalized device coords to viewport coords..
-		//@todo: the zeroes at the end are the viewport origin coordinates
-		//pointout[0] = (pointout[0]+1)*(this.canvas.width >> 1) + 0;
-		//pointout[1] = (pointout[1]+1)*(this.canvas.height >> 1) + 0;
-		
-	
-		pointout[0] = (aux2[0]*this.canvas.width) + (this.canvas.width>>1) ;
-		pointout[1] = (aux2[1]*this.canvas.height) + (this.canvas.width>>1) ;
-		pointout[2] = aux2[2];
+		pointout[0] = (pointout[0]*this.canvas.width) + (this.canvas.width>>1) ;
+		pointout[1] = (pointout[1]*this.canvas.height) + (this.canvas.width>>1) ;
+		//pointout[2] = aux2[2];
 
 		//invert Y!
 		pointout[1] = this.canvas.height - pointout[1];
