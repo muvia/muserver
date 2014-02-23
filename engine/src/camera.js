@@ -20,10 +20,22 @@
 		vec3.set(this.up, 0, 1, 0);
 		this.view_mat = mat4.create();
 		this.proj_mat = mat4.create();
+		
+		//this is for a projection matrix, but we are going to try first 
+		//with a ortographic view 
 		this.fovy = Math.PI / 180.0;
 		this.aspect = this.canvas.width / this.canvas.height;
 		this.near = 0.0; 
 		this.far = 10000.0;
+
+		//orthographic
+		this.near = 0;
+		this.far = 10; 
+		this.left = -5;
+		this.right = 5;
+		this.top = 5;
+		this.bottom = -5; 
+			
 		//store the view and proj matrix product to avoid constant multiplication of them.
 		this.view_proj_mat = mat4.create();
 		this.dirty = true;
@@ -31,8 +43,9 @@
 
 	MuEngine.Camera.prototype.update = function(){
 		mat4.lookAt(this.view_mat, this.eye, this.center, this.up); 
-		mat4.perspective(this.proj_mat, this.fovy, this.aspect, this.near, this.far);
-		mat4.multiply(this.view_proj_mat, this.view_mat, this.proj_mat);		
+		//mat4.perspective(this.proj_mat, this.fovy, this.aspect, this.near, this.far);
+		mat4.ortho(this.proj_mat, this.left, this.right, this.bottom, this.top, this.near, this.far);
+		mat4.multiply(this.view_proj_mat, this.proj_mat, this.view_mat);		
 		this.dirty = false;
 	};
 
@@ -42,15 +55,39 @@
 	 */ 
 	MuEngine.Camera.prototype.project = function(point, pointout){
 		if(this.dirty) this.update();
+		
+		//transform world to camera coords.. 
+
+	 var aux = vec3.create();
+	 var aux2 = vec3.create();
+
+		vec3.transformMat4(aux, point, this.view_mat);		
+
+
+		console.log("Camera.project: view: ",point,"->",aux);
+		
+	
+		vec3.transformMat4(aux2, aux, this.proj_mat);		
+
+		console.log("Camera.project: proj: ",aux,"->",aux2);
+
 		//transform from world space to normalized device coords..
-		vec3.transformMat4(pointout, point, this.view_proj_mat); 
+		//vec3.transformMat4(pointout, point, this.view_proj_mat); 
+		
+
 		//transform from normalized device coords to viewport coords..
 		//@todo: the zeroes at the end are the viewport origin coordinates
-		pointout[0] = (pointout[0]+1)*(this.canvas.width >> 1) + 0;
-		pointout[1] = (pointout[1]+1)*(this.canvas.height >> 1) + 0;
+		//pointout[0] = (pointout[0]+1)*(this.canvas.width >> 1) + 0;
+		//pointout[1] = (pointout[1]+1)*(this.canvas.height >> 1) + 0;
+		
+	
+		pointout[0] = (aux2[0]*this.canvas.width) + (this.canvas.width>>1) ;
+		pointout[1] = (aux2[1]*this.canvas.height) + (this.canvas.width>>1) ;
+		pointout[2] = aux2[2];
+
 		//invert Y!
 		pointout[1] = this.canvas.height - pointout[1];
-		console.log("Camera.project: ",point,"->", pointout);
+		console.log("Camera.project: device: ",aux2,"->",pointout);
 	};
 
   /**
@@ -65,17 +102,17 @@
 	/**
 	 * move the center of the camera using a delta vector
 	 */
-	MuEngine.Camera.prototype.moveCenter = function(delta){
+	MuEngine.Camera.prototype.moveEye = function(delta){
 		var temp =  vec3.create();
-		vec3.add(this.center, this.center, delta);
-		if(!this.fixed_eye){
-			vec3.add(this.eye, this.eye, delta);
+		vec3.add(this.eye, this.eye, delta);
+		if(!this.fixed_center){
+			vec3.add(this.center, this.center, delta);
 		}
 		this.dirty = true;
 	};
 
-	MuEngine.Camera.prototype.eyeFixed = function(flag){
-		this.fixed_eye = flag;
+	MuEngine.Camera.prototype.centerFixed = function(flag){
+		this.fixed_center = flag;
 	};
 
   MuEngine.Camera.prototype.setEye = function(pos){
