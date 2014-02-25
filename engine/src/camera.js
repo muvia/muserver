@@ -1,6 +1,5 @@
 				
 	//-------- CAMERA CLASS -------------
-					
 	/**
 	 * Camera constructor. 
 	 * a camera is always attached to a cell. 
@@ -40,6 +39,14 @@
 		this.view_proj_mat = mat4.create();
 		this.dirty = true;
 	};
+
+
+	/*
+	* camera static attributes (mainly helpers)
+	*/		
+	MuEngine.Camera.prototype.g_p0 = vec3.create();
+	MuEngine.Camera.prototype.g_p1 = vec3.create(); 
+
 
 	MuEngine.Camera.prototype.update = function(){
 		mat4.lookAt(this.view_mat, this.eye, this.center, this.up); 
@@ -133,4 +140,16 @@
 	};
 
 
-	
+ /**
+	* lines are expected in world coordinates
+	*/
+	MuEngine.Camera.prototype.renderLine = function(ori, end, color){
+		this.project(ori,this.g_p0);
+		this.project(end,this.g_p1);
+		this.ctx.beginPath();
+		this.ctx.moveTo(this.g_p0[0],this.g_p0[1]);
+		this.ctx.lineTo(this.g_p1[0],this.g_p1[1]);
+		this.ctx.closePath();
+		this.ctx.strokeStyle = color;
+		this.ctx.stroke();
+	};

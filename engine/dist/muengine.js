@@ -149,7 +149,6 @@ MuEngine.Node.prototype.addChild = function(node){
 
 				
 	//-------- CAMERA CLASS -------------
-					
 	/**
 	 * Camera constructor. 
 	 * a camera is always attached to a cell. 
@@ -189,6 +188,14 @@ MuEngine.Node.prototype.addChild = function(node){
 		this.view_proj_mat = mat4.create();
 		this.dirty = true;
 	};
+
+
+	/*
+	* camera static attributes (mainly helpers)
+	*/		
+	MuEngine.Camera.prototype.g_p0 = vec3.create();
+	MuEngine.Camera.prototype.g_p1 = vec3.create(); 
+
 
 	MuEngine.Camera.prototype.update = function(){
 		mat4.lookAt(this.view_mat, this.eye, this.center, this.up); 
@@ -282,7 +289,19 @@ MuEngine.Node.prototype.addChild = function(node){
 	};
 
 
-	
+ /**
+	* lines are expected in world coordinates
+	*/
+	MuEngine.Camera.prototype.renderLine = function(ori, end, color){
+		this.project(ori,this.g_p0);
+		this.project(end,this.g_p1);
+		this.ctx.beginPath();
+		this.ctx.moveTo(this.g_p0[0],this.g_p0[1]);
+		this.ctx.lineTo(this.g_p1[0],this.g_p1[1]);
+		this.ctx.closePath();
+		this.ctx.strokeStyle = color;
+		this.ctx.stroke();
+	};
 	//------- GRID CLASS ------------------
 
 	/**
@@ -340,13 +359,26 @@ MuEngine.Node.prototype.addChild = function(node){
 		this.color = color || "#cccccc"; 
  	};
 
+
+	/*
+	* line static attributes
+	*/
+	MuEngine.Line.prototype.g_p0 = vec3.create();
+  MuEngine.Line.prototype.g_p1 = vec3.create();
+
 	/*
 	 * renders the primitive (line)
 	 * @param ctx: drawing context
 	 * @param wm: modelview matrix (with parent node transformations applied if it is the case)
 	 */
 	MuEngine.Line.prototype.render = function(mat, cam){
-		/*@todo: MULTIPLY ori, end by mat before cam.project*/
+
+		vec3.transformMat4(this.g_p0, this.ori, mat); 
+		vec3.transformMat4(this.g_p1, this.end, mat); 
+
+		cam.renderLine(this.g_p0, this.g_p1, this.color);
+
+	 /*
 		cam.project(this.ori,pt);
 		cam.project(this.end,pt2);
 		console.log("line.render: ", this.ori[0],",",this.ori[1],":",this.end[0],",",this.end[1]," to-> ",pt[0], ",",pt[1], ":",pt2[0],",",pt2[1]);
@@ -356,6 +388,7 @@ MuEngine.Node.prototype.addChild = function(node){
 		cam.ctx.closePath();
 		cam.ctx.strokeStyle = this.color;
 		cam.ctx.stroke();
+	*/
 	};
 
 
