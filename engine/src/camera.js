@@ -1,4 +1,4 @@
-					
+				
 	//-------- CAMERA CLASS -------------
 					
 	/**
@@ -111,3 +111,26 @@
 		this.eye = pos;
 		this.dirty = true;
 	};
+
+	/**
+	* performs frustum culling against a sphere in world coordinates
+	* @param center: vec3 in world coordinates
+	*	@param radius: radius
+	*/
+	MuEngine.Camera.prototype.containsSphere = function(center, radious){
+		//@todo: implement!
+		console.log("Camera.containsSphere: not implemented!");
+	};
+
+	/**
+	* convenient method to perform culling against sphere, it expects
+	* parameters already pre-computed
+	* param: center: center in VIEW coordinates. 
+	* param: radious: 
+	*/
+	MuEngine.Camera.prototype.containsSphere2 = function(center, radious){
+		
+	};
+
+
+	

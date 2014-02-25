@@ -147,7 +147,7 @@ MuEngine.Node.prototype.addChild = function(node){
 	this.children.push(node);
 };
 
-					
+				
 	//-------- CAMERA CLASS -------------
 					
 	/**
@@ -260,15 +260,42 @@ MuEngine.Node.prototype.addChild = function(node){
 		this.eye = pos;
 		this.dirty = true;
 	};
+
+	/**
+	* performs frustum culling against a sphere in world coordinates
+	* @param center: vec3 in world coordinates
+	*	@param radius: radius
+	*/
+	MuEngine.Camera.prototype.containsSphere = function(center, radious){
+		//@todo: implement!
+		console.log("Camera.containsSphere: not implemented!");
+	};
+
+	/**
+	* convenient method to perform culling against sphere, it expects
+	* parameters already pre-computed
+	* param: center: center in VIEW coordinates. 
+	* param: radious: 
+	*/
+	MuEngine.Camera.prototype.containsSphere2 = function(center, radious){
+		
+	};
+
+
+	
 	//------- GRID CLASS ------------------
 
 	/**
 	 * Grid constructor 
 	 * width x height
+	 * @param width num of rows
+	 * @param height num of columns
+	 * @param cellsize length of a cell side 
 	 */
-	MuEngine.Grid = function(width, height){
+	MuEngine.Grid = function(width, height, cellsize){
 		this.width = width;
 		this.height = height;
+	 	this.cellsize = cellsize;
 		this.cells = new Array(width * height);
 		for(var i=0; i<this.width; ++i){
 				for(var j=0; j< this.height; ++j)
@@ -286,7 +313,21 @@ MuEngine.Node.prototype.addChild = function(node){
 		return this.cells[i*this.width+ j];	
 	};
 
+	MuEngine.Grid.prototype.render = function(mat, cam){
+		var w = this.width*this.cellsize;
+		pt[1] = 0;
+		pt[2] = 0;
+		pt2[1] = w;
+		pt2[2] = w; 		
+		//draw columns
+		var aux = 0;
+		for(var i=0; i<=this.width; ++i){
+			pt[0] = aux;
+			pt2[0] = aux; 
+			aux += this.cellsize;
+		};
 
+	};
 	//------- LINE CLASS -------------------
 	
 
