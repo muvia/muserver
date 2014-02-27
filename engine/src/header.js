@@ -31,8 +31,11 @@ MuEngine  = (function(){
 	 */
 	var pt2 = vec3.create();
 	
-
-
+	/**
+	* cache of images
+	*/
+	var g_images = {}; 
+	
 	//--- CONSTRUCTORS AND METHODS ---
 
  

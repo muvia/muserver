@@ -31,8 +31,11 @@ MuEngine  = (function(){
 	 */
 	var pt2 = vec3.create();
 	
-
-
+	/**
+	* cache of images
+	*/
+	var g_images = {}; 
+	
 	//--- CONSTRUCTORS AND METHODS ---
 
  
@@ -417,6 +420,17 @@ MuEngine.Node.prototype.addChild = function(node){
 
 
 
+//------------ SPRITE CLASS ----------
+
+	MuEngine.Sprite = function(width, height, path){
+		this.width = width;
+		this.height = height;
+		this.path = path;
+	};
+
+	MuEngine.Sprite.prototype.render = function(mat, cam){
+	
+	};
 
 /**
 * common utilities.
@@ -508,6 +522,12 @@ MuEngine.transformLine = function(pt, pt2, ptt, pt2t){
 
 	//store results		
 
+};
+
+/**
+* load an :
+*/
+MuEngine.loadImages = function(imglist){
 };
 
 /**

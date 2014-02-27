@@ -75,6 +75,12 @@ MuEngine.transformLine = function(pt, pt2, ptt, pt2t){
 };
 
 /**
+* load an :
+*/
+MuEngine.loadImages = function(imglist){
+};
+
+/**
  * render a node and all its children. 
  * node is assumed to be the root of the world. 
  * this method will generate recursive calls. 

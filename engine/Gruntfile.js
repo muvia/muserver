@@ -17,6 +17,7 @@ module.exports = function(grunt) {
 					   'src/camera.js',
 					   'src/grid.js',
 					   'src/line.js',
+						 'src/sprite.js', 
 					   'src/util.js',
 						 'src/engine.js'
 					 ],

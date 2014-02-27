@@ -7,6 +7,15 @@
 </head>
 
 <body>
+
+<p>this is a inline image that will be use as default while loading images in the engine: 
+<img id='defaultimg' src="data:image/gif;base64,R0lGODlhEAAOALMAAOazToeHh0tLS/7LZv/0jvb29t/
+f3//Ub//ge8WSLf/rhf/3kdbW1mxsbP//mf///yH5BAAAAAAALAAAAAAQAA4AAARe8L1Ekyky67
+QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjgaORCMxIC6e0CcguWw6aFjsVMkkIr7g7
+7ZKPJjPZqIyd7sJAgVGoEGv2xsBxqNgYPj/gAwXEQA7"
+    width="16" height="14" alt="embedded folder icon"> </p>
+
+
 <canvas id="c" width='480px' height='320px' style='border: 1px solid black' />
 	</canvas>
 	
@@ -14,6 +23,8 @@
 
 <script >
  	var canvas = document.getElementById("c");
+
+  var defaultimg = document.getElementById("defaultimg");
 
 	var p0  = vec3.fromValues(0, 0,  0);
 	var px = vec3.fromValues(1, 0.3, 0);
@@ -62,6 +73,13 @@
 
 function render(){
 	camera.ctx.clearRect(0, 0, canvas.width, canvas.height);
+   
+  camera.ctx.drawImage(defaultimg,
+                  0, 0,
+                  defaultimg.width, defaultimg.height,
+                  100, 100,
+                  defaultimg.width, defaultimg.height);
+
 	MuEngine.renderNode(axis);
 };
 
