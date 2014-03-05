@@ -32,9 +32,15 @@ MuEngine  = (function(){
 	var pt2 = vec3.create();
 	
 	/**
-	* cache of images
+	* cache of MuEngine.imageHandler.
 	*/
-	var g_images = {}; 
+	var g_images ={}; 
+
+ /**
+  * default image to be used while the imageHandlers are fully loaded.
+	* it is initializaded in lazy-load by MuEngine.getImage method.
+ */
+	var g_defimg = null;
 	
 	//--- CONSTRUCTORS AND METHODS ---
 

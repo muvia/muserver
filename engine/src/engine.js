@@ -75,9 +75,15 @@ MuEngine.transformLine = function(pt, pt2, ptt, pt2t){
 };
 
 /**
-* load an :
+* load a image. it will return a MuEngineImageHandler that will allow to use a 
+* dummy image while the final one is being loaded. this will simplify the coding because
+* the developer won't need to handle load callbacks
 */
-MuEngine.loadImages = function(imglist){
+MuEngine.getImage = function(imgpath){
+	//1. check if default image is loaded, else, create it. 
+
+	//2. create an image handler with the default image, and start the loading of the real one.
+
 };
 
 /**
