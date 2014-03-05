@@ -40,7 +40,7 @@ MuEngine  = (function(){
 	/**
 	* cache of MuEngine.imageHandler.
 	*/
-	var g_images ={}; 
+	var g_imageHandlers =[]; 
 
  /**
   * default image to be used while the imageHandlers are fully loaded.
