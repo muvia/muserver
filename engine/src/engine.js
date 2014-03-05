@@ -1,5 +1,15 @@
 
 /**
+ * set the current canvas where the engine will draw. 
+ * it will init both g_canvas and g_ctx module attributes.
+ */
+MuEngine.setActiveCanvas = function(canvas){
+	g_canvas = canvas;
+	g_ctx = g_canvas.getContext('2d');
+}; 
+
+
+/**
  * set the current grid to be rendered by the engine
  */
 MuEngine.setActiveGrid = function(grid){
@@ -13,6 +23,13 @@ MuEngine.setActiveCamera = function(camera){
 	g_camera = camera;
 };
 
+
+/**
+* clear the current canvas
+*/
+MuEngine.clear = function(){
+	g_ctx.clearRect(0, 0, g_canvas.width, g_canvas.height);
+};
 
 /**
  * set the target fps for running the engine
@@ -81,7 +98,9 @@ MuEngine.transformLine = function(pt, pt2, ptt, pt2t){
 */
 MuEngine.getImage = function(imgpath){
 	//1. check if default image is loaded, else, create it. 
-
+	if(g_defimg == null){
+		
+	}
 	//2. create an image handler with the default image, and start the loading of the real one.
 
 };

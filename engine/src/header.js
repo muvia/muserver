@@ -10,6 +10,12 @@ MuEngine  = (function(){
 	//active camera
 	var g_camera = null;
 
+	//active canvas
+	var g_canvas = null;
+
+	//active context
+	var g_ctx = null; 
+
 	//target fps
 	var g_fps = 2;
 

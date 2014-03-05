@@ -23,6 +23,8 @@ QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjgaORCMxIC6e0CcguWw6aFjsVMkkIr7g7
 
 <script >
  	var canvas = document.getElementById("c");
+  
+	MuEngine.setActiveCanvas(canvas);
 
   var defaultimg = document.getElementById("defaultimg");
 
@@ -46,8 +48,7 @@ QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjgaORCMxIC6e0CcguWw6aFjsVMkkIr7g7
 	axis.addChild( new MuEngine.Node(linez));
 
 
-	//I don´t think the camera must have the canvas. 
-	var camera = new MuEngine.Camera(canvas);
+	var camera = new MuEngine.Camera();
 
 	MuEngine.setActiveCamera(camera);
 
@@ -72,14 +73,14 @@ QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjgaORCMxIC6e0CcguWw6aFjsVMkkIr7g7
 };
 
 function render(){
-	camera.ctx.clearRect(0, 0, canvas.width, canvas.height);
-   
+	MuEngine.clear();
+  /* 
   camera.ctx.drawImage(defaultimg,
                   0, 0,
                   defaultimg.width, defaultimg.height,
                   100, 100,
                   defaultimg.width, defaultimg.height);
-
+*/
 	MuEngine.renderNode(axis);
 };
 

@@ -10,6 +10,12 @@ MuEngine  = (function(){
 	//active camera
 	var g_camera = null;
 
+	//active canvas
+	var g_canvas = null;
+
+	//active context
+	var g_ctx = null; 
+
 	//target fps
 	var g_fps = 2;
 
@@ -164,10 +170,7 @@ MuEngine.Node.prototype.addChild = function(node){
 	 * it is a polar camera, whose focus is its parent cell.
 	 * it performs basic perspective transformation. 
 	 */
-	MuEngine.Camera = function(canvas){
-		this.canvas = canvas;
-		//@TODO: make sure the context is safe to reuse between render calls
-		this.ctx = canvas.getContext('2d');
+	MuEngine.Camera = function(){
 		this.eye = vec3.create();
 		this.fixed_eye = true; 
 		vec3.set(this.eye, 0, 0, -10);
@@ -181,7 +184,7 @@ MuEngine.Node.prototype.addChild = function(node){
 		//this is for a projection matrix, but we are going to try first 
 		//with a ortographic view 
 		this.fovy = Math.PI / 180.0;
-		this.aspect = this.canvas.width / this.canvas.height;
+		this.aspect = g_canvas.width / g_canvas.height;
 		this.near = 0.0; 
 		this.far = 10000.0;
 
@@ -238,12 +241,12 @@ MuEngine.Node.prototype.addChild = function(node){
 		vec3.transformMat4(pointout, point, this.view_proj_mat); 
 
 		//transform from normalized device coords to viewport coords..
-		pointout[0] = (pointout[0]*this.canvas.width) + (this.canvas.width>>1) ;
-		pointout[1] = (pointout[1]*this.canvas.height) + (this.canvas.width>>1) ;
+		pointout[0] = (pointout[0]*g_canvas.width) + (g_canvas.width>>1) ;
+		pointout[1] = (pointout[1]*g_canvas.height) + (g_canvas.width>>1) ;
 		//pointout[2] = aux2[2];
 
 		//invert Y!
-		pointout[1] = this.canvas.height - pointout[1];
+		pointout[1] = g_canvas.height - pointout[1];
 		console.log("Camera.project: device: ",aux2,"->",pointout);
 	};
 
@@ -304,12 +307,12 @@ MuEngine.Node.prototype.addChild = function(node){
 	MuEngine.Camera.prototype.renderLine = function(ori, end, color){
 		this.project(ori,this.g_p0);
 		this.project(end,this.g_p1);
-		this.ctx.beginPath();
-		this.ctx.moveTo(this.g_p0[0],this.g_p0[1]);
-		this.ctx.lineTo(this.g_p1[0],this.g_p1[1]);
-		this.ctx.closePath();
-		this.ctx.strokeStyle = color;
-		this.ctx.stroke();
+		g_ctx.beginPath();
+		g_ctx.moveTo(this.g_p0[0],this.g_p0[1]);
+		g_ctx.lineTo(this.g_p1[0],this.g_p1[1]);
+		g_ctx.closePath();
+		g_ctx.strokeStyle = color;
+		g_ctx.stroke();
 	};
 	//------- GRID CLASS ------------------
 
@@ -456,6 +459,16 @@ MuEngine.vec3log = function(label, p){
 };
 
 /**
+ * set the current canvas where the engine will draw. 
+ * it will init both g_canvas and g_ctx module attributes.
+ */
+MuEngine.setActiveCanvas = function(canvas){
+	g_canvas = canvas;
+	g_ctx = g_canvas.getContext('2d');
+}; 
+
+
+/**
  * set the current grid to be rendered by the engine
  */
 MuEngine.setActiveGrid = function(grid){
@@ -469,6 +482,13 @@ MuEngine.setActiveCamera = function(camera){
 	g_camera = camera;
 };
 
+
+/**
+* clear the current canvas
+*/
+MuEngine.clear = function(){
+	g_ctx.clearRect(0, 0, g_canvas.width, g_canvas.height);
+};
 
 /**
  * set the target fps for running the engine
@@ -537,7 +557,9 @@ MuEngine.transformLine = function(pt, pt2, ptt, pt2t){
 */
 MuEngine.getImage = function(imgpath){
 	//1. check if default image is loaded, else, create it. 
-
+	if(g_defimg == null){
+		
+	}
 	//2. create an image handler with the default image, and start the loading of the real one.
 
 };

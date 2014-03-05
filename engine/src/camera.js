@@ -6,10 +6,7 @@
 	 * it is a polar camera, whose focus is its parent cell.
 	 * it performs basic perspective transformation. 
 	 */
-	MuEngine.Camera = function(canvas){
-		this.canvas = canvas;
-		//@TODO: make sure the context is safe to reuse between render calls
-		this.ctx = canvas.getContext('2d');
+	MuEngine.Camera = function(){
 		this.eye = vec3.create();
 		this.fixed_eye = true; 
 		vec3.set(this.eye, 0, 0, -10);
@@ -23,7 +20,7 @@
 		//this is for a projection matrix, but we are going to try first 
 		//with a ortographic view 
 		this.fovy = Math.PI / 180.0;
-		this.aspect = this.canvas.width / this.canvas.height;
+		this.aspect = g_canvas.width / g_canvas.height;
 		this.near = 0.0; 
 		this.far = 10000.0;
 
@@ -80,12 +77,12 @@
 		vec3.transformMat4(pointout, point, this.view_proj_mat); 
 
 		//transform from normalized device coords to viewport coords..
-		pointout[0] = (pointout[0]*this.canvas.width) + (this.canvas.width>>1) ;
-		pointout[1] = (pointout[1]*this.canvas.height) + (this.canvas.width>>1) ;
+		pointout[0] = (pointout[0]*g_canvas.width) + (g_canvas.width>>1) ;
+		pointout[1] = (pointout[1]*g_canvas.height) + (g_canvas.width>>1) ;
 		//pointout[2] = aux2[2];
 
 		//invert Y!
-		pointout[1] = this.canvas.height - pointout[1];
+		pointout[1] = g_canvas.height - pointout[1];
 		console.log("Camera.project: device: ",aux2,"->",pointout);
 	};
 
@@ -146,10 +143,10 @@
 	MuEngine.Camera.prototype.renderLine = function(ori, end, color){
 		this.project(ori,this.g_p0);
 		this.project(end,this.g_p1);
-		this.ctx.beginPath();
-		this.ctx.moveTo(this.g_p0[0],this.g_p0[1]);
-		this.ctx.lineTo(this.g_p1[0],this.g_p1[1]);
-		this.ctx.closePath();
-		this.ctx.strokeStyle = color;
-		this.ctx.stroke();
+		g_ctx.beginPath();
+		g_ctx.moveTo(this.g_p0[0],this.g_p0[1]);
+		g_ctx.lineTo(this.g_p1[0],this.g_p1[1]);
+		g_ctx.closePath();
+		g_ctx.strokeStyle = color;
+		g_ctx.stroke();
 	};
