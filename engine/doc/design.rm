@@ -1,18 +1,22 @@
 design notes
+============
 
 rendering responsabilities
+--------------------------
 
 a camera knows how to render primitives (lines, points, sprites). 
 a Primitive receive a camera and invokes its methods to render itself (like grid).
 
 
 occlusion culling
+-----------------
 
 occlusion culling must happen in model_view space, not view_proj space. 
 occlusion happen at grid-cell level.
 so, each cell may keep a pos_view attribute to cache the transformation, because this will be use in many passes, like zordering. 
 
 rendering sequence
+------------------
 
 if render method in Primitive objects is done through Inmediate Mode calls to camera, it means there is no place here for implement a render queue. 
 therefore, render queue must be implemented in two phases: 
@@ -25,6 +29,7 @@ note: there is a step zero.. to render the grid itself. it can be done directly,
 
 
 auxiliar objects (vectors and matrices)
+---------------------------------------
 
 there are many methods that require the use of auxiliar temporal records. by example, transform a point may require to multiply by the view matrix, store a temporal result, then multiply by the projection matrix.
 this intermediate variable would be created at the fly, but given that this kind of methods will be called potentially hundred of times per frame, it makes sense to try to avoid the creation/destruction of them, and istead of that, to reuse a long-live version. 
@@ -32,5 +37,14 @@ this intermediate variable would be created at the fly, but given that this kind
 to do this, we may declare a set of auxiliar variables at module level, but that would produce some mess if two different objects are using internally the same variable.
 
 another approach would be to declare auxiliar variables per object prototype. using a g_ notation to denotate it. 
+
+transformed position attributes per node
+----------------------------------------
+
+the other side of using auxiliar objects (as mentioned in the previous section) it that we are not to be able to preserve status. 
+for some algorithms, it may be good to preserve intermediate transformations, like world and eye position. 
+These are attributes at instance level, so it is important to decide which of both methods provides the high benefit. 
+
+Remember that world and eye position are Node attributes, primitives does not hold that information. 
 
 

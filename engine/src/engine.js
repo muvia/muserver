@@ -98,18 +98,19 @@ MuEngine.transformLine = function(pt, pt2, ptt, pt2t){
 */
 MuEngine.getImageHandler  = function(imgpath){
 	//1. check if image has already been loaded
-	if(g_imageHandlers[imgpath] != undefined)}
+	if(g_imageHandlers[imgpath] != undefined){
 		return g_imageHandlers[imgpath];
 	}
 
 	//2. check if default image is loaded, else, create it. 
 	if(g_defimg == null){
-		var imgdata = g_ctx.createImageData(128, 128);
 		g_defimg = new Image();
-		g_defimg.setData(imgdata);	
-	}
+		g_defimg.src = "data:image/gif;base64,R0lGODlhEAAOALMAAOazToeHh0tLS/7LZv/0jvb29t/f3//Ub//ge8WSLf/rhf/3kdbW1mxsbP//mf///yH5BAAAAAAALAAAAAAQAA4AAARe8L1Ekyky67QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjgaORCMxIC6e0CcguWw6aFjsVMkkIr7g77ZKPJjPZqIyd7sJAgVGoEGv2xsBxqNgYPj/gAwXEQA7";
+	}	
 	//3. create an image handler with the default image, and start the loading of the real one.
-	
+	var handler = new ImageHandler(imgpath);	
+  g_imageHandlers[imgpath]= handler;	
+	return handler;
 };
 
 /**

@@ -8,14 +8,6 @@
 
 <body>
 
-<p>this is a inline image that will be use as default while loading images in the engine: 
-<img id='defaultimg' src="data:image/gif;base64,R0lGODlhEAAOALMAAOazToeHh0tLS/7LZv/0jvb29t/
-f3//Ub//ge8WSLf/rhf/3kdbW1mxsbP//mf///yH5BAAAAAAALAAAAAAQAA4AAARe8L1Ekyky67
-QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjgaORCMxIC6e0CcguWw6aFjsVMkkIr7g7
-7ZKPJjPZqIyd7sJAgVGoEGv2xsBxqNgYPj/gAwXEQA7"
-    width="16" height="14" alt="embedded folder icon"> </p>
-
-
 <canvas id="c" width='480px' height='320px' style='border: 1px solid black' />
 	</canvas>
 	
@@ -55,6 +47,8 @@ QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjgaORCMxIC6e0CcguWw6aFjsVMkkIr7g7
 	camera.centerFixed(true);
  	camera.setEye(vec3.fromValues(0, 0, -10));
 	camera.setCenter(vec3.fromValues(0, 0,0));
+	
+  var sprite = new MuEngine.Sprite("camouflage.png");
  
 	window.addEventListener('keydown', onkeydown,false);
 

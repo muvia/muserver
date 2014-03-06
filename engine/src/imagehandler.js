@@ -10,6 +10,7 @@
 		var self = this;
 		var realimg = new Image();
 		realimg.onload = function(){
+			console.log("ImageHandler:loaded " + imgurl);
 			self.img = realimg;
 		};
 		realimg.src = imgurl;  		
