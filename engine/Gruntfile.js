@@ -48,5 +48,5 @@ grunt.loadNpmTasks('grunt-contrib-concat');
 
 grunt.registerTask('test', ['jasmine']);
 grunt.registerTask('default', ['watch']);
-
+grunt.registerTask('make', ['concat:dist']);
 };
