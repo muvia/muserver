@@ -247,7 +247,7 @@ MuEngine.Node.prototype.addChild = function(node){
 
 		//invert Y!
 		pointout[1] = g_canvas.height - pointout[1];
-		console.log("Camera.project: device: ",aux2,"->",pointout);
+		//console.log("Camera.project: device: ",aux2,"->",pointout);
 	};
 
   /**
@@ -314,6 +314,16 @@ MuEngine.Node.prototype.addChild = function(node){
 		g_ctx.strokeStyle = color;
 		g_ctx.stroke();
 	};
+
+	/**
+	* render a sprite. 
+	* @param: ori: center of the sprite, world coordinates
+	* @param: imghandler: a image handler 
+	*/
+	MuEngine.Camera.prototype.renderSprite = function(ori, imghandler){
+		this.project(ori, this.g_p0);
+		console.log("camera::renderSprite: ", this.g_p0);	
+	}
 	//------- GRID CLASS ------------------
 
 	/**
@@ -411,20 +421,7 @@ MuEngine.Node.prototype.addChild = function(node){
 
 		vec3.transformMat4(this.g_p0, this.ori, mat); 
 		vec3.transformMat4(this.g_p1, this.end, mat); 
-
 		cam.renderLine(this.g_p0, this.g_p1, this.color);
-
-	 /*
-		cam.project(this.ori,pt);
-		cam.project(this.end,pt2);
-		console.log("line.render: ", this.ori[0],",",this.ori[1],":",this.end[0],",",this.end[1]," to-> ",pt[0], ",",pt[1], ":",pt2[0],",",pt2[1]);
-		cam.ctx.beginPath();
-		cam.ctx.moveTo(pt[0],pt[1]);
-		cam.ctx.lineTo(pt2[0],pt2[1]);
-		cam.ctx.closePath();
-		cam.ctx.strokeStyle = this.color;
-		cam.ctx.stroke();
-	*/
 	};
 
 
@@ -454,15 +451,28 @@ MuEngine.Node.prototype.addChild = function(node){
 	* Sprite constructor
 	* a sprite is a type of node who will render a bitmap.
 	* bitmap is loaded through a ImageHandler.
+	* width, height will be taken from picture attributes
 	*/
-	MuEngine.Sprite = function(path, width, height){
-		this.width = width;
-		this.height = height;
+	MuEngine.Sprite = function(path /*,width, height*/){
+		//this.width = width;
+		//this.height = height;
 		this.path = path;
 		this.imghandler = MuEngine.getImageHandler(path);
 	};
 
+	/*
+	* sprite static attributes
+	*/
+	MuEngine.Sprite.prototype.g_p0 = vec3.create();
+	MuEngine.Sprite.prototype.g_p1 = vec3.create();
+
+
 	MuEngine.Sprite.prototype.render = function(mat, cam){
+		//vec3.set(this.g_p1, this.imghandler.img.width, this.imghandler.img.height, 0.0);	
+		vec3.transformMat4(this.g_p1, this.g_p0, mat); 
+		console.log("Sprite.render: this.g_p0 ", this.g_p0);	
+		console.log("Sprite.render: this.g_p1 ", this.g_p1);	
+		cam.renderSprite(this.g_p1, this.imghandler);
 	
 	};
 

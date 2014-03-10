@@ -49,6 +49,11 @@
 	camera.setCenter(vec3.fromValues(0, 0,0));
 	
   var sprite = new MuEngine.Sprite("camouflage.png");
+	var spriteNode = new MuEngine.Node(sprite);
+	spriteNode.transform.setPos(3.3, 0, 0);
+	spriteNode.transform.update();
+
+	axis.addChild(spriteNode);
  
 	window.addEventListener('keydown', onkeydown,false);
 

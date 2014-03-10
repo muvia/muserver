@@ -4,15 +4,28 @@
 	* Sprite constructor
 	* a sprite is a type of node who will render a bitmap.
 	* bitmap is loaded through a ImageHandler.
+	* width, height will be taken from picture attributes
 	*/
-	MuEngine.Sprite = function(path, width, height){
-		this.width = width;
-		this.height = height;
+	MuEngine.Sprite = function(path /*,width, height*/){
+		//this.width = width;
+		//this.height = height;
 		this.path = path;
 		this.imghandler = MuEngine.getImageHandler(path);
 	};
 
+	/*
+	* sprite static attributes
+	*/
+	MuEngine.Sprite.prototype.g_p0 = vec3.create();
+	MuEngine.Sprite.prototype.g_p1 = vec3.create();
+
+
 	MuEngine.Sprite.prototype.render = function(mat, cam){
+		//vec3.set(this.g_p1, this.imghandler.img.width, this.imghandler.img.height, 0.0);	
+		vec3.transformMat4(this.g_p1, this.g_p0, mat); 
+		console.log("Sprite.render: this.g_p0 ", this.g_p0);	
+		console.log("Sprite.render: this.g_p1 ", this.g_p1);	
+		cam.renderSprite(this.g_p1, this.imghandler);
 	
 	};
 

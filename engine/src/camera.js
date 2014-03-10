@@ -83,7 +83,7 @@
 
 		//invert Y!
 		pointout[1] = g_canvas.height - pointout[1];
-		console.log("Camera.project: device: ",aux2,"->",pointout);
+		//console.log("Camera.project: device: ",aux2,"->",pointout);
 	};
 
   /**
@@ -150,3 +150,13 @@
 		g_ctx.strokeStyle = color;
 		g_ctx.stroke();
 	};
+
+	/**
+	* render a sprite. 
+	* @param: ori: center of the sprite, world coordinates
+	* @param: imghandler: a image handler 
+	*/
+	MuEngine.Camera.prototype.renderSprite = function(ori, imghandler){
+		this.project(ori, this.g_p0);
+		console.log("camera::renderSprite: ", this.g_p0);	
+	}
