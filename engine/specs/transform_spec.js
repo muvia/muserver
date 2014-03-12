@@ -64,4 +64,32 @@ it("scale transforms a point as expected ", function() {
 			MuEngine.vec3log("out",  out);
 			expect(MuEngine.vec3equ(p_equal, out)).toBe(true);
  	});
+
+
+it("accumulate translations through hierarchies", function() {
+			var p_equal = vec3.fromValues(0.5, 0, 0.5);
+			vec3.set(p, 0, 0, 0);
+			var transform1 = new MuEngine.Transform();
+			var transform2 = new MuEngine.Transform();
+			var transform3 = new MuEngine.Transform();
+
+			transform2.setPos(1, 0, 2);
+			transform3.setPos(-0.5, 0, -1.5);
+
+			MuEngine.vec3log("p starts in:",  p);
+			transform1.multP(p, out);
+			MuEngine.vec3cp(out, p);	
+			MuEngine.vec3log("p after transform1:",  p);
+			transform2.multP(p, out);
+			MuEngine.vec3cp(out, p);	
+			MuEngine.vec3log("p after transform2:",  p);
+			transform3.multP(p, out);
+			MuEngine.vec3cp(out, p);	
+			MuEngine.vec3log("p after transform3:",  p);
+			MuEngine.vec3log("p_equal", p_equal);
+			
+			expect(MuEngine.vec3equ(p_equal,p)).toBe(true);
+ 	});
+
+
 });
