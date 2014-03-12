@@ -39,7 +39,6 @@
 	var linez= new MuEngine.Line(p0, pz, "#0000ff");
 	axis.addChild( new MuEngine.Node(linez));
 
-
 	var camera = new MuEngine.Camera();
 
 	MuEngine.setActiveCamera(camera);
@@ -73,13 +72,6 @@
 
 function render(){
 	MuEngine.clear();
-  /* 
-  camera.ctx.drawImage(defaultimg,
-                  0, 0,
-                  defaultimg.width, defaultimg.height,
-                  100, 100,
-                  defaultimg.width, defaultimg.height);
-*/
 	MuEngine.renderNode(axis);
 };
 
