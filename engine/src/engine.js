@@ -121,8 +121,7 @@ MuEngine.getImageHandler  = function(imgpath){
 MuEngine.renderNode = function(node){
 	//@todo: move this to private module attributes 
   mat = mat4.create();	
-  mat_aux= mat4.create();
-  _renderNode(node, mat, mat_aux);	
+  _renderNode(node, mat);	
 };
 
 /**
@@ -136,24 +135,16 @@ MuEngine.deg2rad = function(deg){
 
 /**
  * recursive function used by MuEngine.renderNode
- * mat_parent  is the previous (stacked) model transformation. this is read-only (locally)
- * mat is the current stacked transformation (after mat_parent). this will be the new parent in the next recursive call.
  */ 
-_renderNode = function(node, mat, mat_aux){
+_renderNode = function(node, mat){
 
-//	MuEngine.mat4centerLog("0. mat", mat);
-//	MuEngine.mat4centerLog("0. aux", mat_aux);
-	
-	//mat will store mat_parent * node.transform.mat
-  node.transform.multiply(mat, mat_aux);	
+	node.updateWorldMat(mat);
 	if(node.primitive != null){
-			node.primitive.render(mat_aux, g_camera);
+			node.primitive.render(node.wm, g_camera);
 	};
-	MuEngine.mat4centerLog("1. mat", mat);
-	MuEngine.mat4centerLog("1. aux", mat_aux);
 	for(var i=0; i<node.children.length; ++i){
 		//we flip the matrix to avoid the need to copy mat_aux in mat. 			
-		_renderNode(node.children[i], mat_aux, mat);
+		_renderNode(node.children[i], node.wm );
 	};	  
 };
 

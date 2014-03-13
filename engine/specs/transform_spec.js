@@ -78,13 +78,13 @@ it("accumulate translations through hierarchies", function() {
 
 			MuEngine.vec3log("p starts in:",  p);
 			transform1.multP(p, out);
-			MuEngine.vec3cp(out, p);	
+			vec3.copy(p, out);
 			MuEngine.vec3log("p after transform1:",  p);
 			transform2.multP(p, out);
-			MuEngine.vec3cp(out, p);	
+			vec3.copy(p, out);
 			MuEngine.vec3log("p after transform2:",  p);
 			transform3.multP(p, out);
-			MuEngine.vec3cp(out, p);	
+			vec3.copy(p, out);
 			MuEngine.vec3log("p after transform3:",  p);
 			MuEngine.vec3log("p_equal", p_equal);
 			

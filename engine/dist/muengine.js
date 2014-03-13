@@ -157,12 +157,20 @@ MuEngine.Node = function(primitive){
 	this.transform = new MuEngine.Transform();	
 	this.primitive = primitive || null; 
 	this.children = [ ];
+	//world matrix.
+ 	this.wm = mat4.create(); 
 };
 
 MuEngine.Node.prototype.addChild = function(node){
 	this.children.push(node);
 };
 
+/**
+* use the given matrix as parent matrix, compute world transformation using local transform
+*/
+MuEngine.Node.prototype.updateWorldMat = function(worldmat){
+	this.transform.multiply(worldmat, this.wm);
+};
 				
 	//-------- CAMERA CLASS -------------
 	/**
@@ -496,13 +504,6 @@ MuEngine.vec3log = function(label, p){
 	console.info("MuEngine.vec3log: "+label+":"+p[0].toFixed(2)+", "+p[1].toFixed(2)+", "+p[2].toFixed(2));
 };
 
-//copy the values of a vector into another
-MuEngine.vec3cp = function(ori, des){
-	des[0] = ori[0];
-	des[1] = ori[1];
-	des[2] = ori[2];
-};
-
 //calculate the matrix center and dump to console
 MuEngine.mat4centerLog= function(label, mat){
 	p = vec3.fromValues(0, 0, 0);
@@ -632,8 +633,7 @@ MuEngine.getImageHandler  = function(imgpath){
 MuEngine.renderNode = function(node){
 	//@todo: move this to private module attributes 
   mat = mat4.create();	
-  mat_aux= mat4.create();
-  _renderNode(node, mat, mat_aux);	
+  _renderNode(node, mat);	
 };
 
 /**
@@ -647,24 +647,16 @@ MuEngine.deg2rad = function(deg){
 
 /**
  * recursive function used by MuEngine.renderNode
- * mat_parent  is the previous (stacked) model transformation. this is read-only (locally)
- * mat is the current stacked transformation (after mat_parent). this will be the new parent in the next recursive call.
  */ 
-_renderNode = function(node, mat, mat_aux){
+_renderNode = function(node, mat){
 
-//	MuEngine.mat4centerLog("0. mat", mat);
-//	MuEngine.mat4centerLog("0. aux", mat_aux);
-	
-	//mat will store mat_parent * node.transform.mat
-  node.transform.multiply(mat, mat_aux);	
+	node.updateWorldMat(mat);
 	if(node.primitive != null){
-			node.primitive.render(mat_aux, g_camera);
+			node.primitive.render(node.wm, g_camera);
 	};
-	MuEngine.mat4centerLog("1. mat", mat);
-	MuEngine.mat4centerLog("1. aux", mat_aux);
 	for(var i=0; i<node.children.length; ++i){
 		//we flip the matrix to avoid the need to copy mat_aux in mat. 			
-		_renderNode(node.children[i], mat_aux, mat);
+		_renderNode(node.children[i], node.wm );
 	};	  
 };
 
