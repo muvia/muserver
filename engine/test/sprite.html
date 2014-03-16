@@ -59,10 +59,10 @@
 		var code = e.keyCode;
 		var dorender = true;
 	  switch (code) {
-	       case 37:console.log("Left");  camera.moveEye(vec3.fromValues(0.1, 0, 0)); break; //Left key
-	       case 38: console.log("Up"); camera.moveEye(vec3.fromValues(0, 0.1, 0));break; //Up key
-	       case 39: console.log("Right"); camera.moveEye(vec3.fromValues(-0.1, 0, 0));break; //Right key
-	       case 40: console.log("Down"); camera.moveEye(vec3.fromValues(0, -0.1, 0));break; //Down key
+	       case 37:console.log("Left");  camera.moveEye(vec3.fromValues(0.3, 0, 0)); break; //Left key
+	       case 38: console.log("Up"); camera.moveEye(vec3.fromValues(0, 0.3, 0));break; //Up key
+	       case 39: console.log("Right"); camera.moveEye(vec3.fromValues(-0.3, 0, 0));break; //Right key
+	       case 40: console.log("Down"); camera.moveEye(vec3.fromValues(0, -0.3, 0));break; //Down key
 	       default: console.log(code); dorender = false;//Everything else
 	  }
 	if(dorender) 

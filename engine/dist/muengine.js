@@ -332,6 +332,7 @@ MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 	MuEngine.Camera.prototype.renderSprite = function(ori, imghandler){
 		this.project(ori, this.g_p0);
 		console.log("camera::renderSprite: ", this.g_p0);	
+		g_ctx.drawImage(imghandler.img, this.g_p0[0], this.g_p0[1]);
 	}
 	//------- GRID CLASS ------------------
 
@@ -423,13 +424,12 @@ MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 
 	/*
 	 * renders the primitive (line)
-	 * @param ctx: drawing context
-	 * @param wm: modelview matrix (with parent node transformations applied if it is the case)
+	 * @param: node: The node this primitive belongs to 
 	 */
-	MuEngine.Line.prototype.render = function(mat, cam){
+	MuEngine.Line.prototype.render = function(node, cam){
 
-		vec3.transformMat4(this.g_p0, this.ori, mat); 
-		vec3.transformMat4(this.g_p1, this.end, mat); 
+		vec3.transformMat4(this.g_p0, this.ori, node.wm); 
+		vec3.transformMat4(this.g_p1, this.end, node.wm); 
 		cam.renderLine(this.g_p0, this.g_p1, this.color);
 	};
 
@@ -476,13 +476,10 @@ MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 	MuEngine.Sprite.prototype.g_p1 = vec3.create();
 
 
-	MuEngine.Sprite.prototype.render = function(mat, cam){
+	MuEngine.Sprite.prototype.render = function(node, cam){
 		//vec3.set(this.g_p1, this.imghandler.img.width, this.imghandler.img.height, 0.0);	
-		vec3.transformMat4(this.g_p1, this.g_p0, mat); 
-		console.log("Sprite.render: this.g_p0 ", this.g_p0);	
-		console.log("Sprite.render: this.g_p1 ", this.g_p1);	
+		vec3.transformMat4(this.g_p1, this.g_p0, node.wm); 
 		cam.renderSprite(this.g_p1, this.imghandler);
-	
 	};
 
 
@@ -652,11 +649,11 @@ _renderNode = function(node, mat){
 
 	node.updateWorldMat(mat);
 	if(node.primitive != null){
-			node.primitive.render(node.wm, g_camera);
+			node.primitive.render(node, g_camera);
 	};
 	for(var i=0; i<node.children.length; ++i){
 		//we flip the matrix to avoid the need to copy mat_aux in mat. 			
-		_renderNode(node.children[i], node.wm );
+		_renderNode(node.children[i], node.wm);
 	};	  
 };
 

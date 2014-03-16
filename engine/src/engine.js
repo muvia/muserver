@@ -140,11 +140,11 @@ _renderNode = function(node, mat){
 
 	node.updateWorldMat(mat);
 	if(node.primitive != null){
-			node.primitive.render(node.wm, g_camera);
+			node.primitive.render(node, g_camera);
 	};
 	for(var i=0; i<node.children.length; ++i){
 		//we flip the matrix to avoid the need to copy mat_aux in mat. 			
-		_renderNode(node.children[i], node.wm );
+		_renderNode(node.children[i], node.wm);
 	};	  
 };
 

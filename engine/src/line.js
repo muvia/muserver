@@ -19,13 +19,12 @@
 
 	/*
 	 * renders the primitive (line)
-	 * @param ctx: drawing context
-	 * @param wm: modelview matrix (with parent node transformations applied if it is the case)
+	 * @param: node: The node this primitive belongs to 
 	 */
-	MuEngine.Line.prototype.render = function(mat, cam){
+	MuEngine.Line.prototype.render = function(node, cam){
 
-		vec3.transformMat4(this.g_p0, this.ori, mat); 
-		vec3.transformMat4(this.g_p1, this.end, mat); 
+		vec3.transformMat4(this.g_p0, this.ori, node.wm); 
+		vec3.transformMat4(this.g_p1, this.end, node.wm); 
 		cam.renderLine(this.g_p0, this.g_p1, this.color);
 	};
 

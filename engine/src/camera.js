@@ -159,4 +159,5 @@
 	MuEngine.Camera.prototype.renderSprite = function(ori, imghandler){
 		this.project(ori, this.g_p0);
 		console.log("camera::renderSprite: ", this.g_p0);	
+		g_ctx.drawImage(imghandler.img, this.g_p0[0], this.g_p0[1]);
 	}

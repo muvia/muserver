@@ -20,13 +20,10 @@
 	MuEngine.Sprite.prototype.g_p1 = vec3.create();
 
 
-	MuEngine.Sprite.prototype.render = function(mat, cam){
+	MuEngine.Sprite.prototype.render = function(node, cam){
 		//vec3.set(this.g_p1, this.imghandler.img.width, this.imghandler.img.height, 0.0);	
-		vec3.transformMat4(this.g_p1, this.g_p0, mat); 
-		console.log("Sprite.render: this.g_p0 ", this.g_p0);	
-		console.log("Sprite.render: this.g_p1 ", this.g_p1);	
+		vec3.transformMat4(this.g_p1, this.g_p0, node.wm); 
 		cam.renderSprite(this.g_p1, this.imghandler);
-	
 	};
 
 
