@@ -335,13 +335,17 @@ MuEngine.Transform.prototype.setScale = function(scale){
 	* @param:: x,y, w, h:  origin and extend  of the sprite, world coordinates
 	* @param: imghandler: a image handler 
 	*/
-	MuEngine.Camera.prototype.renderSprite = function(ori, w, h, imghandler){
+	MuEngine.Camera.prototype.renderSprite = function(ori, w, h, anchor,  imghandler){
 		this.project(ori, this.g_p0);
 		//w, h are in world coords.. transform to pixels:
 		var wpx = (w * g_canvas.width) / (this.right - this.left);  
 		var wpy = (h * g_canvas.height) / (this.top - this.bottom);  
-		console.log("wpx ", wpx, " wpy ", wpy);
-		g_ctx.drawImage(imghandler.img, this.g_p0[0], this.g_p0[1], wpx, wpy);
+		//how about the anchor?
+		anchor = 1 | 8 ;
+		var offy = ((1 & anchor) > 0) ? 0 : (((2 & anchor) > 0)? -wpy :-(wpy>>1)); 
+		var offx = ((4 & anchor) > 0) ? 0 : (((8 & anchor) > 0)? -wpx :-(wpx>>1)); 
+		console.log("offx ", offx, " offy ", offy );
+		g_ctx.drawImage(imghandler.img, this.g_p0[0]+offx, this.g_p0[1]+offy, wpx, wpy);
 	}
 	//------- GRID CLASS ------------------
 
@@ -476,6 +480,9 @@ MuEngine.Transform.prototype.setScale = function(scale){
 		this.height = 1.0;
 		this.path = path;
 		this.imghandler = MuEngine.getImageHandler(path);
+		//bit flag to control anchor. ORed of ANCHOR_XXX flags. 
+		this.anchor = 0; 
+
 	};
 
 	/*
@@ -484,10 +491,18 @@ MuEngine.Transform.prototype.setScale = function(scale){
 	MuEngine.Sprite.prototype.g_p0 = vec3.create();
 	MuEngine.Sprite.prototype.g_p1 = vec3.create();
 	
+	MuEngine.Sprite.prototype.ANCHOR_HCENTER = 0;
+	MuEngine.Sprite.prototype.ANCHOR_VCENTER = 0;
+	MuEngine.Sprite.prototype.ANCHOR_CENTER = 0;
+	MuEngine.Sprite.prototype.ANCHOR_TOP = 1; 
+	MuEngine.Sprite.prototype.ANCHOR_BOTTOM = 2;
+	MuEngine.Sprite.prototype.ANCHOR_LEFT = 4;
+	MuEngine.Sprite.prototype.ANCHOR_RIGHT = 8;
+
 	MuEngine.Sprite.prototype.render = function(node, cam){
 		//vec3.set(this.g_p1, this.imghandler.img.width, this.imghandler.img.height, 0.0);	
 		vec3.transformMat4(this.g_p0, g_pZero, node.wm); 
-		cam.renderSprite(this.g_p0, this.width, this.height,  this.imghandler);
+		cam.renderSprite(this.g_p0, this.width, this.height, this.anchor,  this.imghandler);
 	};
 
 

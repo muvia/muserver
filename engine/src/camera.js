@@ -153,11 +153,15 @@
 	* @param:: x,y, w, h:  origin and extend  of the sprite, world coordinates
 	* @param: imghandler: a image handler 
 	*/
-	MuEngine.Camera.prototype.renderSprite = function(ori, w, h, imghandler){
+	MuEngine.Camera.prototype.renderSprite = function(ori, w, h, anchor,  imghandler){
 		this.project(ori, this.g_p0);
 		//w, h are in world coords.. transform to pixels:
 		var wpx = (w * g_canvas.width) / (this.right - this.left);  
 		var wpy = (h * g_canvas.height) / (this.top - this.bottom);  
-		console.log("wpx ", wpx, " wpy ", wpy);
-		g_ctx.drawImage(imghandler.img, this.g_p0[0], this.g_p0[1], wpx, wpy);
+		//how about the anchor?
+		anchor = 1 | 8 ;
+		var offy = ((1 & anchor) > 0) ? 0 : (((2 & anchor) > 0)? -wpy :-(wpy>>1)); 
+		var offx = ((4 & anchor) > 0) ? 0 : (((8 & anchor) > 0)? -wpx :-(wpx>>1)); 
+		console.log("offx ", offx, " offy ", offy );
+		g_ctx.drawImage(imghandler.img, this.g_p0[0]+offx, this.g_p0[1]+offy, wpx, wpy);
 	}
