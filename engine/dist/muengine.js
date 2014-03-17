@@ -40,6 +40,9 @@ MuEngine  = (function(){
  //a reusable, read-only (I hope) zero vector.
 	var g_pZero = vec3.fromValues(0, 0, 0);
 	
+  //a reusable, read-only (I hope) unit vector.
+	var g_pOne = vec3.fromValues(1, 1, 1);
+
 	/**
 	* cache of MuEngine.imageHandler.
 	*/
@@ -241,9 +244,6 @@ MuEngine.Transform.prototype.setScale = function(scale){
 		
 		//transform world to camera coords.. 
 
-	 var aux = vec3.create();
-	 var aux2 = vec3.create();
-
 		/* this is a workable, unoptimized version
 		* it uses TWO separate matrix multiplication, and intermediate auxiliar points
 		vec3.transformMat4(aux, point, this.view_mat);		
@@ -332,12 +332,16 @@ MuEngine.Transform.prototype.setScale = function(scale){
 
 	/**
 	* render a sprite. 
-	* @param: ori: center of the sprite, world coordinates
+	* @param:: x,y, w, h:  origin and extend  of the sprite, world coordinates
 	* @param: imghandler: a image handler 
 	*/
-	MuEngine.Camera.prototype.renderSprite = function(ori, imghandler){
+	MuEngine.Camera.prototype.renderSprite = function(ori, w, h, imghandler){
 		this.project(ori, this.g_p0);
-		g_ctx.drawImage(imghandler.img, this.g_p0[0], this.g_p0[1]);
+		//w, h are in world coords.. transform to pixels:
+		var wpx = (w * g_canvas.width) / (this.right - this.left);  
+		var wpy = (h * g_canvas.height) / (this.top - this.bottom);  
+		console.log("wpx ", wpx, " wpy ", wpy);
+		g_ctx.drawImage(imghandler.img, this.g_p0[0], this.g_p0[1], wpx, wpy);
 	}
 	//------- GRID CLASS ------------------
 
@@ -468,8 +472,8 @@ MuEngine.Transform.prototype.setScale = function(scale){
 	* width, height will be taken from picture attributes
 	*/
 	MuEngine.Sprite = function(path /*,width, height*/){
-		//this.width = width;
-		//this.height = height;
+		this.width = 1.0;
+		this.height = 1.0;
 		this.path = path;
 		this.imghandler = MuEngine.getImageHandler(path);
 	};
@@ -479,12 +483,11 @@ MuEngine.Transform.prototype.setScale = function(scale){
 	*/
 	MuEngine.Sprite.prototype.g_p0 = vec3.create();
 	MuEngine.Sprite.prototype.g_p1 = vec3.create();
-
-
+	
 	MuEngine.Sprite.prototype.render = function(node, cam){
 		//vec3.set(this.g_p1, this.imghandler.img.width, this.imghandler.img.height, 0.0);	
 		vec3.transformMat4(this.g_p0, g_pZero, node.wm); 
-		cam.renderSprite(this.g_p0, this.imghandler);
+		cam.renderSprite(this.g_p0, this.width, this.height,  this.imghandler);
 	};
 
 

@@ -40,6 +40,9 @@ MuEngine  = (function(){
  //a reusable, read-only (I hope) zero vector.
 	var g_pZero = vec3.fromValues(0, 0, 0);
 	
+  //a reusable, read-only (I hope) unit vector.
+	var g_pOne = vec3.fromValues(1, 1, 1);
+
 	/**
 	* cache of MuEngine.imageHandler.
 	*/
