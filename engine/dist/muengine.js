@@ -385,7 +385,7 @@ MuEngine.Transform.prototype.setScale = function(scale){
 		return this.cells[i*this.width+ j];	
 	};
 
-	MuEngine.Grid.prototype.render = function(mat, cam){
+	MuEngine.Grid.prototype.render = function(node, cam){
 		var w = this.width*this.cellsize;
 		this.g_p0[1] = 0;
 		this.g_p0[2] = 0;
@@ -396,8 +396,8 @@ MuEngine.Transform.prototype.setScale = function(scale){
 		for(var i=0; i<=this.height; ++i){
 			this.g_p0[0] = aux;
 			this.g_p1[0] = aux; 
-			vec3.transformMat4(this.g_p0, this.g_p0, mat); 
-			vec3.transformMat4(this.g_p1, this.g_p1, mat); 
+			node.transform.multP(this.g_p0, this.g_p0);
+			node.transform.multP(this.g_p1, this.g_p1);
 			cam.renderLine(this.g_p0, this.g_p1, this.color);
 			aux += this.cellsize;
 		};
@@ -530,6 +530,68 @@ MuEngine.mat4centerLog= function(label, mat){
 	vec3.transformMat4(p, p, mat);
 	console.info("MuEngine.mat4centerLog: "+label+":"+p[0].toFixed(2)+", "+p[1].toFixed(2)+", "+p[2].toFixed(2));
 };
+
+				//------- PRIORITY QUEUE CLASS ------------
+
+				/**
+				 * Priority Queue
+				 * Sort nodes by distance to camera 
+				 * internal pnode structure is:
+				 * pnode{data, next}
+				 * @param: comparator: a function to compare elements:
+				 * comparator(a, b): return true if a > b, false if a <= b
+				 */ 
+				MuEngine.PriorityQueue= function(comparator){
+					this.size = 0; 
+					this.head = null; 	
+					this.comparator = comparator;
+				};
+
+				MuEngine.PriorityQueue.prototype.push = function(node){
+					if(this.head == null){
+						this.head = {data: node, next: null }; 
+						this.size = 1; 
+					}else{
+						if(this.comparator(node, this.head.data)){
+							var aux = this.head;
+							this.head = {data:node, next:aux};
+						}else{
+							var prev = this.head;
+							var curr = this.head.next;
+						do{	
+							if(curr == null){
+								prev.next = {data:node, next:null};	
+								this.size += 1;
+								return;
+							}
+
+							if(this.comparator(node,curr.data)){
+								prev.next = {data:node, next:curr};	
+								this.size += 1;
+								return;
+							}
+							prev = curr;
+							curr = curr.next;
+							}while(true);
+						}
+						this.size += 1;
+					}
+				};
+
+				MuEngine.PriorityQueue.prototype.dump = function(){
+					var pnode = this.head; 
+					var out = "";
+					while(pnode != null){
+						out += pnode.data;
+						pnode = pnode.next; 
+					}
+					return out;
+				};
+				
+				MuEngine.PriorityQueue.prototype.peek = function(){
+					if(this.head == null) return null;
+					else return this.head.data; 
+				}
 
 /**
  * set the current canvas where the engine will draw. 

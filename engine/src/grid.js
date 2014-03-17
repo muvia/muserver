@@ -36,7 +36,7 @@
 		return this.cells[i*this.width+ j];	
 	};
 
-	MuEngine.Grid.prototype.render = function(mat, cam){
+	MuEngine.Grid.prototype.render = function(node, cam){
 		var w = this.width*this.cellsize;
 		this.g_p0[1] = 0;
 		this.g_p0[2] = 0;
@@ -47,8 +47,8 @@
 		for(var i=0; i<=this.height; ++i){
 			this.g_p0[0] = aux;
 			this.g_p1[0] = aux; 
-			vec3.transformMat4(this.g_p0, this.g_p0, mat); 
-			vec3.transformMat4(this.g_p1, this.g_p1, mat); 
+			node.transform.multP(this.g_p0, this.g_p0);
+			node.transform.multP(this.g_p1, this.g_p1);
 			cam.renderLine(this.g_p0, this.g_p1, this.color);
 			aux += this.cellsize;
 		};

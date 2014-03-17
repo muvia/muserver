@@ -20,6 +20,7 @@ module.exports = function(grunt) {
 						 'src/imagehandler.js', 
 						 'src/sprite.js', 
 					   'src/util.js',
+							'src/priority_queue.js',
 						 'src/engine.js'
 					 ],
 			// the location of the resulting JS file
