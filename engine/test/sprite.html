@@ -21,7 +21,7 @@
   var defaultimg = document.getElementById("defaultimg");
 
 	var p0  = vec3.fromValues(0, 0,  0);
-	var px = vec3.fromValues(1, 0.3, 0);
+	var px = vec3.fromValues(1, 0, 0);
 	var py = vec3.fromValues(0, 1, 0);
 	var pz = vec3.fromValues(0, 0, 1);
 
@@ -48,10 +48,10 @@
 	
   var sprite = new MuEngine.Sprite("camouflage.png");
 	var spriteNode = new MuEngine.Node(sprite);
-	spriteNode.transform.setPos(3.3, 0, 0);
+	spriteNode.transform.setPos(1, 0, 0);
 	spriteNode.transform.update();
 
-	axis.addChild(spriteNode);
+	nodex.addChild(spriteNode);
  
 	window.addEventListener('keydown', onkeydown,false);
 

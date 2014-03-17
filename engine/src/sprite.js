@@ -1,4 +1,4 @@
-//------------ SPRITE CLASS ----------
+	//------------ SPRITE CLASS ----------
 
 	/**
 	* Sprite constructor
@@ -22,8 +22,8 @@
 
 	MuEngine.Sprite.prototype.render = function(node, cam){
 		//vec3.set(this.g_p1, this.imghandler.img.width, this.imghandler.img.height, 0.0);	
-		vec3.transformMat4(this.g_p1, this.g_p0, node.wm); 
-		cam.renderSprite(this.g_p1, this.imghandler);
+		vec3.transformMat4(this.g_p0, g_pZero, node.wm); 
+		cam.renderSprite(this.g_p0, this.imghandler);
 	};
 
 

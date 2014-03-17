@@ -36,6 +36,9 @@ MuEngine  = (function(){
 	 * the first coord of the line, and pt2 the last one. 
 	 */
 	var pt2 = vec3.create();
+
+ //a reusable, read-only (I hope) zero vector.
+	var g_pZero = vec3.fromValues(0, 0, 0);
 	
 	/**
 	* cache of MuEngine.imageHandler.
@@ -146,31 +149,34 @@ MuEngine.Transform.prototype.setScale = function(scale){
 
 
 
-//------- NODE CLASS ------------
+				//------- NODE CLASS ------------
 
-/**
- * Node Constructor
- * implements scene graph.
- * a node has a transform, a primitive and a list of children nodes.  
-  */ 
-MuEngine.Node = function(primitive){
-	this.transform = new MuEngine.Transform();	
-	this.primitive = primitive || null; 
-	this.children = [ ];
-	//world matrix.
- 	this.wm = mat4.create(); 
-};
+				/**
+				 * Node Constructor
+				 * implements scene graph.
+				 * a node has a transform, a primitive and a list of children nodes.  
+					*/ 
+				MuEngine.Node = function(primitive){
+					this.transform = new MuEngine.Transform();	
+					this.primitive = primitive || null; 
+					this.children = [ ];
+					//world matrix.
+					this.wm = mat4.create(); 
+					//world position
+					this.wp = vec3.create();
+				};
 
-MuEngine.Node.prototype.addChild = function(node){
-	this.children.push(node);
-};
+				MuEngine.Node.prototype.addChild = function(node){
+					this.children.push(node);
+				};
 
-/**
-* use the given matrix as parent matrix, compute world transformation using local transform
-*/
-MuEngine.Node.prototype.updateWorldMat = function(worldmat){
-	this.transform.multiply(worldmat, this.wm);
-};
+				/**
+				* use the given matrix as parent matrix, compute world transformation using local transform
+				*/
+				MuEngine.Node.prototype.updateWorldMat = function(worldmat){
+					this.transform.multiply(worldmat, this.wm);
+					vec3.transformMat4(this.wp, g_pZero, this.wm); 
+				};
 				
 	//-------- CAMERA CLASS -------------
 	/**
@@ -331,7 +337,6 @@ MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 	*/
 	MuEngine.Camera.prototype.renderSprite = function(ori, imghandler){
 		this.project(ori, this.g_p0);
-		console.log("camera::renderSprite: ", this.g_p0);	
 		g_ctx.drawImage(imghandler.img, this.g_p0[0], this.g_p0[1]);
 	}
 	//------- GRID CLASS ------------------
@@ -454,7 +459,7 @@ MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 	};
 
 
-//------------ SPRITE CLASS ----------
+	//------------ SPRITE CLASS ----------
 
 	/**
 	* Sprite constructor
@@ -478,8 +483,8 @@ MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 
 	MuEngine.Sprite.prototype.render = function(node, cam){
 		//vec3.set(this.g_p1, this.imghandler.img.width, this.imghandler.img.height, 0.0);	
-		vec3.transformMat4(this.g_p1, this.g_p0, node.wm); 
-		cam.renderSprite(this.g_p1, this.imghandler);
+		vec3.transformMat4(this.g_p0, g_pZero, node.wm); 
+		cam.renderSprite(this.g_p0, this.imghandler);
 	};
 
 

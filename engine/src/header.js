@@ -36,6 +36,9 @@ MuEngine  = (function(){
 	 * the first coord of the line, and pt2 the last one. 
 	 */
 	var pt2 = vec3.create();
+
+ //a reusable, read-only (I hope) zero vector.
+	var g_pZero = vec3.fromValues(0, 0, 0);
 	
 	/**
 	* cache of MuEngine.imageHandler.
