@@ -137,49 +137,35 @@ MuEngine.Transform.prototype.setScale = function(scale){
 };
 
 
-	//-------- CELL CLASS -----------------
 
-	/**
-	 * Cell constructor. 
-	 * it is private to the module, only Grid is able to 
-	 * instantiate cells.
-	 */ 
-	Cell = function(row, col){
-		this.row = row;
-		this.col = col;
-		this.objects = {};
-	};
+//------- NODE CLASS ------------
 
+/**
+ * Node Constructor
+ * implements scene graph.
+ * a node has a transform, a primitive and a list of children nodes.  
+	*/ 
+MuEngine.Node = function(primitive){
+	this.transform = new MuEngine.Transform();	
+	this.primitive = primitive || null; 
+	this.children = [ ];
+	//world matrix.
+	this.wm = mat4.create(); 
+	//world position
+	this.wp = vec3.create();
+};
 
+MuEngine.Node.prototype.addChild = function(node){
+	this.children.push(node);
+};
 
-				//------- NODE CLASS ------------
-
-				/**
-				 * Node Constructor
-				 * implements scene graph.
-				 * a node has a transform, a primitive and a list of children nodes.  
-					*/ 
-				MuEngine.Node = function(primitive){
-					this.transform = new MuEngine.Transform();	
-					this.primitive = primitive || null; 
-					this.children = [ ];
-					//world matrix.
-					this.wm = mat4.create(); 
-					//world position
-					this.wp = vec3.create();
-				};
-
-				MuEngine.Node.prototype.addChild = function(node){
-					this.children.push(node);
-				};
-
-				/**
-				* use the given matrix as parent matrix, compute world transformation using local transform
-				*/
-				MuEngine.Node.prototype.updateWorldMat = function(worldmat){
-					this.transform.multiply(worldmat, this.wm);
-					vec3.transformMat4(this.wp, g_pZero, this.wm); 
-				};
+/**
+* use the given matrix as parent matrix, compute world transformation using local transform
+*/
+MuEngine.Node.prototype.updateWorldMat = function(worldmat){
+	this.transform.multiply(worldmat, this.wm);
+	vec3.transformMat4(this.wp, g_pZero, this.wm); 
+};
 				
 	//-------- CAMERA CLASS -------------
 	/**
@@ -347,6 +333,26 @@ MuEngine.Transform.prototype.setScale = function(scale){
 		console.log("offx ", offx, " offy ", offy );
 		g_ctx.drawImage(imghandler.img, this.g_p0[0]+offx, this.g_p0[1]+offy, wpx, wpy);
 	}
+	//-------- CELL CLASS -----------------
+
+	/**
+	 * Cell constructor. 
+	 * Cell is a subclass of Node.   
+	 * it is private to the module, only Grid is able to 
+	 * instantiate cells.
+	 */ 
+	Cell = function(row, col){
+		//execute constructor on parent class
+		MuEngine.Node.call(this);
+		this.row = row;
+		this.col = col;
+	};
+
+	// Cell inherits from Node
+	Cell.prototype = new MuEngine.Node();
+
+	// correct the constructor pointer because it points to Node
+	Cell.prototype.constructor = Cell;
 	//------- GRID CLASS ------------------
 
 	/**
