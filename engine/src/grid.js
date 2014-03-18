@@ -14,8 +14,15 @@
 		this.color = color || "#cccccc"; 
 		this.cells = new Array(width * height);
 		for(var i=0; i<this.width; ++i){
-				for(var j=0; j< this.height; ++j)
-					this.cells[(i*this.width)+j] = new Cell(i, j);
+				for(var j=0; j< this.height; ++j){
+					var cell = new MuEngine.Node();
+					//enrich the node with cell attributes..
+					cell.row = i;
+					cell.col = j; 
+					cell.transform.setPos(i*cellsize, 0, j*cellsize);
+					cell.transform.update();
+					this.cells[(i*this.width)+j] = cell;
+				}
 		};
 	};
 

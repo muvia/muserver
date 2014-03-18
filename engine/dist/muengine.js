@@ -335,24 +335,6 @@ MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 	}
 	//-------- CELL CLASS -----------------
 
-	/**
-	 * Cell constructor. 
-	 * Cell is a subclass of Node.   
-	 * it is private to the module, only Grid is able to 
-	 * instantiate cells.
-	 */ 
-	Cell = function(row, col){
-		//execute constructor on parent class
-		MuEngine.Node.call(this);
-		this.row = row;
-		this.col = col;
-	};
-
-	// Cell inherits from Node
-	Cell.prototype = new MuEngine.Node();
-
-	// correct the constructor pointer because it points to Node
-	Cell.prototype.constructor = Cell;
 	//------- GRID CLASS ------------------
 
 	/**
@@ -369,8 +351,15 @@ MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 		this.color = color || "#cccccc"; 
 		this.cells = new Array(width * height);
 		for(var i=0; i<this.width; ++i){
-				for(var j=0; j< this.height; ++j)
-					this.cells[(i*this.width)+j] = new Cell(i, j);
+				for(var j=0; j< this.height; ++j){
+					var cell = new MuEngine.Node();
+					//enrich the node with cell attributes..
+					cell.row = i;
+					cell.col = j; 
+					cell.transform.setPos(i*cellsize, 0, j*cellsize);
+					cell.transform.update();
+					this.cells[(i*this.width)+j] = cell;
+				}
 		};
 	};
 

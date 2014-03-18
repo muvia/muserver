@@ -22,8 +22,6 @@
 	var py = vec3.fromValues(0, 1, 0);
 	var pz = vec3.fromValues(0, 0, 1);
 
-
-	//create the axis
 	var axis = new MuEngine.Node(); 
 	
 	var linex = new MuEngine.Line(p0, px, "#ff0000");
@@ -33,19 +31,30 @@
 	var liney = new MuEngine.Line(p0, py, "#00ff00");
 	axis.addChild( new MuEngine.Node(liney));
 
+
 	var linez= new MuEngine.Line(p0, pz, "#0000ff");
 	axis.addChild( new MuEngine.Node(linez));
 
-	//create the grid	
- 	var grid = new MuEngine.Grid(3, 4, 0.8, "#888888");
-	var root = new MuEngine.Node(grid);
+	//create two cells with one sprite in each one
+	var cell1 = new MuEngine.Cell(0, 0);
+		var sprite1 = new MuEngine.Sprite("camouflage1.png");
+		var spriteNode1 = new MuEngine.Node(sprite1);
+	cell1.addChild(spriteNode1);
+	cell1.setPos(2, 0, 0);
+		
+	var cell2 = new MuEngine.Cell(0, 0);
+		var sprite2 = new MuEngine.Sprite("camouflage2.png");
+		var spriteNode2 = new MuEngine.Node(sprite2);
+	cell2.addChild(spriteNode2);
+	cell1.setPos(-2, 0, 0);
+		
+	//cells are nodes, so we can add them to root:
+	var root = new MuEngine.Node();
+	root.addChild(cell1);
+	root.addChild(cell2);
 	
-	grid.getCell(0, 0).addChild(new MuEngine.Node(new MuEngine.Sprite("camouflage.png")));
-	grid.getCell(1, 1).addChild(new MuEngine.Node(new MuEngine.Sprite("camouflage1.png")));
-	grid.getCell(2, 2).addChild(new MuEngine.Node(new MuEngine.Sprite("camouflage2.png")));
-
-	//create the camera
-	 camera = new MuEngine.Camera(canvas);
+	
+	var camera = new MuEngine.Camera(canvas);
 
 	MuEngine.setActiveCamera(camera);
 
