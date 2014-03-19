@@ -166,6 +166,23 @@ MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 	this.transform.multiply(worldmat, this.wm);
 	vec3.transformMat4(this.wp, g_pZero, this.wm); 
 };
+
+
+/**
+ * recursive function used by MuEngine.renderNode
+ */ 
+MuEngine.Node.prototype.render = function(mat){
+	this.updateWorldMat(mat);
+	if(this.primitive != null){
+			this.primitive.render(this, g_camera);
+	};
+	for(var i=0; i<this.children.length; ++i){
+		//we flip the matrix to avoid the need to copy mat_aux in mat. 			
+		console.log(this.children[i]);
+		this.children[i].render(this.wm);
+	};	  
+};
+
 				
 	//-------- CAMERA CLASS -------------
 	/**
@@ -358,7 +375,7 @@ MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 					cell.col = j; 
 					cell.transform.setPos(i*cellsize, 0, j*cellsize);
 					cell.transform.update();
-					this.cells[(i*this.width)+j] = cell;
+					this.cells[(i*this.height)+j] = cell;
 				}
 		};
 	};
@@ -377,10 +394,18 @@ MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 	MuEngine.Grid.prototype.getCell = function(i, j){
 		if(i < 0 || j < 0 || i >= this.width || j >= this.height) 
 			return null;
-		return this.cells[i*this.width+ j];	
+		return this.cells[(i*this.height)+ j];	
 	};
 
 	MuEngine.Grid.prototype.render = function(node, cam){
+		this._renderGrid(node, cam);
+		for(var i=0; i<this.cells.length; ++i){
+			var cell = this.cells[i];
+			cell.render(mat);
+		}		
+	};
+
+	MuEngine.Grid.prototype._renderGrid = function(node, cam){
 		var w = this.width*this.cellsize;
 		this.g_p0[1] = 0;
 		this.g_p0[2] = 0;
@@ -410,6 +435,7 @@ MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 			cam.renderLine(this.g_p0, this.g_p1, this.color);
 			aux += this.cellsize;
 		};
+		
 	};
 	//------- LINE CLASS -------------------
 	
@@ -710,7 +736,7 @@ MuEngine.getImageHandler  = function(imgpath){
 MuEngine.renderNode = function(node){
 	//@todo: move this to private module attributes 
   mat = mat4.create();	
-  _renderNode(node, mat);	
+  node.render(mat);	
 };
 
 /**

@@ -21,7 +21,7 @@
 					cell.col = j; 
 					cell.transform.setPos(i*cellsize, 0, j*cellsize);
 					cell.transform.update();
-					this.cells[(i*this.width)+j] = cell;
+					this.cells[(i*this.height)+j] = cell;
 				}
 		};
 	};
@@ -40,10 +40,18 @@
 	MuEngine.Grid.prototype.getCell = function(i, j){
 		if(i < 0 || j < 0 || i >= this.width || j >= this.height) 
 			return null;
-		return this.cells[i*this.width+ j];	
+		return this.cells[(i*this.height)+ j];	
 	};
 
 	MuEngine.Grid.prototype.render = function(node, cam){
+		this._renderGrid(node, cam);
+		for(var i=0; i<this.cells.length; ++i){
+			var cell = this.cells[i];
+			cell.render(mat);
+		}		
+	};
+
+	MuEngine.Grid.prototype._renderGrid = function(node, cam){
 		var w = this.width*this.cellsize;
 		this.g_p0[1] = 0;
 		this.g_p0[2] = 0;
@@ -73,4 +81,5 @@
 			cam.renderLine(this.g_p0, this.g_p1, this.color);
 			aux += this.cellsize;
 		};
+		
 	};

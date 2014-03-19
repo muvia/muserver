@@ -22,7 +22,6 @@
 	var py = vec3.fromValues(0, 1, 0);
 	var pz = vec3.fromValues(0, 0, 1);
 
-
 	//create the axis
 	var axis = new MuEngine.Node(); 
 	
@@ -39,19 +38,29 @@
 	//create the grid	
  	var grid = new MuEngine.Grid(3, 4, 0.8, "#888888");
 	var root = new MuEngine.Node(grid);
+
+
+	putSprite = function(i, j, path){
+		sprite = new MuEngine.Sprite(path);
+		sprite.anchor = 
+	};
 	
-	grid.getCell(0, 0).addChild(new MuEngine.Node(new MuEngine.Sprite("camouflage.png")));
+	grid.getCell(0, 0).addChild(new MuEngine.Node());
 	grid.getCell(1, 1).addChild(new MuEngine.Node(new MuEngine.Sprite("camouflage1.png")));
 	grid.getCell(2, 2).addChild(new MuEngine.Node(new MuEngine.Sprite("camouflage2.png")));
 
+	putSprite(0, 0, "camouflage.png");
+	putSprite(1, 1, "camouflage1.png");
+	putSprite(2, 2, "camouflage2.png");
+
 	//create the camera
-	 camera = new MuEngine.Camera(canvas);
+	camera = new MuEngine.Camera(canvas);
 
 	MuEngine.setActiveCamera(camera);
 
 	camera.centerFixed(true);
  	camera.setEye(vec3.fromValues(0, 0, -10));
-	camera.setCenter(vec3.fromValues(0, 0,0));
+	camera.setCenter(vec3.fromValues(0, 0, 0));
  
 	window.addEventListener('keydown', onkeydown,false);
 
@@ -71,7 +80,7 @@
 
 function render(){
 	MuEngine.clear();
-	MuEngine.renderNode(axis);
+	//MuEngine.renderNode(axis);
 	MuEngine.renderNode(root);
 };
 

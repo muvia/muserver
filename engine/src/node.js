@@ -27,3 +27,20 @@ MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 	this.transform.multiply(worldmat, this.wm);
 	vec3.transformMat4(this.wp, g_pZero, this.wm); 
 };
+
+
+/**
+ * recursive function used by MuEngine.renderNode
+ */ 
+MuEngine.Node.prototype.render = function(mat){
+	this.updateWorldMat(mat);
+	if(this.primitive != null){
+			this.primitive.render(this, g_camera);
+	};
+	for(var i=0; i<this.children.length; ++i){
+		//we flip the matrix to avoid the need to copy mat_aux in mat. 			
+		console.log(this.children[i]);
+		this.children[i].render(this.wm);
+	};	  
+};
+

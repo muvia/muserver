@@ -121,7 +121,7 @@ MuEngine.getImageHandler  = function(imgpath){
 MuEngine.renderNode = function(node){
 	//@todo: move this to private module attributes 
   mat = mat4.create();	
-  _renderNode(node, mat);	
+  node.render(mat);	
 };
 
 /**
