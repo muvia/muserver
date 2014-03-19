@@ -54,6 +54,26 @@ describe("Priority Queue: ", function() {
 					expect(queue.size).toBe(6);
  	});
 
+	it("pops elements until empty the queue", function() {
+		var queue = new MuEngine.PriorityQueue(function(a, b){return a<b;});
+		queue.push(1);
+		queue.push(3);
+		queue.push(2);
+		expect(queue.dump()).toBe("123");
+		expect(queue.size).toBe(3);
+		queue.pop();
+		expect(queue.dump()).toBe("23");
+		expect(queue.size).toBe(2);
+		queue.pop();
+		expect(queue.dump()).toBe("3");
+		expect(queue.size).toBe(1);
+		queue.pop();
+		expect(queue.dump()).toBe("");
+		expect(queue.size).toBe(0);
+		queue.pop();
+		expect(queue.dump()).toBe("");
+		expect(queue.size).toBe(0);
+});
 
 
 });

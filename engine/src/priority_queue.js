@@ -58,5 +58,15 @@
 				
 				MuEngine.PriorityQueue.prototype.peek = function(){
 					if(this.head == null) return null;
-					else return this.head.data; 
+					return this.head.data; 
+				}
+				
+				MuEngine.PriorityQueue.prototype.pop = function(){
+					if(this.head == null) return null;
+					var _head = this.head;
+					this.head = this.head.next;
+					var data = _head.data;
+					this.size -= 1; 
+					_head.next = _head.data = null;
+					return data; 
 				}

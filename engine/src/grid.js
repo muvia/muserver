@@ -1,6 +1,20 @@
 	//------- GRID CLASS ------------------
 
 	/**
+	 * helper sort function for the render queue of the grid
+	 */
+	_compareCellsByEyePos = function(cellA, cellB){
+		return cellA.eyePos[2] < cellB.eyePos[2];
+	};
+	
+	/**
+	 * we are going to extend Cell functionality by appending this method 
+	 */
+	_updateEyePos = function(){
+		
+	};
+
+	/**
 	 * Grid constructor 
 	 * width x height
 	 * @param width num of rows
@@ -13,12 +27,16 @@
 	 	this.cellsize = cellsize;
 		this.color = color || "#cccccc"; 
 		this.cells = new Array(width * height);
+		this.queue = new MuEngine.PriorityQueue(_compareCellsByEyePos);
 		for(var i=0; i<this.width; ++i){
 				for(var j=0; j< this.height; ++j){
 					var cell = new MuEngine.Node();
 					//enrich the node with cell attributes..
 					cell.row = i;
-					cell.col = j; 
+					cell.col = j;
+					//a vector to store eye coordinates
+					cell.eyePos = vec3.create();
+					cell.updateEyePos = _updateEyePos();
 					cell.transform.setPos(i*cellsize, 0, j*cellsize);
 					cell.transform.update();
 					this.cells[(i*this.height)+j] = cell;
@@ -47,8 +65,17 @@
 		this._renderGrid(node, cam);
 		for(var i=0; i<this.cells.length; ++i){
 			var cell = this.cells[i];
+			cell.updateEyePos();
+			//here its a good point to perform occlusion culling..
+			this.queue.push(cell);
+		}	
+		//hopefully, here we have a list of visible cells sorted by depth..
+		var cell = this.queue.pop();
+		while(cell!=null){
 			cell.render(mat);
-		}		
+			cell = this.queue.pop();
+		} 
+		
 	};
 
 	MuEngine.Grid.prototype._renderGrid = function(node, cam){
