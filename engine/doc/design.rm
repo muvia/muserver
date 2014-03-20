@@ -48,3 +48,11 @@ These are attributes at instance level, so it is important to decide which of bo
 Remember that world and eye position are Node attributes, primitives does not hold that information. 
 
 
+Animation
+-------------
+
+animation must run in a single timer. we may use the same loop that updates the node graph to update animations in the nodes.
+so, each node may keep a queue of animation objects, and also the related methods to handle them.
+given the fact that there are going to be lot of nodes withouth animations, it would be a (little) improvement not to create a null Node.anims attribute, because we are going to end with a lot of null attributes in our node graph.but it make sense to define Node.prototype animation-related methods that initialize the attribute on demand, because the reference to those methods only will exist in the prototype object.
+
+
