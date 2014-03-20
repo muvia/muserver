@@ -42,13 +42,11 @@
 
 	putSprite = function(i, j, path){
 		sprite = new MuEngine.Sprite(path);
-		sprite.anchor = 
+		sprite.anchor = 0;
+		spriteNode = new MuEngine.Node(sprite);
+		grid.getCell(i, j).addChild(spriteNode); 
 	};
 	
-	grid.getCell(0, 0).addChild(new MuEngine.Node());
-	grid.getCell(1, 1).addChild(new MuEngine.Node(new MuEngine.Sprite("camouflage1.png")));
-	grid.getCell(2, 2).addChild(new MuEngine.Node(new MuEngine.Sprite("camouflage2.png")));
-
 	putSprite(0, 0, "camouflage.png");
 	putSprite(1, 1, "camouflage1.png");
 	putSprite(2, 2, "camouflage2.png");

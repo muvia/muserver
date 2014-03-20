@@ -159,7 +159,6 @@
 		var wpx = (w * g_canvas.width) / (this.right - this.left);  
 		var wpy = (h * g_canvas.height) / (this.top - this.bottom);  
 		//how about the anchor?
-		anchor = 1 | 8 ;
 		var offy = ((1 & anchor) > 0) ? 0 : (((2 & anchor) > 0)? -wpy :-(wpy>>1)); 
 		var offx = ((4 & anchor) > 0) ? 0 : (((8 & anchor) > 0)? -wpx :-(wpx>>1)); 
 		console.log("offx ", offx, " offy ", offy );

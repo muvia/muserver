@@ -36,7 +36,7 @@
 					cell.col = j;
 					//a vector to store eye coordinates
 					cell.eyePos = vec3.create();
-					cell.updateEyePos = _updateEyePos();
+					cell.updateEyePos = _updateEyePos;
 					cell.transform.setPos(i*cellsize, 0, j*cellsize);
 					cell.transform.update();
 					this.cells[(i*this.height)+j] = cell;
@@ -72,7 +72,7 @@
 		//hopefully, here we have a list of visible cells sorted by depth..
 		var cell = this.queue.pop();
 		while(cell!=null){
-			cell.render(mat);
+			cell.render(node.wm);
 			cell = this.queue.pop();
 		} 
 		
