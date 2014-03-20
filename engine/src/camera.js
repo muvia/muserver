@@ -7,13 +7,10 @@
 	 * it performs basic perspective transformation. 
 	 */
 	MuEngine.Camera = function(){
-		this.eye = vec3.create();
+		this.eye = vec3.fromValues(0, 0, -10);
 		this.fixed_eye = true; 
-		vec3.set(this.eye, 0, 0, -10);
-		this.center = vec3.create();
-		vec3.set(this.center, 0, 0, 0);
-		this.up = vec3.create();
-		vec3.set(this.up, 0, 1, 0);
+		this.center = vec3.fromValues( 0, 0, 0);
+		this.up = vec3.fromValues( 0, 1, 0);
 		this.view_mat = mat4.create();
 		this.proj_mat = mat4.create();
 		
@@ -53,26 +50,21 @@
 		this.dirty = false;
 	};
 
+
+	/*
+	* transforms a point from world coordinates to eye coordinates
+	*/
+	MuEngine.Camera.prototype.world2eye = function(point, pointout){
+		if(this.dirty) this.update();
+		vec3.transformMat4(pointout, point, this.view_proj_mat); 
+	}
+
 	/**
 	 * given a point in world space, multiply by view_mat and proj_mat and store 
-	 * result in pointout
+	 * result in pointout, in viewport coordinates (pixels)
 	 */ 
 	MuEngine.Camera.prototype.project = function(point, pointout){
-		if(this.dirty) this.update();
-		
-		//transform world to camera coords.. 
-
-		/* this is a workable, unoptimized version
-		* it uses TWO separate matrix multiplication, and intermediate auxiliar points
-		vec3.transformMat4(aux, point, this.view_mat);		
-		console.log("Camera.project: view: ",point,"->",aux);
-		vec3.transformMat4(aux2, aux, this.proj_mat);		
-		console.log("Camera.project: proj: ",aux,"->",aux2);
-		*/
-
-		//transform from world space to normalized device coords..
-		vec3.transformMat4(pointout, point, this.view_proj_mat); 
-
+		this.world2eye(point, pointout);
 		//transform from normalized device coords to viewport coords..
 		pointout[0] = (pointout[0]*g_canvas.width) + (g_canvas.width>>1) ;
 		pointout[1] = (pointout[1]*g_canvas.height) + (g_canvas.width>>1) ;
@@ -161,6 +153,5 @@
 		//how about the anchor?
 		var offy = ((1 & anchor) > 0) ? 0 : (((2 & anchor) > 0)? -wpy :-(wpy>>1)); 
 		var offx = ((4 & anchor) > 0) ? 0 : (((8 & anchor) > 0)? -wpx :-(wpx>>1)); 
-		console.log("offx ", offx, " offy ", offy );
 		g_ctx.drawImage(imghandler.img, this.g_p0[0]+offx, this.g_p0[1]+offy, wpx, wpy);
 	}

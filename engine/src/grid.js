@@ -6,13 +6,6 @@
 	_compareCellsByEyePos = function(cellA, cellB){
 		return cellA.eyePos[2] < cellB.eyePos[2];
 	};
-	
-	/**
-	 * we are going to extend Cell functionality by appending this method 
-	 */
-	_updateEyePos = function(){
-		
-	};
 
 	/**
 	 * Grid constructor 
@@ -36,7 +29,6 @@
 					cell.col = j;
 					//a vector to store eye coordinates
 					cell.eyePos = vec3.create();
-					cell.updateEyePos = _updateEyePos;
 					cell.transform.setPos(i*cellsize, 0, j*cellsize);
 					cell.transform.update();
 					this.cells[(i*this.height)+j] = cell;
@@ -65,7 +57,7 @@
 		this._renderGrid(node, cam);
 		for(var i=0; i<this.cells.length; ++i){
 			var cell = this.cells[i];
-			cell.updateEyePos();
+			cam.world2eye(cell.transform.pos, cell.eyePos);
 			//here its a good point to perform occlusion culling..
 			this.queue.push(cell);
 		}	
