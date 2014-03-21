@@ -12,6 +12,7 @@ module.exports = function(grunt) {
 			src: [
 					   'src/header.js',
 					   'src/transform.js',
+					   'src/animator.js',
 					   'src/node.js',
 					   'src/camera.js',
 					   'src/cell.js',
