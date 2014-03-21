@@ -148,18 +148,22 @@ MuEngine.Transform.prototype.setScale = function(scale){
  * N <= 0: infinite loop
  */
 MuEngine.Animator = function(target, startVal, endVal, type, duration, loops ){
+	
+
+
+	
 	//configuration parameters
     this.target = target;
-		this.loops = loops;
+	this.loops = loops;
     this.startVal = startVal;
     this.endVal = endVal;
     this.duration = duration;
 
 	//internal status variables
     this.starttime = 0;
-		this.status = 0; //idle
-		this.val = null;
-		this.step = 0.0;
+	this.status = 0; //idle
+	this.val = null;
+	this.step = 0.0;
 };
 
 //a few public static constants
@@ -186,7 +190,7 @@ MuEngine.Animator.prototype.update = function(dt, node){
 				this.step = 1.0;
 				this.status = this.STATUS_FINISHED;	
 			}else{
-				this.step = this.elapsedtime/duration;
+				this.step = this.elapsedtime/this.duration;
 			}
 			this.apply(node);		
 	}

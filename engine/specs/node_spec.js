@@ -20,19 +20,19 @@ it("accumulate transformations through hierarchies", function() {
 
 			mat = mat4.create();
 
-			MuEngine.vec3log("p starts in:",  p);
+			//MuEngine.vec3log("p starts in:",  p);
 			node1.transform.multP(p, out);
 			vec3.copy(p, out);
-			MuEngine.vec3log("p after node1:",  p);
+			//MuEngine.vec3log("p after node1:",  p);
 			node2.updateWorldMat(node1.wm);
 			node2.transform.multP(p, out);
 			vec3.copy(p, out);
-			MuEngine.vec3log("p after node2:",  p);
+			//MuEngine.vec3log("p after node2:",  p);
 			node3.updateWorldMat(node2.wm);
 			node3.transform.multP(p, out);
 			vec3.copy(p, out);
-			MuEngine.vec3log("p after node3:",  p);
-			MuEngine.vec3log("p_equal", p_equal);
+			//MuEngine.vec3log("p after node3:",  p);
+			//MuEngine.vec3log("p_equal", p_equal);
 			
 			expect(MuEngine.vec3equ(p_equal,p)).toBe(true);
  	});

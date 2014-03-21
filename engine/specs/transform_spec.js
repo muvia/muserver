@@ -31,10 +31,10 @@ it("translation transforms a point as expected ", function() {
 			var transform = new MuEngine.Transform();
 			transform.setPos(0.5, 0.6, 0.7);
 			transform.multP(p, out);
-			console.info("translation: ");
-			MuEngine.vec3log("p_equal", p_equal);
-			MuEngine.vec3log("p",  p);
-			MuEngine.vec3log("out",  out);
+			//console.info("translation: ");
+			//MuEngine.vec3log("p_equal", p_equal);
+			//MuEngine.vec3log("p",  p);
+			//MuEngine.vec3log("out",  out);
 			expect(MuEngine.vec3equ(p_equal, out)).toBe(true);
  	});
 
@@ -44,10 +44,10 @@ it("rotation transforms a point as expected ", function() {
 			var transform = new MuEngine.Transform();
 			transform.setRotZ(MuEngine.deg2rad(90), 0.0, 0.0);
 			transform.multP(p, out);
-			console.info("rotation: ");
-			MuEngine.vec3log("p_equal", p_equal);
-			MuEngine.vec3log("p",  p);
-			MuEngine.vec3log("out",  out);
+			//console.info("rotation: ");
+			//MuEngine.vec3log("p_equal", p_equal);
+			//MuEngine.vec3log("p",  p);
+			//MuEngine.vec3log("out",  out);
 			expect(MuEngine.vec3equ(p_equal, out)).toBe(true);
  	});
 
@@ -58,10 +58,10 @@ it("scale transforms a point as expected ", function() {
 			transform.setScale(0.5);
 			transform.update();
 			transform.multP(p, out);
-			console.info("scaling: ");
-			MuEngine.vec3log("p_equal", p_equal);
-			MuEngine.vec3log("p",  p);
-			MuEngine.vec3log("out",  out);
+			//console.info("scaling: ");
+			//MuEngine.vec3log("p_equal", p_equal);
+			//MuEngine.vec3log("p",  p);
+			//MuEngine.vec3log("out",  out);
 			expect(MuEngine.vec3equ(p_equal, out)).toBe(true);
  	});
 
@@ -76,17 +76,17 @@ it("accumulate translations through hierarchies", function() {
 			transform2.setPos(1, 0, 2);
 			transform3.setPos(-0.5, 0, -1.5);
 
-			MuEngine.vec3log("p starts in:",  p);
+			//MuEngine.vec3log("p starts in:",  p);
 			transform1.multP(p, out);
 			vec3.copy(p, out);
-			MuEngine.vec3log("p after transform1:",  p);
+			//MuEngine.vec3log("p after transform1:",  p);
 			transform2.multP(p, out);
 			vec3.copy(p, out);
-			MuEngine.vec3log("p after transform2:",  p);
+			//MuEngine.vec3log("p after transform2:",  p);
 			transform3.multP(p, out);
 			vec3.copy(p, out);
-			MuEngine.vec3log("p after transform3:",  p);
-			MuEngine.vec3log("p_equal", p_equal);
+			//MuEngine.vec3log("p after transform3:",  p);
+			//MuEngine.vec3log("p_equal", p_equal);
 			
 			expect(MuEngine.vec3equ(p_equal,p)).toBe(true);
  	});
