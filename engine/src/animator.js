@@ -10,32 +10,33 @@
  */
 MuEngine.Animator = function(target, startVal, endVal, type, duration, loops ){
 	
-
-
-	
 	//configuration parameters
     this.target = target;
-	this.loops = loops;
+		this.loops = loops;
     this.startVal = startVal;
     this.endVal = endVal;
     this.duration = duration;
 
 	//internal status variables
     this.starttime = 0;
-	this.status = 0; //idle
-	this.val = null;
+	this.status = "idle";  
+	if(target === "pos"){
+		this.val = vec3.fromValues(startVal[0], startVal[1], startVal[2]);
+	}
+	else
+		this.val = startVal;
 	this.step = 0.0;
 };
 
 //a few public static constants
-MuEngine.Animator.prototype.TARGET_POS = 0;
-MuEngine.Animator.prototype.TARGET_ROTY  = 1;  
+MuEngine.Animator.prototype.TARGET_POS ="pos";
+MuEngine.Animator.prototype.TARGET_ROTY  = "rotY";  
 
-MuEngine.Animator.prototype.TYPE_LINEAR = 0;
+MuEngine.Animator.prototype.TYPE_LINEAR = "linear";
 
-MuEngine.Animator.prototype.STATUS_IDLE = 0;
-MuEngine.Animator.prototype.STATUS_RUNNING = 1;
-MuEngine.Animator.prototype.STATUS_FINISHED = 2; 
+MuEngine.Animator.prototype.STATUS_IDLE = "idle";
+MuEngine.Animator.prototype.STATUS_RUNNING = "running";
+MuEngine.Animator.prototype.STATUS_FINISHED = "finished"; 
 
 MuEngine.Animator.prototype.update = function(dt, node){
 	if(this.status === this.STATUS_IDLE){
@@ -64,9 +65,12 @@ MuEngine.Animator.prototype.update = function(dt, node){
 */
 MuEngine.Animator.prototype.apply = function(node){
 	if(this.target === this.TARGET_POS){
-//		node.transform.	
+		vec3.subtract(this.val, this.endVal, this.startVal);
+		vec3.scale(this.val, this.val, this.step); 
+		node.transform.setPos(this.val[0], this.val[1], this.val[2]);	
 	}else if(this.target === this.TARGET_ROTY){
-		
+		this.val = this.startVal + this.step*(this.endVal - this.startVal);	
+		node.transform.rotY(this.val);
 	}else{
 		throw "unknown animator target: " + this.target ;
 	}		

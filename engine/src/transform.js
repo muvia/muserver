@@ -65,9 +65,18 @@
  */
  MuEngine.Transform.prototype.setRotZ= function(anglerad){
  	quat.rotateZ(this.rot, this.rot, anglerad); 
-
 	this._dirty = true; 
 };
+
+ /**
+ * rotation over axis Y is used to rotate some 3d objects, like nodes and grids, 
+ around the vertical axis.
+ */
+ MuEngine.Transform.prototype.setRotY= function(anglerad){
+ 	quat.rotateY(this.rot, this.rot, anglerad); 
+	this._dirty = true; 
+};
+
 
 /**
 * we assume uniform scale
