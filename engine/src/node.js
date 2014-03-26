@@ -39,7 +39,6 @@ MuEngine.Node.prototype.render = function(mat){
 	};
 	for(var i=0; i<this.children.length; ++i){
 		//we flip the matrix to avoid the need to copy mat_aux in mat. 			
-		console.log(this.children[i]);
 		this.children[i].render(this.wm);
 	};	  
 };
