@@ -64,9 +64,9 @@
  	camera.setEye(vec3.fromValues(5, 5, -10));
 	camera.setCenter(vec3.fromValues(0, 0, 0));
 
-	//add an animator to the grid
-	
-		
+	//add an animator to the grid, with default values
+ var animator = new MuEngine.Animator({});		
+ gridNode.addAnimator(animator);
  
 	window.addEventListener('keydown', onkeydown,false);
 
@@ -81,8 +81,11 @@
 	  }
 };
 
+
 function render(){
+	var dt = MuEngine.tick();
 	MuEngine.clear();
+	MuEngine.updateNode(root, dt);
 	MuEngine.renderNode(root);
 };
 

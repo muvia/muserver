@@ -150,26 +150,28 @@ MuEngine.Transform.prototype.setScale = function(scale){
 
 /**
  * Animator class constructor
+	 parameters as attributes of a config object: 
+		target, startVal, endVal, type, duration, loops 
  * @param target: one of Animator.prototype.TARGET_XXX
  * @param type: One of Animator.prototype.TYPE_XXX
  * @param  loops
  * N > 0: Number of executions
  * N <= 0: infinite loop
  */
-MuEngine.Animator = function(target, startVal, endVal, type, duration, loops ){
+MuEngine.Animator = function(config){
 	
 	//configuration parameters
-    this.target = target;
-		this.loops = loops;
-    this.startVal = startVal;
-    this.endVal = endVal;
-    this.duration = duration;
+    this.target = config.target ||  "pos";
+		this.loops = config.loops || 1;
+    this.startVal = config.startVal || 0.0;
+    this.endVal = config.endVal || 1.0;
+    this.duration = config.duration || 1000;
 
 	//internal status variables
     this.starttime = 0;
 	this.status = "idle";  
-	if(target === "pos"){
-		this.val = vec3.fromValues(startVal[0], startVal[1], startVal[2]);
+	if(this.target === "pos"){
+			this.val = vec3.clone(this.startVal);
 	}
 	else
 		this.val = startVal;
@@ -267,6 +269,29 @@ MuEngine.Node.prototype.render = function(mat){
 		this.children[i].render(this.wm);
 	};	  
 };
+
+
+/**
+* animators are temporal objects. they are added on demand, and once they
+* reach the finished status, they are removed from the collection. 
+*/
+MuEngine.Node.prototype.addAnimator= function (animator){
+	if(this.animators == undefined){
+		console.log("adding animator array");
+		this.animators = [];
+	}		
+	this.animators.push(animator);
+};
+
+
+MuEngine.Node.prototype.update = function(dt){
+	if(this.animators != undefined){
+		for(var i=0; i<this.animators.length; ++i){
+			var animator = this.animators[i];
+			animator.update(dt, this);
+		}
+	}
+}
 
 				
 	//-------- CAMERA CLASS -------------
@@ -866,35 +891,23 @@ _renderNode = function(node, mat){
 };
 
 /**
- *
+ * compute the elapsed time 
  */ 
-update = function(dt){
-};
-
-/**
- *
- */ 
-render = function(){
-	ctx = this.g_camera.canvas.getContext('2d');
- 	ctx.beginPath();
-	ctx.moveTo(10, 10);
-	ctx.moveTo(110, 10);
-	ctx.stroke();
-	ctx.beginPath();
- 	ctx.moveTo(100, 150);
- 	ctx.lineTo(450, 50);		
- 	ctx.stroke();	
-};
-
-/**
- * compute the elapsed time and invoke update and render methods
- */ 
-tick = function(){
+MuEngine.tick = function(){
 	var dt = Date.now() - MuEngine.g_start_time;
-	//console.log("tick! "+ dt);
-	update(dt);
-	render();
+	return dt;
 };
+
+/**
+* Similar to renderNode, but invokes update(dt) in each node.
+*/
+MuEngine.updateNode = function(node, dt){
+	node.update(dt);
+		for(var i=0; i<node.children.length; ++i){
+		//we flip the matrix to avoid the need to copy mat_aux in mat. 			
+		MuEngine.updateNode(node.children[i], dt);
+	};	
+}
 
 return MuEngine;
 }());

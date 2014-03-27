@@ -43,3 +43,26 @@ MuEngine.Node.prototype.render = function(mat){
 	};	  
 };
 
+
+/**
+* animators are temporal objects. they are added on demand, and once they
+* reach the finished status, they are removed from the collection. 
+*/
+MuEngine.Node.prototype.addAnimator= function (animator){
+	if(this.animators == undefined){
+		console.log("adding animator array");
+		this.animators = [];
+	}		
+	this.animators.push(animator);
+};
+
+
+MuEngine.Node.prototype.update = function(dt){
+	if(this.animators != undefined){
+		for(var i=0; i<this.animators.length; ++i){
+			var animator = this.animators[i];
+			animator.update(dt, this);
+		}
+	}
+}
+

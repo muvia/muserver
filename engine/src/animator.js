@@ -2,26 +2,28 @@
 
 /**
  * Animator class constructor
+	 parameters as attributes of a config object: 
+		target, startVal, endVal, type, duration, loops 
  * @param target: one of Animator.prototype.TARGET_XXX
  * @param type: One of Animator.prototype.TYPE_XXX
  * @param  loops
  * N > 0: Number of executions
  * N <= 0: infinite loop
  */
-MuEngine.Animator = function(target, startVal, endVal, type, duration, loops ){
+MuEngine.Animator = function(config){
 	
 	//configuration parameters
-    this.target = target;
-		this.loops = loops;
-    this.startVal = startVal;
-    this.endVal = endVal;
-    this.duration = duration;
+    this.target = config.target ||  "pos";
+		this.loops = config.loops || 1;
+    this.startVal = config.startVal || 0.0;
+    this.endVal = config.endVal || 1.0;
+    this.duration = config.duration || 1000;
 
 	//internal status variables
     this.starttime = 0;
 	this.status = "idle";  
-	if(target === "pos"){
-		this.val = vec3.fromValues(startVal[0], startVal[1], startVal[2]);
+	if(this.target === "pos"){
+			this.val = vec3.clone(this.startVal);
 	}
 	else
 		this.val = startVal;
