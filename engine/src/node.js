@@ -50,7 +50,6 @@ MuEngine.Node.prototype.render = function(mat){
 */
 MuEngine.Node.prototype.addAnimator= function (animator){
 	if(this.animators == undefined){
-		console.log("adding animator array");
 		this.animators = [];
 	}		
 	this.animators.push(animator);
@@ -59,9 +58,15 @@ MuEngine.Node.prototype.addAnimator= function (animator){
 
 MuEngine.Node.prototype.update = function(dt){
 	if(this.animators != undefined){
-		for(var i=0; i<this.animators.length; ++i){
+		for(var i=0; i<this.animators.length; ){
 			var animator = this.animators[i];
 			animator.update(dt, this);
+			if(animator.isFinished()){
+				console.log("removing animator");
+				this.animators.splice(i, 1);
+			}else{
+				++i;
+			}
 		}
 	}
 }

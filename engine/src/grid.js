@@ -95,8 +95,8 @@
 		for(var j=0; j<=this.width; ++j){
 			this.g_p0[2] = aux;
 			this.g_p1[2] = aux; 
-			vec3.transformMat4(this.g_p0, this.g_p0, mat); 
-			vec3.transformMat4(this.g_p1, this.g_p1, mat); 
+			node.transform.multP(this.g_p0, this.g_p0);
+			node.transform.multP(this.g_p1, this.g_p1);
 			cam.renderLine(this.g_p0, this.g_p1, this.color);
 			aux += this.cellsize;
 		};

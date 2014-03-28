@@ -15,8 +15,8 @@ MuEngine.Animator = function(config){
 	//configuration parameters
     this.target = config.target ||  "pos";
 		this.loops = config.loops || 1;
-    this.startVal = config.startVal || 0.0;
-    this.endVal = config.endVal || 1.0;
+    this.startVal = config.start || 0.0;
+    this.endVal = config.end || 1.0;
     this.duration = config.duration || 1000;
 
 	//internal status variables
@@ -40,7 +40,16 @@ MuEngine.Animator.prototype.STATUS_IDLE = "idle";
 MuEngine.Animator.prototype.STATUS_RUNNING = "running";
 MuEngine.Animator.prototype.STATUS_FINISHED = "finished"; 
 
+
+MuEngine.Animator.prototype.isFinished = function(){
+	return this.status === this.STATUS_FINISHED;
+}
+
+
+
+
 MuEngine.Animator.prototype.update = function(dt, node){
+	console.log("status: " + this.status + " step:"+ this.step);
 	if(this.status === this.STATUS_IDLE){
 			this.status = this.STATUS_RUNNING; 
 			this.elapsedtime= 0; 
@@ -69,6 +78,7 @@ MuEngine.Animator.prototype.apply = function(node){
 	if(this.target === this.TARGET_POS){
 		vec3.subtract(this.val, this.endVal, this.startVal);
 		vec3.scale(this.val, this.val, this.step); 
+		console.log("Animator.apply val " + this.val[0] + ", "+ this.val[1] + ", "+ this.val[2]);
 		node.transform.setPos(this.val[0], this.val[1], this.val[2]);	
 	}else if(this.target === this.TARGET_ROTY){
 		this.val = this.startVal + this.step*(this.endVal - this.startVal);	

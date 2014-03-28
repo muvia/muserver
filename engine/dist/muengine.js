@@ -22,8 +22,7 @@ MuEngine  = (function(){
 	//the interval for the event loop
 	var g_interval = null;
 
-	var g_start_time = null;
-
+	var g_start_time = Date.now();
 
 	/**
 	 * last result of invoking MuEngine.transformPoint.
@@ -163,8 +162,8 @@ MuEngine.Animator = function(config){
 	//configuration parameters
     this.target = config.target ||  "pos";
 		this.loops = config.loops || 1;
-    this.startVal = config.startVal || 0.0;
-    this.endVal = config.endVal || 1.0;
+    this.startVal = config.start || 0.0;
+    this.endVal = config.end || 1.0;
     this.duration = config.duration || 1000;
 
 	//internal status variables
@@ -188,7 +187,16 @@ MuEngine.Animator.prototype.STATUS_IDLE = "idle";
 MuEngine.Animator.prototype.STATUS_RUNNING = "running";
 MuEngine.Animator.prototype.STATUS_FINISHED = "finished"; 
 
+
+MuEngine.Animator.prototype.isFinished = function(){
+	return this.status === this.STATUS_FINISHED;
+}
+
+
+
+
 MuEngine.Animator.prototype.update = function(dt, node){
+	console.log("status: " + this.status + " step:"+ this.step);
 	if(this.status === this.STATUS_IDLE){
 			this.status = this.STATUS_RUNNING; 
 			this.elapsedtime= 0; 
@@ -217,6 +225,7 @@ MuEngine.Animator.prototype.apply = function(node){
 	if(this.target === this.TARGET_POS){
 		vec3.subtract(this.val, this.endVal, this.startVal);
 		vec3.scale(this.val, this.val, this.step); 
+		console.log("Animator.apply val " + this.val[0] + ", "+ this.val[1] + ", "+ this.val[2]);
 		node.transform.setPos(this.val[0], this.val[1], this.val[2]);	
 	}else if(this.target === this.TARGET_ROTY){
 		this.val = this.startVal + this.step*(this.endVal - this.startVal);	
@@ -277,7 +286,6 @@ MuEngine.Node.prototype.render = function(mat){
 */
 MuEngine.Node.prototype.addAnimator= function (animator){
 	if(this.animators == undefined){
-		console.log("adding animator array");
 		this.animators = [];
 	}		
 	this.animators.push(animator);
@@ -286,9 +294,15 @@ MuEngine.Node.prototype.addAnimator= function (animator){
 
 MuEngine.Node.prototype.update = function(dt){
 	if(this.animators != undefined){
-		for(var i=0; i<this.animators.length; ++i){
+		for(var i=0; i<this.animators.length; ){
 			var animator = this.animators[i];
 			animator.update(dt, this);
+			if(animator.isFinished()){
+				console.log("removing animator");
+				this.animators.splice(i, 1);
+			}else{
+				++i;
+			}
 		}
 	}
 }
@@ -547,8 +561,8 @@ MuEngine.Node.prototype.update = function(dt){
 		for(var j=0; j<=this.width; ++j){
 			this.g_p0[2] = aux;
 			this.g_p1[2] = aux; 
-			vec3.transformMat4(this.g_p0, this.g_p0, mat); 
-			vec3.transformMat4(this.g_p1, this.g_p1, mat); 
+			node.transform.multP(this.g_p0, this.g_p0);
+			node.transform.multP(this.g_p1, this.g_p1);
 			cam.renderLine(this.g_p0, this.g_p1, this.color);
 			aux += this.cellsize;
 		};
@@ -894,7 +908,9 @@ _renderNode = function(node, mat){
  * compute the elapsed time 
  */ 
 MuEngine.tick = function(){
-	var dt = Date.now() - MuEngine.g_start_time;
+	var now = Date.now();
+	var dt = now - g_start_time;
+	g_start_time = now;
 	return dt;
 };
 

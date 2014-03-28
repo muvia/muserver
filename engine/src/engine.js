@@ -152,7 +152,9 @@ _renderNode = function(node, mat){
  * compute the elapsed time 
  */ 
 MuEngine.tick = function(){
-	var dt = Date.now() - MuEngine.g_start_time;
+	var now = Date.now();
+	var dt = now - g_start_time;
+	g_start_time = now;
 	return dt;
 };
 

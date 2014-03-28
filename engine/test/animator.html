@@ -9,6 +9,9 @@
 <body>
 <canvas id="c" width='480px' height='320px' style='border: 1px solid black' />
 	</canvas>
+
+
+<p>Press P to add an absolute position animator</p>
 	
 <script src='../dist/muengine.js'></script>
 
@@ -65,9 +68,14 @@
 	camera.setCenter(vec3.fromValues(0, 0, 0));
 
 	//add an animator to the grid, with default values
- var animator = new MuEngine.Animator({});		
- gridNode.addAnimator(animator);
- 
+addPosAnimator = function(){
+ 	var animator = new MuEngine.Animator({
+		start: vec3.fromValues(0, 0, 0),
+		end: vec3.fromValues(1, 0, 1)
+	});		
+ 	gridNode.addAnimator(animator);
+ };
+
 	window.addEventListener('keydown', onkeydown,false);
 
 	function onkeydown(e){
@@ -77,6 +85,9 @@
 	       case 38: console.log("Up"); camera.moveEye(vec3.fromValues(0, 0.1, 0));break; //Up key
 	       case 39: console.log("Right"); camera.moveEye(vec3.fromValues(-0.1, 0, 0));break; //Right key
 	       case 40: console.log("Down"); camera.moveEye(vec3.fromValues(0, -0.1, 0));break; //Down key
+					case 80: console.log("add pos animator"); 
+					addPosAnimator();
+					break; 
 	       default: console.log(code); //Everything else
 	  }
 };

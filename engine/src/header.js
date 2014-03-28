@@ -22,8 +22,7 @@ MuEngine  = (function(){
 	//the interval for the event loop
 	var g_interval = null;
 
-	var g_start_time = null;
-
+	var g_start_time = Date.now();
 
 	/**
 	 * last result of invoking MuEngine.transformPoint.
