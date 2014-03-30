@@ -26,7 +26,7 @@ MuEngine.Animator = function(config){
 			this.val = vec3.clone(this.startVal);
 	}
 	else
-		this.val = startVal;
+		this.val = this.startVal;
 	this.step = 0.0;
 };
 
@@ -82,7 +82,8 @@ MuEngine.Animator.prototype.apply = function(node){
 		node.transform.setPos(this.val[0], this.val[1], this.val[2]);	
 	}else if(this.target === this.TARGET_ROTY){
 		this.val = this.startVal + this.step*(this.endVal - this.startVal);	
-		node.transform.rotY(this.val);
+		//console.log("Animator.apply step "+ this.step + " rotY " + MuEngine.rad2deg(this.val));
+		node.transform.setRotY(this.val);
 	}else{
 		throw "unknown animator target: " + this.target ;
 	}		

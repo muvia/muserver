@@ -61,37 +61,6 @@ MuEngine.stop = function(){
 };
 	
 /**
- * transform a point p into pt, using the current grid as world transform,
- * current camera as view transform. 
- * pt is optional, to store the transformed point. result is always applied
- * to local variable MuEngine.pt 
- */
-MuEngine.transformPoint = function(p, pt){
-			
-};
-
-/**
- * transform a line pt-pt2 into ptt-pt2t, using the current  grid and camera for world and 
- * view transform. 
- * pt, pt2 are assumed in world coordinates.
- * if ptt or pt2t are null or undefined, result will be stored in MuEngine.pt and MuEngine pt2  
- */  
-MuEngine.transformLine = function(pt, pt2, ptt, pt2t){
-   if(ptt == undefined || ptt == null){
-		ptt = this.pt;
-		pt2t = this.pt2;
-	}
-	//multiply by view matrix (or inverse view matrix?)
-
-	//multiply by projection matrix
-
-	//multiply by device-to screen matrix
-
-	//store results		
-
-};
-
-/**
 * load a image. it will return a MuEngineImageHandler that will allow to use a 
 * dummy image while the final one is being loaded. this will simplify the coding because
 * the developer won't need to handle load callbacks
@@ -125,30 +94,6 @@ MuEngine.renderNode = function(node){
 };
 
 /**
-* utility method 
-*/
-MuEngine.deg2rad = function(deg){
-  //@todo: the division would be stored in a private static var
-  return  deg * (Math.PI / 180);
-};
-
-
-/**
- * recursive function used by MuEngine.renderNode
- */ 
-_renderNode = function(node, mat){
-
-	node.updateWorldMat(mat);
-	if(node.primitive != null){
-			node.primitive.render(node, g_camera);
-	};
-	for(var i=0; i<node.children.length; ++i){
-		//we flip the matrix to avoid the need to copy mat_aux in mat. 			
-		_renderNode(node.children[i], node.wm);
-	};	  
-};
-
-/**
  * compute the elapsed time 
  */ 
 MuEngine.tick = function(){
@@ -164,7 +109,6 @@ MuEngine.tick = function(){
 MuEngine.updateNode = function(node, dt){
 	node.update(dt);
 		for(var i=0; i<node.children.length; ++i){
-		//we flip the matrix to avoid the need to copy mat_aux in mat. 			
 		MuEngine.updateNode(node.children[i], dt);
 	};	
 }

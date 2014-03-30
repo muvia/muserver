@@ -39,7 +39,7 @@
 	 */
 	MuEngine.Transform.prototype.multiply = function(mat, out){
 		if(this._dirty) this.update();
-		mat4.multiply(out, this.mat, mat);
+		mat4.multiply(out, mat, this.mat);
 	};
 
  /**
@@ -64,6 +64,7 @@
  * kind of rotation employed in this engine.
  */
  MuEngine.Transform.prototype.setRotZ= function(anglerad){
+	quat.identity(this.rot);
  	quat.rotateZ(this.rot, this.rot, anglerad); 
 	this._dirty = true; 
 };
@@ -73,6 +74,7 @@
  around the vertical axis.
  */
  MuEngine.Transform.prototype.setRotY= function(anglerad){
+	quat.identity(this.rot);
  	quat.rotateY(this.rot, this.rot, anglerad); 
 	this._dirty = true; 
 };

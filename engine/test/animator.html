@@ -11,8 +11,9 @@
 	</canvas>
 
 
-<p>Press P to add an absolute position animator</p>
-	
+<p>Press P to add an absolute simple  position animator </p>
+<p>Press R to add an absolute looped rotation animator</p>
+
 <script src='../dist/muengine.js'></script>
 
 <script >
@@ -68,11 +69,21 @@
  	camera.setEye(vec3.fromValues(5, 5, -10));
 	camera.setCenter(vec3.fromValues(0, 0, 0));
 
-	//add an animator to the grid, with default values
+//add an animator to the grid, with default values
 addPosAnimator = function(){
  	var animator = new MuEngine.Animator({
 		start: vec3.fromValues(0, 0, 0),
 		end: vec3.fromValues(1, 0, 1)
+	});		
+ 	gridNode.addAnimator(animator);
+ };
+
+//add an animator to the grid, with default values
+addRotAnimator = function(){
+ 	var animator = new MuEngine.Animator({
+		start: 0,
+		end: MuEngine.deg2rad(180),
+		target: "rotY"
 	});		
  	gridNode.addAnimator(animator);
  };
@@ -86,9 +97,8 @@ addPosAnimator = function(){
 	       case 38: console.log("Up"); camera.moveEye(vec3.fromValues(0, 0.1, 0));break; //Up key
 	       case 39: console.log("Right"); camera.moveEye(vec3.fromValues(-0.1, 0, 0));break; //Right key
 	       case 40: console.log("Down"); camera.moveEye(vec3.fromValues(0, -0.1, 0));break; //Down key
-					case 80: console.log("add pos animator"); 
-					addPosAnimator();
-					break; 
+					case 80: console.log("add pos animator"); addPosAnimator();		break; //P key
+					case 82: console.log("add rot animator"); addRotAnimator();		break; //R key
 	       default: console.log(code); //Everything else
 	  }
 };

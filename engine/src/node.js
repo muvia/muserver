@@ -30,7 +30,7 @@ MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 
 
 /**
- * recursive function used by MuEngine.renderNode
+ * recursive function 
  */ 
 MuEngine.Node.prototype.render = function(mat){
 	this.updateWorldMat(mat);
@@ -38,7 +38,6 @@ MuEngine.Node.prototype.render = function(mat){
 			this.primitive.render(this, g_camera);
 	};
 	for(var i=0; i<this.children.length; ++i){
-		//we flip the matrix to avoid the need to copy mat_aux in mat. 			
 		this.children[i].render(this.wm);
 	};	  
 };

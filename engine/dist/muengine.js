@@ -97,7 +97,7 @@ MuEngine  = (function(){
 	 */
 	MuEngine.Transform.prototype.multiply = function(mat, out){
 		if(this._dirty) this.update();
-		mat4.multiply(out, this.mat, mat);
+		mat4.multiply(out, mat, this.mat);
 	};
 
  /**
@@ -122,6 +122,7 @@ MuEngine  = (function(){
  * kind of rotation employed in this engine.
  */
  MuEngine.Transform.prototype.setRotZ= function(anglerad){
+	quat.identity(this.rot);
  	quat.rotateZ(this.rot, this.rot, anglerad); 
 	this._dirty = true; 
 };
@@ -131,6 +132,7 @@ MuEngine  = (function(){
  around the vertical axis.
  */
  MuEngine.Transform.prototype.setRotY= function(anglerad){
+	quat.identity(this.rot);
  	quat.rotateY(this.rot, this.rot, anglerad); 
 	this._dirty = true; 
 };
@@ -173,7 +175,7 @@ MuEngine.Animator = function(config){
 			this.val = vec3.clone(this.startVal);
 	}
 	else
-		this.val = startVal;
+		this.val = this.startVal;
 	this.step = 0.0;
 };
 
@@ -229,7 +231,8 @@ MuEngine.Animator.prototype.apply = function(node){
 		node.transform.setPos(this.val[0], this.val[1], this.val[2]);	
 	}else if(this.target === this.TARGET_ROTY){
 		this.val = this.startVal + this.step*(this.endVal - this.startVal);	
-		node.transform.rotY(this.val);
+		//console.log("Animator.apply step "+ this.step + " rotY " + MuEngine.rad2deg(this.val));
+		node.transform.setRotY(this.val);
 	}else{
 		throw "unknown animator target: " + this.target ;
 	}		
@@ -266,7 +269,7 @@ MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 
 
 /**
- * recursive function used by MuEngine.renderNode
+ * recursive function 
  */ 
 MuEngine.Node.prototype.render = function(mat){
 	this.updateWorldMat(mat);
@@ -274,7 +277,6 @@ MuEngine.Node.prototype.render = function(mat){
 			this.primitive.render(this, g_camera);
 	};
 	for(var i=0; i<this.children.length; ++i){
-		//we flip the matrix to avoid the need to copy mat_aux in mat. 			
 		this.children[i].render(this.wm);
 	};	  
 };
@@ -675,6 +677,20 @@ MuEngine.mat4centerLog= function(label, mat){
 	console.info("MuEngine.mat4centerLog: "+label+":"+p[0].toFixed(2)+", "+p[1].toFixed(2)+", "+p[2].toFixed(2));
 };
 
+/**
+* utility method 
+*/
+MuEngine.deg2rad = function(deg){
+  return  deg * (Math.PI / 180);
+};
+
+
+MuEngine.rad2deg= function(rad){
+  return  rad * 180 / Math.PI;
+};
+
+
+
 				//------- PRIORITY QUEUE CLASS ------------
 
 				/**
@@ -809,37 +825,6 @@ MuEngine.stop = function(){
 };
 	
 /**
- * transform a point p into pt, using the current grid as world transform,
- * current camera as view transform. 
- * pt is optional, to store the transformed point. result is always applied
- * to local variable MuEngine.pt 
- */
-MuEngine.transformPoint = function(p, pt){
-			
-};
-
-/**
- * transform a line pt-pt2 into ptt-pt2t, using the current  grid and camera for world and 
- * view transform. 
- * pt, pt2 are assumed in world coordinates.
- * if ptt or pt2t are null or undefined, result will be stored in MuEngine.pt and MuEngine pt2  
- */  
-MuEngine.transformLine = function(pt, pt2, ptt, pt2t){
-   if(ptt == undefined || ptt == null){
-		ptt = this.pt;
-		pt2t = this.pt2;
-	}
-	//multiply by view matrix (or inverse view matrix?)
-
-	//multiply by projection matrix
-
-	//multiply by device-to screen matrix
-
-	//store results		
-
-};
-
-/**
 * load a image. it will return a MuEngineImageHandler that will allow to use a 
 * dummy image while the final one is being loaded. this will simplify the coding because
 * the developer won't need to handle load callbacks
@@ -873,30 +858,6 @@ MuEngine.renderNode = function(node){
 };
 
 /**
-* utility method 
-*/
-MuEngine.deg2rad = function(deg){
-  //@todo: the division would be stored in a private static var
-  return  deg * (Math.PI / 180);
-};
-
-
-/**
- * recursive function used by MuEngine.renderNode
- */ 
-_renderNode = function(node, mat){
-
-	node.updateWorldMat(mat);
-	if(node.primitive != null){
-			node.primitive.render(node, g_camera);
-	};
-	for(var i=0; i<node.children.length; ++i){
-		//we flip the matrix to avoid the need to copy mat_aux in mat. 			
-		_renderNode(node.children[i], node.wm);
-	};	  
-};
-
-/**
  * compute the elapsed time 
  */ 
 MuEngine.tick = function(){
@@ -912,7 +873,6 @@ MuEngine.tick = function(){
 MuEngine.updateNode = function(node, dt){
 	node.update(dt);
 		for(var i=0; i<node.children.length; ++i){
-		//we flip the matrix to avoid the need to copy mat_aux in mat. 			
 		MuEngine.updateNode(node.children[i], dt);
 	};	
 }

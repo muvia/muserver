@@ -22,3 +22,17 @@ MuEngine.mat4centerLog= function(label, mat){
 	vec3.transformMat4(p, p, mat);
 	console.info("MuEngine.mat4centerLog: "+label+":"+p[0].toFixed(2)+", "+p[1].toFixed(2)+", "+p[2].toFixed(2));
 };
+
+/**
+* utility method 
+*/
+MuEngine.deg2rad = function(deg){
+  return  deg * (Math.PI / 180);
+};
+
+
+MuEngine.rad2deg= function(rad){
+  return  rad * 180 / Math.PI;
+};
+
+
