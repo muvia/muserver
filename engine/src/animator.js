@@ -49,7 +49,7 @@ MuEngine.Animator.prototype.isFinished = function(){
 
 
 MuEngine.Animator.prototype.update = function(dt, node){
-	console.log("status: " + this.status + " step:"+ this.step);
+//	console.log("status: " + this.status + " step:"+ this.step);
 	if(this.status === this.STATUS_IDLE){
 			this.status = this.STATUS_RUNNING; 
 			this.elapsedtime= 0; 
@@ -78,7 +78,7 @@ MuEngine.Animator.prototype.apply = function(node){
 	if(this.target === this.TARGET_POS){
 		vec3.subtract(this.val, this.endVal, this.startVal);
 		vec3.scale(this.val, this.val, this.step); 
-		console.log("Animator.apply val " + this.val[0] + ", "+ this.val[1] + ", "+ this.val[2]);
+	//	console.log("Animator.apply val " + this.val[0] + ", "+ this.val[1] + ", "+ this.val[2]);
 		node.transform.setPos(this.val[0], this.val[1], this.val[2]);	
 	}else if(this.target === this.TARGET_ROTY){
 		this.val = this.startVal + this.step*(this.endVal - this.startVal);	

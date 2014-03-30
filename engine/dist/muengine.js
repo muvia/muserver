@@ -196,7 +196,7 @@ MuEngine.Animator.prototype.isFinished = function(){
 
 
 MuEngine.Animator.prototype.update = function(dt, node){
-	console.log("status: " + this.status + " step:"+ this.step);
+//	console.log("status: " + this.status + " step:"+ this.step);
 	if(this.status === this.STATUS_IDLE){
 			this.status = this.STATUS_RUNNING; 
 			this.elapsedtime= 0; 
@@ -225,7 +225,7 @@ MuEngine.Animator.prototype.apply = function(node){
 	if(this.target === this.TARGET_POS){
 		vec3.subtract(this.val, this.endVal, this.startVal);
 		vec3.scale(this.val, this.val, this.step); 
-		console.log("Animator.apply val " + this.val[0] + ", "+ this.val[1] + ", "+ this.val[2]);
+	//	console.log("Animator.apply val " + this.val[0] + ", "+ this.val[1] + ", "+ this.val[2]);
 		node.transform.setPos(this.val[0], this.val[1], this.val[2]);	
 	}else if(this.target === this.TARGET_ROTY){
 		this.val = this.startVal + this.step*(this.endVal - this.startVal);	
@@ -538,29 +538,21 @@ MuEngine.Node.prototype.update = function(dt){
 
 	MuEngine.Grid.prototype._renderGrid = function(node, cam){
 		var w = this.width*this.cellsize;
-		this.g_p0[1] = 0;
-		this.g_p0[2] = 0;
-		this.g_p1[1] = 0;
-		this.g_p1[2] = w; 		
 		//draw rows
 		var aux = 0;
 		for(var i=0; i<=this.height; ++i){
-			this.g_p0[0] = aux;
-			this.g_p1[0] = aux; 
+			vec3.set(this.g_p0, aux, 0, 0);
+			vec3.set(this.g_p1, aux, 0, w);
 			node.transform.multP(this.g_p0, this.g_p0);
 			node.transform.multP(this.g_p1, this.g_p1);
 			cam.renderLine(this.g_p0, this.g_p1, this.color);
 			aux += this.cellsize;
 		};
 		var h = this.height*this.cellsize;
-		this.g_p0[0] = 0;
-		this.g_p0[1] = 0;
-		this.g_p1[0] = h;
-		this.g_p1[1] = 0; 		
 		aux = 0;
 		for(var j=0; j<=this.width; ++j){
-			this.g_p0[2] = aux;
-			this.g_p1[2] = aux; 
+			vec3.set(this.g_p0, 0, 0, aux);
+			vec3.set(this.g_p1, h, 0, aux);
 			node.transform.multP(this.g_p0, this.g_p0);
 			node.transform.multP(this.g_p1, this.g_p1);
 			cam.renderLine(this.g_p0, this.g_p1, this.color);

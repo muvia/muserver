@@ -72,29 +72,21 @@
 
 	MuEngine.Grid.prototype._renderGrid = function(node, cam){
 		var w = this.width*this.cellsize;
-		this.g_p0[1] = 0;
-		this.g_p0[2] = 0;
-		this.g_p1[1] = 0;
-		this.g_p1[2] = w; 		
 		//draw rows
 		var aux = 0;
 		for(var i=0; i<=this.height; ++i){
-			this.g_p0[0] = aux;
-			this.g_p1[0] = aux; 
+			vec3.set(this.g_p0, aux, 0, 0);
+			vec3.set(this.g_p1, aux, 0, w);
 			node.transform.multP(this.g_p0, this.g_p0);
 			node.transform.multP(this.g_p1, this.g_p1);
 			cam.renderLine(this.g_p0, this.g_p1, this.color);
 			aux += this.cellsize;
 		};
 		var h = this.height*this.cellsize;
-		this.g_p0[0] = 0;
-		this.g_p0[1] = 0;
-		this.g_p1[0] = h;
-		this.g_p1[1] = 0; 		
 		aux = 0;
 		for(var j=0; j<=this.width; ++j){
-			this.g_p0[2] = aux;
-			this.g_p1[2] = aux; 
+			vec3.set(this.g_p0, 0, 0, aux);
+			vec3.set(this.g_p1, h, 0, aux);
 			node.transform.multP(this.g_p0, this.g_p0);
 			node.transform.multP(this.g_p1, this.g_p1);
 			cam.renderLine(this.g_p0, this.g_p1, this.color);
