@@ -453,18 +453,20 @@ MuEngine.Node.prototype.update = function(dt){
 
 	/**
 	* render a sprite. 
-	* @param:: x,y, w, h:  origin and extend  of the sprite, world coordinates
-	* @param: imghandler: a image handler 
+	* @param ori: point in 3d world coords of the anchor position
 	*/
-	MuEngine.Camera.prototype.renderSprite = function(ori, w, h, anchor,  imghandler){
+	MuEngine.Camera.prototype.renderSprite = function(ori, sprite){
 		this.project(ori, this.g_p0);
 		//w, h are in world coords.. transform to pixels:
-		var wpx = (w * g_canvas.width) / (this.right - this.left);  
-		var wpy = (h * g_canvas.height) / (this.top - this.bottom);  
+		var wpx = (sprite.width * g_canvas.width) / (this.right - this.left);  
+		var wpy = (sprite.height * g_canvas.height) / (this.top - this.bottom);  
 		//how about the anchor?
-		var offy = ((1 & anchor) > 0) ? 0 : (((2 & anchor) > 0)? -wpy :-(wpy>>1)); 
-		var offx = ((4 & anchor) > 0) ? 0 : (((8 & anchor) > 0)? -wpx :-(wpx>>1)); 
-		g_ctx.drawImage(imghandler.img, this.g_p0[0]+offx, this.g_p0[1]+offy, wpx, wpy);
+		var offy = ((1 & sprite.anchor) > 0) ? 0 : (((2 & sprite.anchor) > 0)? -wpy :-(wpy>>1)); 
+		var offx = ((4 & sprite.anchor) > 0) ? 0 : (((8 & sprite.anchor) > 0)? -wpx :-(wpx>>1)); 
+		if(sprite.tilew != null && sprite.tileh != null)
+			g_ctx.drawImage(sprite.imghandler.img, sprite.tilex, sprite.tiley, sprite.tilew, sprite.tileh, this.g_p0[0]+offx, this.g_p0[1]+offy, wpx, wpy);
+		else
+			g_ctx.drawImage(sprite.imghandler.img, this.g_p0[0]+offx, this.g_p0[1]+offy, wpx, wpy);
 	}
 	//------- GRID CLASS ------------------
 
@@ -628,14 +630,18 @@ MuEngine.Node.prototype.update = function(dt){
 		this.imghandler = MuEngine.getImageHandler(path);
 		//bit flag to control anchor. ORed of ANCHOR_XXX flags. 
 		this.anchor = 0; 
+		this.tilex = 0;
+		this.tiley = 0;
+		this.tilew = null;
+		this.tileh = null;
 
 	};
 
 	/*
 	* sprite static attributes
 	*/
-	MuEngine.Sprite.prototype.g_p0 = vec3.create();
-	MuEngine.Sprite.prototype.g_p1 = vec3.create();
+	//MuEngine.Sprite.prototype.g_p0 = vec3.create();
+	//MuEngine.Sprite.prototype.g_p1 = vec3.create();
 	
 	MuEngine.Sprite.prototype.ANCHOR_HCENTER = 0;
 	MuEngine.Sprite.prototype.ANCHOR_VCENTER = 0;
@@ -646,9 +652,9 @@ MuEngine.Node.prototype.update = function(dt){
 	MuEngine.Sprite.prototype.ANCHOR_RIGHT = 8;
 
 	MuEngine.Sprite.prototype.render = function(node, cam){
-		//vec3.set(this.g_p1, this.imghandler.img.width, this.imghandler.img.height, 0.0);	
-		vec3.transformMat4(this.g_p0, g_pZero, node.wm); 
-		cam.renderSprite(this.g_p0, this.width, this.height, this.anchor,  this.imghandler);
+		//vec3.transformMat4(this.g_p0, g_pZero, node.wm); 
+		cam.renderSprite(node.wp, this);
+
 	};
 
 
