@@ -300,7 +300,6 @@ MuEngine.Node.prototype.update = function(dt){
 			var animator = this.animators[i];
 			animator.update(dt, this);
 			if(animator.isFinished()){
-				console.log("removing animator");
 				this.animators.splice(i, 1);
 			}else{
 				++i;
@@ -464,7 +463,7 @@ MuEngine.Node.prototype.update = function(dt){
 		var offy = ((1 & sprite.anchor) > 0) ? 0 : (((2 & sprite.anchor) > 0)? -wpy :-(wpy>>1)); 
 		var offx = ((4 & sprite.anchor) > 0) ? 0 : (((8 & sprite.anchor) > 0)? -wpx :-(wpx>>1)); 
 		if(sprite.tilew != null && sprite.tileh != null)
-			g_ctx.drawImage(sprite.imghandler.img, sprite.tilex, sprite.tiley, sprite.tilew, sprite.tileh, this.g_p0[0]+offx, this.g_p0[1]+offy, wpx, wpy);
+			g_ctx.drawImage(sprite.imghandler.img, sprite.tilex*sprite.tilew, sprite.tiley*sprite.tileh, sprite.tilew, sprite.tileh, this.g_p0[0]+offx, this.g_p0[1]+offy, wpx, wpy);
 		else
 			g_ctx.drawImage(sprite.imghandler.img, this.g_p0[0]+offx, this.g_p0[1]+offy, wpx, wpy);
 	}
@@ -640,8 +639,6 @@ MuEngine.Node.prototype.update = function(dt){
 	/*
 	* sprite static attributes
 	*/
-	//MuEngine.Sprite.prototype.g_p0 = vec3.create();
-	//MuEngine.Sprite.prototype.g_p1 = vec3.create();
 	
 	MuEngine.Sprite.prototype.ANCHOR_HCENTER = 0;
 	MuEngine.Sprite.prototype.ANCHOR_VCENTER = 0;
@@ -652,7 +649,6 @@ MuEngine.Node.prototype.update = function(dt){
 	MuEngine.Sprite.prototype.ANCHOR_RIGHT = 8;
 
 	MuEngine.Sprite.prototype.render = function(node, cam){
-		//vec3.transformMat4(this.g_p0, g_pZero, node.wm); 
 		cam.renderSprite(node.wp, this);
 
 	};

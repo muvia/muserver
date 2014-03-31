@@ -61,7 +61,6 @@ MuEngine.Node.prototype.update = function(dt){
 			var animator = this.animators[i];
 			animator.update(dt, this);
 			if(animator.isFinished()){
-				console.log("removing animator");
 				this.animators.splice(i, 1);
 			}else{
 				++i;

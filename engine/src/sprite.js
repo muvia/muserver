@@ -23,8 +23,6 @@
 	/*
 	* sprite static attributes
 	*/
-	//MuEngine.Sprite.prototype.g_p0 = vec3.create();
-	//MuEngine.Sprite.prototype.g_p1 = vec3.create();
 	
 	MuEngine.Sprite.prototype.ANCHOR_HCENTER = 0;
 	MuEngine.Sprite.prototype.ANCHOR_VCENTER = 0;
@@ -35,7 +33,6 @@
 	MuEngine.Sprite.prototype.ANCHOR_RIGHT = 8;
 
 	MuEngine.Sprite.prototype.render = function(node, cam){
-		//vec3.transformMat4(this.g_p0, g_pZero, node.wm); 
 		cam.renderSprite(node.wp, this);
 
 	};
