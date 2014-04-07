@@ -306,6 +306,9 @@ MuEngine.Node.prototype.update = function(dt){
 			}
 		}
 	}
+	if(this.primitive != null){
+		this.primitive.update(dt);
+	}	
 }
 
 				
@@ -561,7 +564,13 @@ MuEngine.Node.prototype.update = function(dt){
 			cam.renderLine(this.g_p0, this.g_p1, this.color);
 			aux += this.cellsize;
 		};
-		
+	};
+
+
+	MuEngine.Grid.prototype.update = function(dt){
+		for(var i=0; i<this.cells.length; i++){
+			this.cells[i].update(dt);
+		}	
 	};
 	//------- LINE CLASS -------------------
 	
@@ -593,7 +602,9 @@ MuEngine.Node.prototype.update = function(dt){
 		cam.renderLine(this.g_p0, this.g_p1, this.color);
 	};
 
-
+	/*do nothing*/
+	MuEngine.Line.prototype.update = function(dt){
+	};
 
 	//-------- IMAGE HANDLER CLASS -----------------
 
@@ -633,7 +644,6 @@ MuEngine.Node.prototype.update = function(dt){
 		this.tiley = 0;
 		this.tilew = null;
 		this.tileh = null;
-
 	};
 
 	/*
@@ -653,7 +663,35 @@ MuEngine.Node.prototype.update = function(dt){
 
 	};
 
+	MuEngine.Sprite.prototype.play = function(anim){
+		if(this["anims"]  == undefined){
+			throw "calling play in sprite without animation data"; 
+		}
+		if(this["animctrl"] == undefined){
+			this["animctrl"] = {};
+		}	 
+		this.animctrl.curranim = this.anims[anim];
+		
+	};
+	
+	/**
+	* add a new animation to this sprite 
+	* name: name of the animation
+	* row: row that contains the tiles
+	* tiles: array of column indexes  
+	*/
+	MuEngine.Sprite.prototype.addAnimation = function(name, row, tiles){
+		if(this['anims']  == undefined){
+			this.anims = {};
+		}	
+		this.anims[name]= {'row': row, 'tiles': tiles};
+	};	
 
+
+
+	MuEngine.Sprite.prototype.update = function(dt){
+		
+	};
 
 /**
 * common utilities.

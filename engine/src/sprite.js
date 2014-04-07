@@ -17,7 +17,6 @@
 		this.tiley = 0;
 		this.tilew = null;
 		this.tileh = null;
-
 	};
 
 	/*
@@ -37,4 +36,32 @@
 
 	};
 
+	MuEngine.Sprite.prototype.play = function(anim){
+		if(this["anims"]  == undefined){
+			throw "calling play in sprite without animation data"; 
+		}
+		if(this["animctrl"] == undefined){
+			this["animctrl"] = {};
+		}	 
+		this.animctrl.curranim = this.anims[anim];
+		
+	};
+	
+	/**
+	* add a new animation to this sprite 
+	* name: name of the animation
+	* row: row that contains the tiles
+	* tiles: array of column indexes  
+	*/
+	MuEngine.Sprite.prototype.addAnimation = function(name, row, tiles){
+		if(this['anims']  == undefined){
+			this.anims = {};
+		}	
+		this.anims[name]= {'row': row, 'tiles': tiles};
+	};	
 
+
+
+	MuEngine.Sprite.prototype.update = function(dt){
+		
+	};

@@ -67,5 +67,8 @@ MuEngine.Node.prototype.update = function(dt){
 			}
 		}
 	}
+	if(this.primitive != null){
+		this.primitive.update(dt);
+	}	
 }
 

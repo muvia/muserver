@@ -28,5 +28,7 @@
 		cam.renderLine(this.g_p0, this.g_p1, this.color);
 	};
 
-
+	/*do nothing*/
+	MuEngine.Line.prototype.update = function(dt){
+	};
 

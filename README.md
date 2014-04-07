@@ -1,2 +1,0 @@
-# muserver
-### a Sails application

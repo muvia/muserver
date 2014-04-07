@@ -92,5 +92,11 @@
 			cam.renderLine(this.g_p0, this.g_p1, this.color);
 			aux += this.cellsize;
 		};
-		
+	};
+
+
+	MuEngine.Grid.prototype.update = function(dt){
+		for(var i=0; i<this.cells.length; i++){
+			this.cells[i].update(dt);
+		}	
 	};

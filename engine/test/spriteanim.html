@@ -1,18 +1,37 @@
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8" />
+  
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+
 <title>canvas</title> 
 <script src="../../lib/gl-matrix.js" ></script>
 
 </head>
 
 <body>
-<canvas id="c" width='480px' height='320px' style='border: 1px solid black' />
-	</canvas>
+
+<div data-role="page" id='main-page'>
+<div data-role="header" data-position="fixed">
+    <h1>Sprite Animation Test</h1>
+</div>
+<div data-role="content">
 
 
-<p>Press P to add an absolute simple  position animator </p>
-<p>Press R to add an absolute looped rotation animator</p>
+	<div style="float: left;">
+		<canvas id="c" width='480px' height='320px' style='border: 1px solid black; ' />
+		</canvas>
+
+				<button id="front-walk">front walk</button>
+				<button  id="side-walk">side walk</button>
+	</div>
+
+	<div style="float: left;">
+<img src="assets/personita.png" style="float: left;"></img>
+</div>
 
 <script src='../dist/muengine.js'></script>
 
@@ -52,9 +71,12 @@
 		sprite.tileh = 128;
 		spriteNode = new MuEngine.Node(sprite);
 		grid.getCell(i, j).addChild(spriteNode); 
+		return spriteNode;
 	};
 	
-	putSprite(0, 0, "assets/personita.png");
+	var spriteNode = putSprite(0, 0, "assets/personita.png");
+	spriteNode.primitive.addAnimation("front-walk", 0, [0, 1, 0,  2]);
+	spriteNode.primitive.addAnimation("side-walk", 1, [0, 1, 0, 2]);
 
 	//create root node
 	var root = new MuEngine.Node();
@@ -105,6 +127,11 @@ addRotAnimator = function(){
 };
 
 
+$("button").on("click", function(ev){
+	spriteNode.primitive.play(this.id);
+});
+
+
 function render(){
 	var dt = MuEngine.tick();
 	MuEngine.clear();
@@ -129,6 +156,7 @@ window.requestAnimFrame = (function(){
 
 
 </script>
+</div>
 
 </body>
 </html>
