@@ -46,8 +46,8 @@
 		this.animctrl.curranim = this.anims[anim];
 		this.animctrl.elapsed = 0;
 	  this.animctrl.loop = loop;		
-		this.tilex = this.animctrl.curranim.row;
-		this.tiley = this.animctrl.curranim.tiles[0];
+		this.tiley = this.animctrl.curranim.row;
+		this.tilex = this.animctrl.curranim.tiles[0];
 	};
 	
 	/**
@@ -66,7 +66,20 @@
 
 
 	MuEngine.Sprite.prototype.update = function(dt){
-		if(this.animctrl.curranim == null)	return;
+		if(this.animctrl == undefined) return;
+		anim = this.animctrl.curranim;
+		if(anim == undefined || anim == null) return;		
 		this.animctrl.elapsed += dt;
-			
+		if(this.animctrl.elapsed >= anim.duration){
+			if(!this.animctrl.loop){
+				this.tilex = anim.tiles[anim.tiles.length-1];
+				this.animctrl.curranim = null; 
+				return;
+			}
+			else{
+				this.animctrl.elapsed = this.animctrl.elapsed % anim.duration; 
+			}
+		}
+		this.tilex = anim.tiles[Math.floor((anim.tiles.length-1)*(this.animctrl.elapsed/anim.duration))];
+		console.log("anim x "+ this.tilex + " y "+ this.tiley + " elapsed "+ this.animctrl.elapsed + " duration "+ anim.duration);
 	};

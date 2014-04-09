@@ -74,9 +74,9 @@
 	};
 	
 	var spriteNode = putSprite(0, 0, "assets/personita.png");
-	spriteNode.primitive.addAnimation("front-walk", 0, [0, 1, 0,  2]);
-	spriteNode.primitive.addAnimation("side-walk", 1, [0, 1, 0, 2]);
-
+	spriteNode.primitive.addAnimation("side-walk", 0, [0, 1, 0, 2], 1000);
+	spriteNode.primitive.addAnimation("front-walk", 1, [0, 1, 0,  2], 1000);
+	
 	//create root node
 	var root = new MuEngine.Node();
 	root.addChild(axis);
