@@ -308,7 +308,10 @@ MuEngine.Node.prototype.update = function(dt){
 	}
 	if(this.primitive != null){
 		this.primitive.update(dt);
-	}	
+	}
+	for(var i=0; i<this.children.length; ++i){
+		this.children[i].update(dt);
+	};	
 }
 
 				

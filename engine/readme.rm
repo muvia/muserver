@@ -1,0 +1,16 @@
+Prerequisites
+
+npm
+grunt
+jasmine
+
+setup:
+
+
+sudo npm install -g grunt-cli
+
+npm install 
+
+from here, you can already run "grunt watch"
+
+
