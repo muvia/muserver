@@ -666,7 +666,7 @@ MuEngine.Node.prototype.update = function(dt){
 
 	};
 
-	MuEngine.Sprite.prototype.play = function(anim){
+	MuEngine.Sprite.prototype.play = function(anim, loop){
 		if(this["anims"]  == undefined){
 			throw "calling play in sprite without animation data"; 
 		}
@@ -674,7 +674,10 @@ MuEngine.Node.prototype.update = function(dt){
 			this["animctrl"] = {};
 		}	 
 		this.animctrl.curranim = this.anims[anim];
-		
+		this.animctrl.elapsed = 0;
+	  this.animctrl.loop = loop;		
+		this.tilex = this.animctrl.curranim.row;
+		this.tiley = this.animctrl.curranim.tiles[0];
 	};
 	
 	/**
@@ -683,17 +686,19 @@ MuEngine.Node.prototype.update = function(dt){
 	* row: row that contains the tiles
 	* tiles: array of column indexes  
 	*/
-	MuEngine.Sprite.prototype.addAnimation = function(name, row, tiles){
+	MuEngine.Sprite.prototype.addAnimation = function(name, row, tiles, duration ){
 		if(this['anims']  == undefined){
 			this.anims = {};
 		}	
-		this.anims[name]= {'row': row, 'tiles': tiles};
+		this.anims[name]= {'row': row, 'tiles': tiles, 'duration': duration};
 	};	
 
 
 
 	MuEngine.Sprite.prototype.update = function(dt){
-		
+		if(this.animctrl.curranim == null)	return;
+		this.animctrl.elapsed += dt;
+			
 	};
 
 /**
@@ -915,9 +920,7 @@ MuEngine.tick = function(){
 */
 MuEngine.updateNode = function(node, dt){
 	node.update(dt);
-		for(var i=0; i<node.children.length; ++i){
-		MuEngine.updateNode(node.children[i], dt);
-	};	
+	
 }
 
 return MuEngine;

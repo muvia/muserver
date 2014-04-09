@@ -108,9 +108,7 @@ MuEngine.tick = function(){
 */
 MuEngine.updateNode = function(node, dt){
 	node.update(dt);
-		for(var i=0; i<node.children.length; ++i){
-		MuEngine.updateNode(node.children[i], dt);
-	};	
+	
 }
 
 return MuEngine;
