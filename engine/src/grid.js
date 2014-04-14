@@ -23,14 +23,7 @@
 		this.queue = new MuEngine.PriorityQueue(_compareCellsByEyePos);
 		for(var i=0; i<this.width; ++i){
 				for(var j=0; j< this.height; ++j){
-					var cell = new MuEngine.Node();
-					//enrich the node with cell attributes..
-					cell.row = i;
-					cell.col = j;
-					//a vector to store eye coordinates
-					cell.eyePos = vec3.create();
-					cell.transform.setPos(i*cellsize, 0, j*cellsize);
-					cell.transform.update();
+					var cell = new Cell(i, j, cellsize);
 					this.cells[(i*this.height)+j] = cell;
 				}
 		};

@@ -14,7 +14,7 @@ MuEngine.Animator = function(config){
 	
 	//configuration parameters
     this.target = config.target ||  "pos";
-		this.loops = config.loops || 1;
+	this.loops = config.loops || 1;
     this.startVal = config.start || 0.0;
     this.endVal = config.end || 1.0;
     this.duration = config.duration || 1000;

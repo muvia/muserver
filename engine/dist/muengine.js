@@ -163,7 +163,7 @@ MuEngine.Animator = function(config){
 	
 	//configuration parameters
     this.target = config.target ||  "pos";
-		this.loops = config.loops || 1;
+	this.loops = config.loops || 1;
     this.startVal = config.start || 0.0;
     this.endVal = config.end || 1.0;
     this.duration = config.duration || 1000;
@@ -473,6 +473,26 @@ MuEngine.Node.prototype.update = function(dt){
 		else
 			g_ctx.drawImage(sprite.imghandler.img, this.g_p0[0]+offx, this.g_p0[1]+offy, wpx, wpy);
 	}
+//------- CELL CLASS EXTENDS NODE ------------
+
+/**
+ * this is a private class, not expected to be instantiated for the user
+ */
+
+var Cell = function(i, j, cellsize){
+	MuEngine.Node.call(this);
+	this.row = i;
+	this.col = j;
+	//a vector to store eye coordinates
+	this.eyePos = vec3.create();
+	this.transform.setPos(i*cellsize, 0, j*cellsize);
+	this.transform.update();
+};
+
+//chaining prototypes
+Cell.prototype = new MuEngine.Node();
+
+
 	//------- GRID CLASS ------------------
 
 	/**
@@ -498,14 +518,7 @@ MuEngine.Node.prototype.update = function(dt){
 		this.queue = new MuEngine.PriorityQueue(_compareCellsByEyePos);
 		for(var i=0; i<this.width; ++i){
 				for(var j=0; j< this.height; ++j){
-					var cell = new MuEngine.Node();
-					//enrich the node with cell attributes..
-					cell.row = i;
-					cell.col = j;
-					//a vector to store eye coordinates
-					cell.eyePos = vec3.create();
-					cell.transform.setPos(i*cellsize, 0, j*cellsize);
-					cell.transform.update();
+					var cell = new Cell(i, j, cellsize);
 					this.cells[(i*this.height)+j] = cell;
 				}
 		};
