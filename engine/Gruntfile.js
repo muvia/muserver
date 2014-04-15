@@ -17,6 +17,7 @@ module.exports = function(grunt) {
 					   'src/camera.js',
 					   'src/cell.js',
 					   'src/grid.js',
+					   'src/avatar.js',
 					   'src/line.js',
 						 'src/imagehandler.js', 
 						 'src/sprite.js', 

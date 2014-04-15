@@ -12,9 +12,13 @@ var Cell = function(i, j, cellsize){
 	this.eyePos = vec3.create();
 	this.transform.setPos(i*cellsize, 0, j*cellsize);
 	this.transform.update();
+    this.walkable = true;
 };
 
 //chaining prototypes
 Cell.prototype = new MuEngine.Node();
 
 
+Cell.prototype.isWalkable = function(){
+    return this.walkable; // || is full.. || has other dynamic obstacles
+}

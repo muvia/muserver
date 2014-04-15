@@ -31,14 +31,14 @@ MuEngine.Animator = function(config){
 };
 
 //a few public static constants
-MuEngine.Animator.prototype.TARGET_POS ="pos";
-MuEngine.Animator.prototype.TARGET_ROTY  = "rotY";  
+MuEngine.Animator.TARGET_POS ="pos";
+MuEngine.Animator.TARGET_ROTY  = "rotY";
 
-MuEngine.Animator.prototype.TYPE_LINEAR = "linear";
+MuEngine.Animator.TYPE_LINEAR = "linear";
 
-MuEngine.Animator.prototype.STATUS_IDLE = "idle";
-MuEngine.Animator.prototype.STATUS_RUNNING = "running";
-MuEngine.Animator.prototype.STATUS_FINISHED = "finished"; 
+MuEngine.Animator.STATUS_IDLE = "idle";
+MuEngine.Animator.STATUS_RUNNING = "running";
+MuEngine.Animator.STATUS_FINISHED = "finished";
 
 
 MuEngine.Animator.prototype.isFinished = function(){
