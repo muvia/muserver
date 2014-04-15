@@ -50,24 +50,24 @@ MuEngine.Animator.prototype.isFinished = function(){
 
 MuEngine.Animator.prototype.update = function(dt, node){
 //	console.log("status: " + this.status + " step:"+ this.step);
-	if(this.status === this.STATUS_IDLE){
-			this.status = this.STATUS_RUNNING; 
+	if(this.status === MuEngine.Animator.STATUS_IDLE){
+			this.status = MuEngine.Animator.STATUS_RUNNING;
 			this.elapsedtime= 0; 
 			this.step = 0;
 			this.apply(node);
 	}
-	else if(this.status === this.STATUS_RUNNING){ 
+	else if(this.status === MuEngine.Animator.STATUS_RUNNING){
 			this.elapsedtime  += dt;
 			if(this.elapsedtime > this.duration){
 				this.loops--;
 				this.step = 1.0;
-				this.status = this.STATUS_FINISHED;	
+				this.status = MuEngine.Animator.STATUS_FINISHED;
 			}else{
 				this.step = this.elapsedtime/this.duration;
 			}
 			this.apply(node);		
 	}
-	else if(this.status === this.STATUS_FINISHED){
+	else if(this.status === MuEngine.Animator.STATUS_FINISHED){
 	}else throw "unknown animator status: " + this.status; 	
 };
 
@@ -75,12 +75,12 @@ MuEngine.Animator.prototype.update = function(dt, node){
 * private method. apply the current value to the node
 */
 MuEngine.Animator.prototype.apply = function(node){
-	if(this.target === this.TARGET_POS){
+	if(this.target === MuEngine.Animator.TARGET_POS){
 		vec3.subtract(this.val, this.endVal, this.startVal);
 		vec3.scale(this.val, this.val, this.step); 
 	//	console.log("Animator.apply val " + this.val[0] + ", "+ this.val[1] + ", "+ this.val[2]);
 		node.transform.setPos(this.val[0], this.val[1], this.val[2]);	
-	}else if(this.target === this.TARGET_ROTY){
+	}else if(this.target === MuEngine.Animator.TARGET_ROTY){
 		this.val = this.startVal + this.step*(this.endVal - this.startVal);	
 		//console.log("Animator.apply step "+ this.step + " rotY " + MuEngine.rad2deg(this.val));
 		node.transform.setRotY(this.val);

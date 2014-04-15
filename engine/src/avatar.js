@@ -14,7 +14,7 @@
  *  col: inicial col
  *  speed: time required to move from one cell to another (seconds)
  */
-var Avatar = function(config){
+MuEngine.Avatar = function(config){
 	MuEngine.Node.call(this);
 	this.row = 0 | config.row;
 	this.col = 0 | config.col;
@@ -26,17 +26,19 @@ var Avatar = function(config){
 	//the current cell
 	this.cell = this.grid.getCell(this.row, this.col);
     this.nextCell = null; //when moving..
-	this.transform.setPos(this.cell.transform.pos);
-	this.transform.update();
+    this.cell.addChild(this);
+	//this.transform.setPos(this.cell.transform.pos);
+	//this.transform.update();
+
 };
 
 //chaining prototypes
-Avatar.prototype = new MuEngine.Node();
+MuEngine.Avatar.prototype = new MuEngine.Node();
 
-Avatar.DIR_UP = 1;
-Avatar.DIR_DOWN = 2; 
-Avatar.DIR_LEFT = 4; 
-Avatar.DIR_RIGHT = 8; 
+MuEngine.Avatar.DIR_UP = 1;
+MuEngine.Avatar.DIR_DOWN = 2;
+MuEngine.Avatar.DIR_LEFT = 4;
+MuEngine.Avatar.DIR_RIGHT = 8;
 
 /**
  * create an animator that will move the current node from the current cell
@@ -46,9 +48,9 @@ Avatar.DIR_RIGHT = 8;
  * in the other hand, if the movement is allowed, it will return true. 
  * @param: dir: binary flag, "OR" combination of Avatar.DIR_xxx constants. 
  */
-Avatar.prototype.move = function(_dir){
-	var row = this.row + ((_dir & Avatar.DIR_UP)?1:((_dir & Avatar.DIR_DOWN)?-1:0));
-    var col = this.col + ((_dir & Avatar.DIR_RIGHT)?1:((_dir & Avatar.DIR_LEFT)?-1:0));
+MuEngine.Avatar.prototype.move = function(_dir){
+	var row = this.row + ((_dir & MuEngine.Avatar.DIR_UP)?1:((_dir & MuEngine.Avatar.DIR_DOWN)?-1:0));
+    var col = this.col + ((_dir & MuEngine.Avatar.DIR_RIGHT)?1:((_dir & MuEngine.Avatar.DIR_LEFT)?-1:0));
 	this.nextCell = this.grid.getCell(row, col);
 	if(this.nextCell == null){
 		//out of boundaries!

@@ -199,24 +199,24 @@ MuEngine.Animator.prototype.isFinished = function(){
 
 MuEngine.Animator.prototype.update = function(dt, node){
 //	console.log("status: " + this.status + " step:"+ this.step);
-	if(this.status === this.STATUS_IDLE){
-			this.status = this.STATUS_RUNNING; 
+	if(this.status === MuEngine.Animator.STATUS_IDLE){
+			this.status = MuEngine.Animator.STATUS_RUNNING;
 			this.elapsedtime= 0; 
 			this.step = 0;
 			this.apply(node);
 	}
-	else if(this.status === this.STATUS_RUNNING){ 
+	else if(this.status === MuEngine.Animator.STATUS_RUNNING){
 			this.elapsedtime  += dt;
 			if(this.elapsedtime > this.duration){
 				this.loops--;
 				this.step = 1.0;
-				this.status = this.STATUS_FINISHED;	
+				this.status = MuEngine.Animator.STATUS_FINISHED;
 			}else{
 				this.step = this.elapsedtime/this.duration;
 			}
 			this.apply(node);		
 	}
-	else if(this.status === this.STATUS_FINISHED){
+	else if(this.status === MuEngine.Animator.STATUS_FINISHED){
 	}else throw "unknown animator status: " + this.status; 	
 };
 
@@ -224,12 +224,12 @@ MuEngine.Animator.prototype.update = function(dt, node){
 * private method. apply the current value to the node
 */
 MuEngine.Animator.prototype.apply = function(node){
-	if(this.target === this.TARGET_POS){
+	if(this.target === MuEngine.Animator.TARGET_POS){
 		vec3.subtract(this.val, this.endVal, this.startVal);
 		vec3.scale(this.val, this.val, this.step); 
 	//	console.log("Animator.apply val " + this.val[0] + ", "+ this.val[1] + ", "+ this.val[2]);
 		node.transform.setPos(this.val[0], this.val[1], this.val[2]);	
-	}else if(this.target === this.TARGET_ROTY){
+	}else if(this.target === MuEngine.Animator.TARGET_ROTY){
 		this.val = this.startVal + this.step*(this.endVal - this.startVal);	
 		//console.log("Animator.apply step "+ this.step + " rotY " + MuEngine.rad2deg(this.val));
 		node.transform.setRotY(this.val);
@@ -607,7 +607,7 @@ Cell.prototype.isWalkable = function(){
  *  col: inicial col
  *  speed: time required to move from one cell to another (seconds)
  */
-var Avatar = function(config){
+MuEngine.Avatar = function(config){
 	MuEngine.Node.call(this);
 	this.row = 0 | config.row;
 	this.col = 0 | config.col;
@@ -619,17 +619,19 @@ var Avatar = function(config){
 	//the current cell
 	this.cell = this.grid.getCell(this.row, this.col);
     this.nextCell = null; //when moving..
-	this.transform.setPos(this.cell.transform.pos);
-	this.transform.update();
+    this.cell.addChild(this);
+	//this.transform.setPos(this.cell.transform.pos);
+	//this.transform.update();
+
 };
 
 //chaining prototypes
-Avatar.prototype = new MuEngine.Node();
+MuEngine.Avatar.prototype = new MuEngine.Node();
 
-Avatar.DIR_UP = 1;
-Avatar.DIR_DOWN = 2; 
-Avatar.DIR_LEFT = 4; 
-Avatar.DIR_RIGHT = 8; 
+MuEngine.Avatar.DIR_UP = 1;
+MuEngine.Avatar.DIR_DOWN = 2;
+MuEngine.Avatar.DIR_LEFT = 4;
+MuEngine.Avatar.DIR_RIGHT = 8;
 
 /**
  * create an animator that will move the current node from the current cell
@@ -639,9 +641,9 @@ Avatar.DIR_RIGHT = 8;
  * in the other hand, if the movement is allowed, it will return true. 
  * @param: dir: binary flag, "OR" combination of Avatar.DIR_xxx constants. 
  */
-Avatar.prototype.move = function(_dir){
-	var row = this.row + ((_dir & Avatar.DIR_UP)?1:((_dir & Avatar.DIR_DOWN)?-1:0));
-    var col = this.col + ((_dir & Avatar.DIR_RIGHT)?1:((_dir & Avatar.DIR_LEFT)?-1:0));
+MuEngine.Avatar.prototype.move = function(_dir){
+	var row = this.row + ((_dir & MuEngine.Avatar.DIR_UP)?1:((_dir & MuEngine.Avatar.DIR_DOWN)?-1:0));
+    var col = this.col + ((_dir & MuEngine.Avatar.DIR_RIGHT)?1:((_dir & MuEngine.Avatar.DIR_LEFT)?-1:0));
 	this.nextCell = this.grid.getCell(row, col);
 	if(this.nextCell == null){
 		//out of boundaries!
