@@ -10,8 +10,9 @@
  * N > 0: Number of executions
  * N <= 0: infinite loop
  */
-MuEngine.Animator = function(config){
-	
+MuEngine.Animator  = function(config){
+//prototype chaining will call this method with empty parameters
+  if(config === undefined) return;	
 	//configuration parameters
     this.target = config.target ||  "pos";
 	this.loops = config.loops || 1;
@@ -22,11 +23,6 @@ MuEngine.Animator = function(config){
 	//internal status variables
     this.starttime = 0;
 	this.status = "idle";  
-	if(this.target === "pos"){
-			this.val = vec3.clone(this.startVal);
-	}
-	else
-		this.val = this.startVal;
 	this.step = 0.0;
 };
 
@@ -44,8 +40,6 @@ MuEngine.Animator.STATUS_FINISHED = "finished";
 MuEngine.Animator.prototype.isFinished = function(){
 	return this.status === this.STATUS_FINISHED;
 }
-
-
 
 
 MuEngine.Animator.prototype.update = function(dt, node){
@@ -71,20 +65,39 @@ MuEngine.Animator.prototype.update = function(dt, node){
 	}else throw "unknown animator status: " + this.status; 	
 };
 
-/**
-* private method. apply the current value to the node
-*/
-MuEngine.Animator.prototype.apply = function(node){
-	if(this.target === MuEngine.Animator.TARGET_POS){
-		vec3.subtract(this.val, this.endVal, this.startVal);
-		vec3.scale(this.val, this.val, this.step); 
-	//	console.log("Animator.apply val " + this.val[0] + ", "+ this.val[1] + ", "+ this.val[2]);
-		node.transform.setPos(this.val[0], this.val[1], this.val[2]);	
-	}else if(this.target === MuEngine.Animator.TARGET_ROTY){
-		this.val = this.startVal + this.step*(this.endVal - this.startVal);	
-		//console.log("Animator.apply step "+ this.step + " rotY " + MuEngine.rad2deg(this.val));
-		node.transform.setRotY(this.val);
-	}else{
-		throw "unknown animator target: " + this.target ;
-	}		
+
+//---------------- class AnimatorPos extends Animator ----------------
+
+
+MuEngine.AnimatorPos  = function(config){
+	config.target =  MuEngine.Animator.TARGET_POS;
+	MuEngine.Animator.call(this, config);	
+	this.val = vec3.clone(this.startVal);
 };
+
+//chaining prototypes
+MuEngine.AnimatorPos.prototype  = new MuEngine.Animator;
+
+MuEngine.AnimatorPos.prototype.apply = function(node){
+	vec3.subtract(this.val, this.endVal, this.startVal);
+	vec3.scale(this.val, this.val, this.step); 
+	node.transform.setPos(this.val[0], this.val[1], this.val[2]);	
+};
+
+//---------------- class AnimatorRotY extends Animator ----------------
+MuEngine.AnimatorRotY  = function(config){
+	config.target =  MuEngine.Animator.TARGET_ROTY;
+	MuEngine.Animator.call(this, config);	
+	this.val = this.startVal;
+};
+
+//chaining prototypes
+MuEngine.AnimatorRotY.prototype = new MuEngine.Animator;
+
+MuEngine.AnimatorRotY.prototype.apply = function(node){
+		this.val = this.startVal + this.step*(this.endVal - this.startVal);	
+		node.transform.setRotY(this.val);
+};
+
+
+//---------------- class AnimatorMoveCell extends Animator -------------

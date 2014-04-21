@@ -71,7 +71,7 @@
 
 //add an animator to the grid, with default values
 addPosAnimator = function(){
- 	var animator = new MuEngine.Animator({
+ 	var animator = new MuEngine.AnimatorPos({
 		start: vec3.fromValues(0, 0, 0),
 		end: vec3.fromValues(1, 0, 1)
 	});		
@@ -80,10 +80,9 @@ addPosAnimator = function(){
 
 //add an animator to the grid, with default values
 addRotAnimator = function(){
- 	var animator = new MuEngine.Animator({
+ 	var animator = new MuEngine.AnimatorRotY({
 		start: 0,
-		end: MuEngine.deg2rad(180),
-		target: "rotY"
+		end: MuEngine.deg2rad(180)
 	});		
  	gridNode.addAnimator(animator);
  };
