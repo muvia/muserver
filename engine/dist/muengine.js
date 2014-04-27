@@ -666,10 +666,9 @@ MuEngine.Avatar.prototype.move = function(_dir){
 		this.nextCell = null;
         return false;
 	}
-    var animator = new MuEngine.Animator({
+    var animator = new MuEngine.AnimatorPos({
         start: this.cell.wp,
-        end: this.nextCell.wp,
-        target: MuEngine.Animator.TARGET_POS
+        end: this.nextCell.wp
     });
     this.addAnimator(animator);
 }

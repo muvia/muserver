@@ -1,4 +1,4 @@
-//-------- ANIMATOR CLASS -----------------
+	//-------- ANIMATOR CLASS -----------------
 
 /**
  * Animator class constructor
