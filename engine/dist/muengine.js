@@ -147,7 +147,7 @@ MuEngine.Transform.prototype.setScale = function(scale){
 };
 
 
-//-------- ANIMATOR CLASS -----------------
+	//-------- ANIMATOR CLASS -----------------
 
 /**
  * Animator class constructor
@@ -163,14 +163,15 @@ MuEngine.Animator  = function(config){
 //prototype chaining will call this method with empty parameters
   if(config === undefined) return;	
 	//configuration parameters
-    this.target = config.target ||  "pos";
+  this.target = config.target ||  "pos";
 	this.loops = config.loops || 1;
-    this.startVal = config.start || 0.0;
-    this.endVal = config.end || 1.0;
-    this.duration = config.duration || 1000;
+  this.startVal = config.start || 0.0;
+  this.endVal = config.end || 1.0;
+  this.duration = config.duration || 1000;
+	this.cb = config.cb;
 
 	//internal status variables
-    this.starttime = 0;
+  this.starttime = 0;
 	this.status = "idle";  
 	this.step = 0.0;
 };
@@ -205,6 +206,7 @@ MuEngine.Animator.prototype.update = function(dt, node){
 				this.loops--;
 				this.step = 1.0;
 				this.status = MuEngine.Animator.STATUS_FINISHED;
+				this.cb();
 			}else{
 				this.step = this.elapsedtime/this.duration;
 			}
@@ -271,6 +273,17 @@ MuEngine.Node = function(primitive){
 MuEngine.Node.prototype.addChild = function(node){
 	this.children.push(node);
 };
+
+
+MuEngine.Node.prototype.removeChild = function(node){
+	for(i=0; i<this.children.length; ++i){
+		if(this.children[i] === node){
+			this.children.splice(i, 1);
+			return;
+		}
+	}
+};
+
 
 /**
 * use the given matrix as parent matrix, compute world transformation using local transform
@@ -500,7 +513,7 @@ var Cell = function(i, j, cellsize){
 	this.eyePos = vec3.create();
 	this.transform.setPos(i*cellsize, 0, j*cellsize);
 	this.transform.update();
-    this.walkable = true;
+  this.walkable = true;
 };
 
 //chaining prototypes
@@ -509,7 +522,8 @@ Cell.prototype = new MuEngine.Node();
 
 Cell.prototype.isWalkable = function(){
     return this.walkable; // || is full.. || has other dynamic obstacles
-}	//------- GRID CLASS ------------------
+}
+	//------- GRID CLASS ------------------
 
 	/**
 	 * helper sort function for the render queue of the grid
@@ -622,20 +636,16 @@ Cell.prototype.isWalkable = function(){
  */
 MuEngine.Avatar = function(config){
 	MuEngine.Node.call(this);
-	this.row = 0 | config.row;
-	this.col = 0 | config.col;
 	this.grid = config.grid;
 	this.speed = 0.1 | config.speed; 
 	if(this.grid == undefined){
 		throw "Avatar.constructor: grid must be defined"; 
 	}
 	//the current cell
-	this.cell = this.grid.getCell(this.row, this.col);
-    this.nextCell = null; //when moving..
-    this.cell.addChild(this);
-	//this.transform.setPos(this.cell.transform.pos);
-	//this.transform.update();
-
+	this.cell = this.grid.getCell(config.row, config.col);
+  this.nextCell = null; //when moving..
+  this.cell.addChild(this);
+	this.dir = 0; //zero if not moving. DIR_XX flag if moving.
 };
 
 //chaining prototypes
@@ -655,8 +665,11 @@ MuEngine.Avatar.DIR_RIGHT = 8;
  * @param: dir: binary flag, "OR" combination of Avatar.DIR_xxx constants. 
  */
 MuEngine.Avatar.prototype.move = function(_dir){
-	var row = this.row + ((_dir & MuEngine.Avatar.DIR_UP)?1:((_dir & MuEngine.Avatar.DIR_DOWN)?-1:0));
-    var col = this.col + ((_dir & MuEngine.Avatar.DIR_RIGHT)?1:((_dir & MuEngine.Avatar.DIR_LEFT)?-1:0));
+  //return if already moving
+  if(this.dir != 0) return;
+  this.dir = _dir;
+	var row = this.cell.row + ((_dir & MuEngine.Avatar.DIR_UP)?1:((_dir & MuEngine.Avatar.DIR_DOWN)?-1:0));
+    var col = this.cell.col + ((_dir & MuEngine.Avatar.DIR_RIGHT)?1:((_dir & MuEngine.Avatar.DIR_LEFT)?-1:0));
 	this.nextCell = this.grid.getCell(row, col);
 	if(this.nextCell == null){
 		//out of boundaries!
@@ -666,9 +679,20 @@ MuEngine.Avatar.prototype.move = function(_dir){
 		this.nextCell = null;
         return false;
 	}
-    var animator = new MuEngine.AnimatorPos({
-        start: this.cell.wp,
-        end: this.nextCell.wp
+	console.log("moving dir ", _dir, " from ", this.cell.row , ",", this.cell.col, " to ", row, ",", col);
+	_this = this;
+  var animator = new MuEngine.AnimatorPos({
+      start: this.cell.wp,
+      end: this.nextCell.wp,
+			cb: function(){
+				_this.cell.removeChild(_this);
+				_this.cell = _this.nextCell;
+				_this.cell.addChild(_this);
+				_this.nextCell = null;	
+				_this.dir = 0;
+				_this.transform.setPos(0, 0, 0);
+				//_this.transform.update();
+			}
     });
     this.addAnimator(animator);
 }

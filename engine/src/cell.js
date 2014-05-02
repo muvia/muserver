@@ -12,7 +12,7 @@ var Cell = function(i, j, cellsize){
 	this.eyePos = vec3.create();
 	this.transform.setPos(i*cellsize, 0, j*cellsize);
 	this.transform.update();
-    this.walkable = true;
+  this.walkable = true;
 };
 
 //chaining prototypes
