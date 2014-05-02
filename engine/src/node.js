@@ -20,6 +20,17 @@ MuEngine.Node.prototype.addChild = function(node){
 	this.children.push(node);
 };
 
+
+MuEngine.Node.prototype.removeChild = function(node){
+	for(i=0; i<this.children.length; ++i){
+		if(this.children[i] === node){
+			this.children.splice(i, 1);
+			return;
+		}
+	}
+};
+
+
 /**
 * use the given matrix as parent matrix, compute world transformation using local transform
 */

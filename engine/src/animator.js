@@ -14,14 +14,15 @@ MuEngine.Animator  = function(config){
 //prototype chaining will call this method with empty parameters
   if(config === undefined) return;	
 	//configuration parameters
-    this.target = config.target ||  "pos";
+  this.target = config.target ||  "pos";
 	this.loops = config.loops || 1;
-    this.startVal = config.start || 0.0;
-    this.endVal = config.end || 1.0;
-    this.duration = config.duration || 1000;
+  this.startVal = config.start || 0.0;
+  this.endVal = config.end || 1.0;
+  this.duration = config.duration || 1000;
+	this.cb = config.cb;
 
 	//internal status variables
-    this.starttime = 0;
+  this.starttime = 0;
 	this.status = "idle";  
 	this.step = 0.0;
 };
@@ -56,6 +57,7 @@ MuEngine.Animator.prototype.update = function(dt, node){
 				this.loops--;
 				this.step = 1.0;
 				this.status = MuEngine.Animator.STATUS_FINISHED;
+				this.cb();
 			}else{
 				this.step = this.elapsedtime/this.duration;
 			}
