@@ -207,6 +207,7 @@ MuEngine.Animator.prototype.update = function(dt, node){
 				this.step = 1.0;
 				this.status = MuEngine.Animator.STATUS_FINISHED;
 				this.cb();
+                return;
 			}else{
 				this.step = this.elapsedtime/this.duration;
 			}
