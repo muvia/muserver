@@ -668,20 +668,20 @@ MuEngine.Avatar.DIR_RIGHT = 8;
 MuEngine.Avatar.prototype.move = function(_dir){
   //return if already moving
   if(this.dir != 0) return;
-  this.dir = _dir;
-	var row = this.cell.row + ((_dir & MuEngine.Avatar.DIR_UP)?1:((_dir & MuEngine.Avatar.DIR_DOWN)?-1:0));
+    var row = this.cell.row + ((_dir & MuEngine.Avatar.DIR_UP)?1:((_dir & MuEngine.Avatar.DIR_DOWN)?-1:0));
     var col = this.cell.col + ((_dir & MuEngine.Avatar.DIR_RIGHT)?1:((_dir & MuEngine.Avatar.DIR_LEFT)?-1:0));
-	this.nextCell = this.grid.getCell(row, col);
-	if(this.nextCell == null){
-		//out of boundaries!
-		return false;
-	}
-	if(!this.nextCell.isWalkable()){
-		this.nextCell = null;
+    this.nextCell = this.grid.getCell(row, col);
+    if(this.nextCell == null){
+        //out of boundaries!
         return false;
-	}
-	console.log("moving dir ", _dir, " from ", this.cell.row , ",", this.cell.col, " to ", row, ",", col);
-	_this = this;
+    }
+    if(!this.nextCell.isWalkable()){
+        this.nextCell = null;
+        return false;
+    }
+    console.log("moving dir ", _dir, " from ", this.cell.row , ",", this.cell.col, " to ", row, ",", col);
+    this.dir = _dir;
+    _this = this;
   var animator = new MuEngine.AnimatorPos({
       start: this.cell.wp,
       end: this.nextCell.wp,
