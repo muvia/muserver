@@ -1,6 +1,7 @@
 <html ng-app="muPortal">
 <head>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.js"></script>
     <script src="js/muportal.js"></script>
     <title >{{'_HomeTitle_'| i18n }}</title>
 </head>
@@ -10,6 +11,10 @@ body
 <div ng-controller='mainController'>
     <p>{{'_Greeting_'| i18n }}</p>
 </div>
+
+<h2>view:</h2>
+<div data-ng-view=""></div>
+
 
 </body>
 </html>

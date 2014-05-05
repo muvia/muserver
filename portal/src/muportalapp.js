@@ -4,14 +4,11 @@
  */
 'use strict';
 
-var muPortalApp = angular.module('muPortal', ['localization']);
-
-/*.
+var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization']).
     config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
-            when('/', {templateUrl:'partials/home.html', controller:HomeController}).
-            when('/edit/:index', {templateUrl:'partials/form.html', controller:EditPersonController}).
-            when('/new', {templateUrl:'partials/form.html', controller:NewPersonController}).
+            when('/', {templateUrl:'partials/welcome.html', controller:"mainController"}).
+            when('/edit/:index', {templateUrl:'partials/form.html', controller:"mainController"}).
+            when('/welcome', {templateUrl:'partials/welcome.html', controller:"mainController"}).
             otherwise({redirectTo:'/'});
     }]);
-*/
