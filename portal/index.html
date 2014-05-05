@@ -1,8 +1,15 @@
-<html>
+<html ng-app="muPortal">
 <head>
-<title >a portal</title>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
+    <script src="js/muportal.js"></script>
+    <title >a portal</title>
 </head>
 <body>
 body
+
+<div ng-controller='mainController'>
+    <p>{{someText.message}}</p>
+</div>
+
 </body>
 </html>
