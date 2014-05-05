@@ -212,30 +212,3 @@ angular.module('localization', [])
         return i18NAttrDirective;
     }]);
 
-/**
- * muportalapp.js
- * app main module
- */
-'use strict';
-
-var muPortalApp = angular.module('muPortal', ['localization']);
-
-/*.
-    config(['$routeProvider', function ($routeProvider) {
-        $routeProvider.
-            when('/', {templateUrl:'partials/home.html', controller:HomeController}).
-            when('/edit/:index', {templateUrl:'partials/form.html', controller:EditPersonController}).
-            when('/new', {templateUrl:'partials/form.html', controller:NewPersonController}).
-            otherwise({redirectTo:'/'});
-    }]);
-*//**
- * controllers/main.js
- * controller for the index
- */
-
-muPortalApp.controller('mainController',
-    function($scope) {
-        var someText = {};
-        someText.message = 'You have started your journey.';
-        $scope.someText = someText;
-    });

@@ -10,6 +10,7 @@ module.exports = function (grunt) {
             dist: {
                 // the files to concatenate
                 src: [
+                    'lib/localize.js',
                     'src/muportalapp.js',
                     'src/controllers/main.js'
                 ],
