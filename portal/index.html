@@ -5,16 +5,12 @@
     <script src="js/muportal.js"></script>
     <title >{{'_HomeTitle_'| i18n }}</title>
 </head>
-<body>
-body
 
-<div ng-controller='mainController'>
-    <p>{{'_Greeting_'| i18n }}</p>
-</div>
-
-<h2>view:</h2>
-<div data-ng-view=""></div>
-
-
+<body ng-controller='mainController'>
+     <header class="header clearfix" ng-include="'/partials/header.html'"></header>
+      <div class="main-content">
+        <div ng-view></div>
+      </div>
+      <footer class="footer" ng-include="'/partials/footer.html'"></footer>
 </body>
 </html>
