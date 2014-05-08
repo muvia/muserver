@@ -7,5 +7,12 @@
   "license": "MIT",
   "dependencies": {
     "hapi": "^4.1.0"
-  }
+  },
+	"devDependencies": {
+  	"grunt": "0.4.2",
+	"frisby": "*",
+	"jasmine-node":"*",
+	"grunt-jasmine-node":"*"
+ 	 }
+
 }
