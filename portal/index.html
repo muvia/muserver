@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="muPortal">
+<html ng-app="muPortal" lang="{{}}">
 <head>
     <meta charset="utf-8">
     <title data-i18n='_siteTitle_'></title>
@@ -24,11 +24,26 @@
 
 <body ng-controller='mainController'>
 
-        <header role="banner" aria-labelledby="banner-desc" class="header clearfix" ng-include="'/partials/header.html'"></header>
+    <header role="banner" aria-labelledby="banner-desc" class="header clearfix" ng-include="'/partials/header.html'"></header>
 
-      <div class="main-content">
+    <nav role="navigation" aria-labelledby="sitenav-desc">
+        <h2 class="visually-hidden"><span id="sitenav-desc">Site</span> Navigation</h2>
+        <ul>
+            <li>...</li>
+            <li>...</li>
+            <li>...</li>
+        </ul>
+    </nav>
+
+
+
+    <!-- There should be only one main landmark. -->
+    <main  id="content" class="main-content" role="main" aria-labelledby="main-desc" tabindex="-1">
         <div ng-view></div>
-      </div>
-      <footer class="footer" ng-include="'/partials/footer.html'"></footer>
+    </main>
+
+    <!-- There should be only one content information section -->
+    <footer role="contentinfo" aria-labelledby="footer-desc" class="footer" ng-include="'/partials/footer.html'"></footer>
+
 </body>
 </html>
