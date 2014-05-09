@@ -6,7 +6,11 @@
   "author": "cesarpachon",
   "license": "MIT",
   "dependencies": {
-    "hapi": "^4.1.0"
+      "hapi": "^4.1.0",
+      "travelogue":"*",
+      "yar":"*",
+      "passport":"*",
+      "passport-local":"*"
   },
 	"devDependencies": {
   	"grunt": "0.4.2",
