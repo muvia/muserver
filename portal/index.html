@@ -1,0 +1,24 @@
+<html ng-app="muPortal">
+<head>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.js"></script>
+    <script src="js/ui-bootstrap-tpls-0.11.0.min.js"></script>
+    <script src="js/muportal.js"></script>
+    <title >{{'_HomeTitle_'| i18n }}</title>
+</head>
+
+<body ng-controller='mainController'>
+     <header class="header clearfix" ng-include="'/partials/header.html'"></header>
+      <div class="main-content">
+        <div ng-view></div>
+      </div>
+      <footer class="footer" ng-include="'/partials/footer.html'"></footer>
+</body>
+</html>
