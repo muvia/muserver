@@ -6,11 +6,13 @@
 muPortalApp.controller('mainController',
     function($scope, $window) {
 
-        var someText = {};
+        /*var someText = {};
         someText.message = 'You have started your journey.';
         $scope.someText = someText;
-
+        */
+        
         $scope.locale = ($window.navigator.userLanguage || $window.navigator.language)
+        console.log("your locale is: " +$scope.locale);
 
         /**
          * given a partialname, like "welcome_intro.html", return the relative
@@ -18,7 +20,6 @@ muPortalApp.controller('mainController',
          * @param partialname
          */
         $scope.getLocalizedPartial= function(partialname){
-            console.log("your locale is: " +$scope.locale);
             return "partials/"+$scope.locale.substr(0, 2) + "/" + partialname;
         }
 
