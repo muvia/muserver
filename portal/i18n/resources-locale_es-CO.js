@@ -20,6 +20,11 @@
         "description":"skip to main content in header link"
     },
     {
+        "key":"_bannerTitle_",
+        "value":"Título del banner",
+        "description":"Title in the banner"
+    },
+    {
         "key":"_welcome_",
         "value":"bienvenido",
         "description":"Home page title text"

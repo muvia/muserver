@@ -10,7 +10,7 @@ muPortalApp.controller('mainController',
         someText.message = 'You have started your journey.';
         $scope.someText = someText;
         */
-        
+
         $scope.locale = ($window.navigator.userLanguage || $window.navigator.language)
         console.log("your locale is: " +$scope.locale);
 
