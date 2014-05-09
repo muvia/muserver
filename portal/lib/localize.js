@@ -11,8 +11,8 @@ angular.module('localization', [])
     // managing the translation dictionary
     .provider('localize', function localizeProvider() {
 
-        this.languages = ['en-US'];
-        this.defaultLanguage = 'en-US';
+        this.languages = ['es-CO','en-US'];
+        this.defaultLanguage = 'es-CO';
         this.ext = 'js';
 
         var provider = this;
@@ -21,8 +21,8 @@ angular.module('localization', [])
 
             var localize = {
                 // use the $window service to get the language of the user's browser
-                language:'',
-                // array to hold the localized resource string entries
+                //language:$window.navigator.userLanguage || $window.navigator.language,
+                //language:'',
                 dictionary:[],
                 // location of the resource file
                 url: undefined,

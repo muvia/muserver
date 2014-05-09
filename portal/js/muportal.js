@@ -11,8 +11,8 @@ angular.module('localization', [])
     // managing the translation dictionary
     .provider('localize', function localizeProvider() {
 
-        this.languages = ['en-US'];
-        this.defaultLanguage = 'en-US';
+        this.languages = ['es-CO','en-US'];
+        this.defaultLanguage = 'es-CO';
         this.ext = 'js';
 
         var provider = this;
@@ -21,8 +21,8 @@ angular.module('localization', [])
 
             var localize = {
                 // use the $window service to get the language of the user's browser
-                language:'',
-                // array to hold the localized resource string entries
+                //language:$window.navigator.userLanguage || $window.navigator.language,
+                //language:'',
                 dictionary:[],
                 // location of the resource file
                 url: undefined,
@@ -232,11 +232,13 @@ var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.boo
  */
 
 muPortalApp.controller('mainController',
-    function($scope, $locale) {
+    function($scope, $window) {
 
         var someText = {};
         someText.message = 'You have started your journey.';
         $scope.someText = someText;
+
+        $scope.locale = ($window.navigator.userLanguage || $window.navigator.language)
 
         /**
          * given a partialname, like "welcome_intro.html", return the relative
@@ -244,7 +246,8 @@ muPortalApp.controller('mainController',
          * @param partialname
          */
         $scope.getLocalizedPartial= function(partialname){
-            return "partials/"+$locale.id.substr(0, 2) + "/" + partialname;
+            console.log("your locale is: " +$scope.locale);
+            return "partials/"+$scope.locale.substr(0, 2) + "/" + partialname;
         }
 
     });
