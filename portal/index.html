@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="muPortal" lang="{{}}">
+<html ng-app="muPortal"  ng-controller='mainController' lang="{{locale}}">
 <head>
     <meta charset="utf-8">
     <title data-i18n='_siteTitle_'></title>
@@ -22,7 +22,7 @@
     <script src="js/muportal.js"></script>
 </head>
 
-<body ng-controller='mainController'>
+<body >
 
     <header role="banner" aria-labelledby="banner-desc" class="header clearfix" ng-include="'/partials/header.html'"></header>
 
