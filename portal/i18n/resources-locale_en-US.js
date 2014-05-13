@@ -24,6 +24,17 @@
         "value":"Banner Title",
         "description":"Title in the banner"
     },
+
+    {
+        "key":"_login_",
+        "value":"Login",
+        "description":"login button label"
+    },
+    {
+        "key":"_register_",
+        "value":"Register",
+        "description":"register button label"
+    },
     {
         "key":"_welcome_",
         "value":"you are welcome!",

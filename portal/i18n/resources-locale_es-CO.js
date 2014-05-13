@@ -25,6 +25,16 @@
         "description":"Title in the banner"
     },
     {
+        "key":"_login_",
+        "value":"Ingresar",
+        "description":"login button label"
+    },
+    {
+        "key":"_register_",
+        "value":"Registrarse",
+        "description":"register button label"
+    },
+    {
         "key":"_welcome_",
         "value":"bienvenido",
         "description":"Home page title text"
