@@ -1,4 +1,4 @@
-<h2 data-i18n="_register_"></h2>
+<h2  id="register-page" data-i18n="_register_"></h2>
 
 <p ><span data-i18n="_register_msg_"></span>
     <a href="" ua-oauth-link="facebook">Facebook</a>,
@@ -6,7 +6,7 @@
     <a href="" ua-oauth-link="linkedin">LinkedIn</a>.
 </p>
 
-<form ua-signup ng-show="!verificationEmailSent">
+<form ua-signup ng-show="!verificationEmailSent" role="form" aria-labelledby="register-page">
     <input name="first_name" placeholder="Your name"><br>
     <input name="login" ua-is-email placeholder="Email"><br>
     <input name="password" placeholder="Password" type="password"><br>
