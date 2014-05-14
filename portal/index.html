@@ -19,6 +19,8 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.js"></script>
     <script src="js/ui-bootstrap-tpls-0.11.0.min.js"></script>
+    <script src="https://app.userapp.io/js/userapp.client.js"></script>
+    <script src="https://app.userapp.io/js/angularjs.userapp.js"></script>
     <script src="js/muportal.js"></script>
 </head>
 
@@ -29,8 +31,9 @@
     <nav role="navigation" aria-labelledby="sitenav-desc">
         <h2 class="visually-hidden"><span id="sitenav-desc">Site</span> Navigation</h2>
         <ul>
-            <li><a href="#/login" data-i18n="_login_"></a></li>
-            <li><a href="#/register" data-i18n="_register_"></a></li>
+            <li ng-show="!user.authenticated" ><a href="#/login" data-i18n="_login_"></a></li>
+            <li ng-show="!user.authenticated" ><a href="#/register" data-i18n="_register_"></a></li>
+            <li ng-show="user.authenticated" ><a href="#" ua-logout data-i18n="_logout_"></a></li>
         </ul>
     </nav>
 

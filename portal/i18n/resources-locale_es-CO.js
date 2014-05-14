@@ -30,9 +30,39 @@
         "description":"login button label"
     },
     {
+        "key":"_login_msg_",
+        "value":"Ingresa tus datos:",
+        "description":"login intro paragraph"
+    },
+    {
+        "key":"_login_alternatives_",
+        "value":"O ingresa con tu cuenta de gmail, facebook ó linkedin:",
+        "description":"login intro paragraph"
+    },
+    {
+        "key":"_reset_password_",
+        "value":"Olvidaste tu contraseña?",
+        "description":"reset password link"
+    },
+    {
+        "key":"_username_",
+        "value":"Nombre de usuario",
+        "description":"username"
+    },
+    {
+        "key":"_password_",
+        "value":"Contraseña",
+        "description":"password"
+    },
+    {
         "key":"_register_",
         "value":"Registrarse",
         "description":"register button label"
+    },
+    {
+        "key":"_logout_",
+        "value":"Salir",
+        "description":"logout"
     },
     {
         "key":"_welcome_",

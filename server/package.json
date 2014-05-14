@@ -10,7 +10,8 @@
       "travelogue":"*",
       "yar":"*",
       "passport":"*",
-      "passport-local":"*"
+      "passport-local":"*",
+      "passport-userapp": "*"
   },
 	"devDependencies": {
   	"grunt": "0.4.2",

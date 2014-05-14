@@ -57,33 +57,18 @@ server.auth.strategy('passport', 'passport');
 var Passport = server.plugins.travelogue.passport;
 
 
-var LocalStrategy = require('passport-local').Strategy;
+var UserAppStrategy = require('passport-userapp').Strategy;
 
-Passport.use(new LocalStrategy(
-    function(username, password, done) {
-        User.findOne({ username: username }, function(err, user) {
-            if (err) { return done(err); }
-            if (!user) {
-                return done(null, false, { message: 'Incorrect username.' });
-            }
-            if (!user.validPassword(password)) {
-                return done(null, false, { message: 'Incorrect password.' });
-            }
+Passport.use(new UserAppStrategy({
+        appId: '53739ca105ab1'
+    },
+    function (userprofile, done) {
+        Users.findOrCreate(userprofile, function(err,user) {
+            if(err) return done(err);
             return done(null, user);
         });
     }
 ));
-
-
-Passport.serializeUser(function(user, done) {
-    done(null, user.id);
-});
-
-Passport.deserializeUser(function(id, done) {
-    User.findById(id, function (err, user) {
-        done(err, user);
-    });
-});
 
 server.route(routes);
 
