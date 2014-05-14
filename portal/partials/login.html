@@ -21,7 +21,7 @@
     </ul>
 
     <p ng-show="loading"><img src="https://app.userapp.io/img/ajax-loader-transparent.gif"></p>
-    <p ng-show="error">{{ error.error_code + ".."+ error.message }}</p>
+    <p ng-show="error" data-i18n="{{error.name}}"></p>
 
 </form>
 

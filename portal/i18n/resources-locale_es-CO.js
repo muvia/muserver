@@ -80,6 +80,16 @@
         "description":"logout"
     },
     {
+        "key":"INVALID_ARGUMENT_PASSWORD",
+        "value":"El valor para la contraseña no es correcto",
+        "description":"UserApp error code"
+    },
+    {
+        "key":"INVALID_ARGUMENT_LOGIN",
+        "value":"El nombre de usuario no es correcto",
+        "description":"UserApp error code"
+    },
+    {
         "key":"_welcome_",
         "value":"bienvenido",
         "description":"Home page title text"
