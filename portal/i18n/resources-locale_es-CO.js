@@ -36,7 +36,7 @@
     },
     {
         "key":"_login_alternatives_",
-        "value":"O ingresa con tu cuenta de gmail, facebook ó linkedin:",
+        "value":"O ingresa con una cuenta de alguno de estos servicios:",
         "description":"login intro paragraph"
     },
     {
@@ -58,6 +58,11 @@
         "key":"_register_",
         "value":"Registrarse",
         "description":"register button label"
+    },
+    {
+        "key":"_register_msg_",
+        "value":"Crea una nueva cuenta o regístrate usando una cuenta existente de: ",
+        "description":"register page intro paragraph"
     },
     {
         "key":"_logout_",

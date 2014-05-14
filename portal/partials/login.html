@@ -9,12 +9,12 @@
     <p><button type="submit" data-i18n="_login_"></button></p>
     <p data-i18n="_login_alternatives_">></p>
     <ul>
-    <li><a href="" ua-oauth-link="linkedin">Log in with LinkedIn</a></li>
-    <li><a href="" ua-oauth-link="google">Log in with Google</a></li>
-    <li><a href="" ua-oauth-link="facebook">Log in with Facebook</a></li>
+    <li><a href="" ua-oauth-link="linkedin">LinkedIn</a></li>
+    <li><a href="" ua-oauth-link="google">Google</a></li>
+    <li><a href="" ua-oauth-link="facebook">Facebook</a></li>
     </ul>
     <p ng-show="loading"><img src="https://app.userapp.io/img/ajax-loader-transparent.gif"></p>
-    <p ng-show="error">{{ error.message }}</p>
+    <p ng-show="error">{{ error.error_code + ".."+ error.message }}</p>
 </form>
 
 <p><a href="#/signup" data-i18n="_register_"></a></p>
