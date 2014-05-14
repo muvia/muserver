@@ -7,14 +7,21 @@
 </p>
 
 <form ua-signup ng-show="!verificationEmailSent" role="form" aria-labelledby="register-page">
-    <input name="first_name" placeholder="Your name"><br>
-    <input name="login" ua-is-email placeholder="Email"><br>
-    <input name="password" placeholder="Password" type="password"><br>
-    <p><button type="submit">Create account</button></p>
+
+    <label for="first_name" data-i18n="_username_"></label>
+    <input id="first_name" name="first_name" placeholder="{{'_username_' | i18n}}"><br>
+
+    <label for="login" data-i18n="_email_"></label>
+    <input id="login" name="login" type="email" ua-is-email placeholder="{{'_email_' | i18n}}"><br>
+
+    <label for="password" data-i18n="_password_"></label>
+    <input id="password" name="password" placeholder="{{'_password_' | i18n}}" type="password"><br>
+
+    <p><button type="submit" data-i18n="_register_"></button></p>
 
     <p ng-show="loading"><img src="https://app.userapp.io/img/ajax-loader-transparent.gif"></p>
     <p ng-show="error">{{ error.message }}</p>
 </form>
 
-<p ng-show="verificationEmailSent">An email has been sent to your inbox. Click on the link to verify your account.</p>
-<p><a href="#/login">Log in</a></p>
+<p ng-show="verificationEmailSent" data-i18n="_email_sent_"></p>
+<p><a href="#/login" data-i18n="_login_"></a></p>

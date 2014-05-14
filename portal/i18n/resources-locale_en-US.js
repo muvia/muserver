@@ -22,7 +22,7 @@
     {
         "key":"_bannerTitle_",
         "value":"Banner Title",
-        "description":"Title in the banner"
+        "description":"Title"
     },
     {
         "key":"_login_",
@@ -53,6 +53,16 @@
         "key":"_password_",
         "value":"password",
         "description":"password"
+    },
+    {
+        "key":"_email_",
+        "value":"e-mail",
+        "description":"email"
+    },
+    {
+        "key":"_email_sent_",
+        "value":"An email has been sent to your inbox. Click on the link to verify your account.",
+        "description":"email sent msg"
     },
     {
         "key":"_register_",

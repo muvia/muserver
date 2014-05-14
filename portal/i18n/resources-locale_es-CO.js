@@ -21,7 +21,7 @@
     },
     {
         "key":"_bannerTitle_",
-        "value":"Título del banner",
+        "value":"Título",
         "description":"Title in the banner"
     },
     {
@@ -53,6 +53,16 @@
         "key":"_password_",
         "value":"Contraseña",
         "description":"password"
+    },
+    {
+        "key":"_email_",
+        "value":"Correo electrónico",
+        "description":"email"
+    },
+    {
+        "key":"_email_sent_",
+        "value":"Te hemos enviado un correo electrónico con un link de confirmación. haz click en ese link para activar tu cuenta.",
+        "description":"email sent msg"
     },
     {
         "key":"_register_",
