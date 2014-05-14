@@ -12,7 +12,8 @@ module.exports = function (grunt) {
                 src: [
                     'lib/localize.js',
                     'src/muportalapp.js',
-                    'src/controllers/main.js'
+                    'src/controllers/mainctrl.js',
+                    'src/controllers/authctrl.js'
                 ],
                 // the location of the resulting JS file
                 dest: 'js/<%= pkg.name %>.js'

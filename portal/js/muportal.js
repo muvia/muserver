@@ -222,12 +222,12 @@ var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.boo
     config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/', {templateUrl:'partials/welcome.html', controller:"mainController"}).
-            when('/edit/:index', {templateUrl:'partials/form.html', controller:"mainController"}).
+            when('/login', {templateUrl:'partials/login.html', controller:"authController"}).
             when('/welcome', {templateUrl:'partials/welcome.html', controller:"mainController"}).
             otherwise({redirectTo:'/'});
     }]);
 /**
- * controllers/main.js
+ * controllers/mainctrl.js
  * controller for the index
  */
 
@@ -250,5 +250,14 @@ muPortalApp.controller('mainController',
         $scope.getLocalizedPartial= function(partialname){
             return "partials/"+$scope.locale.substr(0, 2) + "/" + partialname;
         }
+
+    });/**
+ * controllers/authctrl.js
+ * controller for the index
+ */
+
+muPortalApp.controller('authController',
+    function($scope, $window) {
+
 
     });
