@@ -16,14 +16,14 @@ frisby.create('Basic frisby-jasmine test')
      url: "http://brightb.it"
      }
      })*/
-     .expectJSONTypes('0', {
+    .inspectJSON()
+     .expectJSONTypes(
+        {
          id: String,
-         name: String, //Boolean
+         name: String,
+         description: String,
+         max_avatars: Number
          //in_reply_to_screen_name: function(val) { expect(val).toBeTypeOrNull(String); }, // Custom matcher callback
-         status: {
-            accept_connections: Boolean,
-            total_users: Number,
-            max_users: Number
-         }
-     })
+
+        })
     .toss();

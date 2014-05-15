@@ -8,12 +8,16 @@
 
 var hapi = require('hapi');
 
+var muWorldHandler = require('./api/world_handler.js');
 
 var routes = [
 
     //api related stuff
     {
         method: 'GET', path: '/api', handler: function (request, reply) { reply('ok'); }
+    },
+    {
+        method: 'GET', path: '/api/world', handler: muWorldHandler.getWorldHandler
     },
     //static content, for the portal
     {
