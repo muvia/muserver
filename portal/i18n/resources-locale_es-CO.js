@@ -90,6 +90,16 @@
         "description":"UserApp error code"
     },
     {
+        "key":"_profile_",
+        "value":"Mi Perfil",
+        "description":"Profile title"
+    },
+    {
+        "key":"_profile_msg_",
+        "value":"Aquí puedes configurar tus preferencias para hacer el sitio más fácil de usar.",
+        "description":"profile_intro_paragraph"
+    },
+    {
         "key":"_welcome_",
         "value":"bienvenido",
         "description":"Home page title text"

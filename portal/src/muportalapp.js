@@ -8,12 +8,12 @@ var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.boo
     config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/', {templateUrl:'partials/welcome.html', controller:"mainController"}).
-            when('/login', {templateUrl:'partials/login.html', controller:"authController", login: true}).
+            when('/login', {templateUrl:'partials/login.html', controller:"authController", public: true}).
             when('/register', {templateUrl:'partials/register.html', controller:"authController", public: true}).
-            when('/welcome', {templateUrl:'partials/welcome.html', controller:"mainController", public: true}).
+            when('/welcome', {templateUrl:'partials/welcome.html', controller:"mainController", login: true}).
+            when('/profile', {templateUrl:'partials/profile.html', controller:"mainController", login: true}).
             otherwise({redirectTo:'/'});
     }]);
-
 
 muPortalApp.run(function($rootScope, user) {
     user.init({ appId: '53739ca105ab1' });
