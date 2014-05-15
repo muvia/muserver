@@ -16,7 +16,13 @@ var MuWorld = function(){
     this.name = "The World 01";
     this.description = "the first world";
     this.max_avatars = 100;
+    this.num_avatars = 0;
 };
+
+MuWorld.prototype.acceptnew_avatars = function(){
+  return this.max_avatars > this.num_avatars;
+};
+
 
 
 module.exports = new MuWorld();

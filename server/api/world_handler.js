@@ -21,7 +21,9 @@ exports.getWorldHandler = function(request, reply){
         id: muWorld.id,
         name: muWorld.name,
         description: muWorld.description,
-        max_avatars: muWorld.max_avatars
+        max_avatars: muWorld.max_avatars,
+        num_avatars: muWorld.num_avatars,
+        acceptnew_avatars : muWorld.acceptnew_avatars()
     };
 
     reply(res);

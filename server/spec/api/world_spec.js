@@ -22,8 +22,10 @@ frisby.create('Basic frisby-jasmine test')
          id: String,
          name: String,
          description: String,
-         max_avatars: Number
-         //in_reply_to_screen_name: function(val) { expect(val).toBeTypeOrNull(String); }, // Custom matcher callback
+         max_avatars: Number,
+         num_avatars : Number,
+         acceptnew_avatars : Boolean
+//in_reply_to_screen_name: function(val) { expect(val).toBeTypeOrNull(String); }, // Custom matcher callback
 
         })
     .toss();
