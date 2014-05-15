@@ -101,7 +101,7 @@
     },
     {
         "key":"_welcome_",
-        "value":"you are welcome!",
+        "value":"welcome",
         "description":"Home page title text"
     }
 
