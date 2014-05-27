@@ -1,6 +1,7 @@
 <html>
 <head>
 <title>testing controller concept</title>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 </head>
 <body>
 
@@ -12,6 +13,34 @@
     <li>http://www.w3.org/WAI/GL/wiki/Using_ARIA_menus</li>
 </ul>
 
+
+<a href="#" id="controller">
+    <div id="root">root</div>
+
+    <div id="option1">
+        opcion 1
+    </div>
+
+    <div id="option2">
+        opcion 2
+    </div>
+
+    <div id="option3">
+        opcion 3
+    </div>
+</a>
+
+
+<script>
+    'use strict';
+
+    var controller = $("#controller");
+
+    controller.focus(function(ev){console.log("focus!");});
+
+    controller.keydown(function(){console.log("key pressed ");});
+
+</script>
 
 <ul role="menubar">
     <li role="presentation">
