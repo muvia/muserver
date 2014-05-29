@@ -1,6 +1,45 @@
 <html>
 <head>
 <title>testing controller concept</title>
+
+<style media="screen" type="text/css">
+
+.controller-container {
+   float:left;
+   width:100%;
+   background:#fff;
+   border-bottom:4px solid #000;
+   overflow:hidden;
+   position:relative;
+}
+.controller-container ul {
+   clear:left;
+   float:left;
+   list-style:none;
+   margin:0;
+   padding:0;
+   position:relative;
+   left:50%;
+   text-align:center;
+}
+.controller-container ul li {
+   display:block;
+   float:left;
+   list-style:none;
+   margin:0;
+   padding:0;
+   position:relative;
+   right:50%;
+}
+
+.controller-container focused{
+	border-style:double;
+	border-color:#ff0000;
+}
+
+</style>
+
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 </head>
 <body>
 
@@ -12,6 +51,38 @@
     <li>http://www.w3.org/WAI/GL/wiki/Using_ARIA_menus</li>
 </ul>
 
+
+<a href="#" id="controller" class="controller-container">
+    <ul id="root">
+
+    <li id="option1">
+        opcion 1
+    </li>
+
+    <li id="option2">
+        opcion 2
+    </li>
+
+    <li id="option3">
+        opcion 3
+    </li>
+    </ul>
+</a>
+
+
+<script>
+    'use strict';
+
+    var controller = $("#controller");
+
+    controller.focus(function(ev){console.log("focus!");});
+
+    controller.keydown(function(){console.log("key pressed ");});
+    
+    
+    
+
+</script>
 
 <ul role="menubar">
     <li role="presentation">
