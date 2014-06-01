@@ -45,12 +45,12 @@ module.exports = function (grunt) {
             dist: {
             	nonull: true,
                 files: [
-	                {expand: true, src: ['index.html'], dest: '../../cesarpachon.github.io/muvia/', filter: 'isFile'},
-	                {expand: true, src: ['js/*'], dest: '../../cesarpachon.github.io/muvia/', filter: 'isFile'},
-	                {expand: true, src: ['css/*'], dest: '../../cesarpachon.github.io/muvia/', filter: 'isFile'},
-	                {expand: true, src: ['i18n/*'], dest: '../../cesarpachon.github.io/muvia/', filter: 'isFile'},
-	                {expand: true, src: ['partials/*'], dest: '../../cesarpachon.github.io/muvia/', filter: 'isFile'},
-	                {expand: true, src: ['img/*'], dest: '../../cesarpachon.github.io/muvia/', filter: 'isFile'}
+	                {expand: true, src: ['index.html'], dest: '../server/portal/', filter: 'isFile'},
+	                {expand: true, src: ['js/*'], dest: '../server/portal/', filter: 'isFile'},
+	                {expand: true, src: ['css/*'], dest: '../server/portal/', filter: 'isFile'},
+	                {expand: true, src: ['i18n/*'], dest: '../server/portal/', filter: 'isFile'},
+	                {expand: true, src: ['partials/*'], dest: '../server/portal/', filter: 'isFile'},
+	                {expand: true, src: ['img/*'], dest: '../server/portal/', filter: 'isFile'}
                 ]
             }
         }

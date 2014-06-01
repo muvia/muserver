@@ -1,0 +1,29 @@
+<!--handling login-->
+<h2  id="login-page" data-i18n="_login_"></h2>
+
+<p data-i18n="_login_msg_"></p>
+
+<form ua-login  role="form" aria-labelledby="login-page">
+
+    <label for="login" data-i18n="_username_"></label>
+    <input id="login" name="login" placeholder="{{'_username_' | i18n}}"><br>
+
+    <label for="password" data-i18n="_password_"></label>
+    <input id="password" name="password" placeholder="{{'_password_' | i18n}}" type="password"><br>
+
+    <p><button type="submit" data-i18n="_login_"></button></p>
+
+    <p data-i18n="_login_alternatives_">></p>
+    <ul>
+    <li><a href="" ua-oauth-link="linkedin">LinkedIn</a></li>
+    <li><a href="" ua-oauth-link="google">Google</a></li>
+    <li><a href="" ua-oauth-link="facebook">Facebook</a></li>
+    </ul>
+
+    <p ng-show="loading"><img src="https://app.userapp.io/img/ajax-loader-transparent.gif"></p>
+    <p ng-show="error" data-i18n="{{error.name}}"></p>
+
+</form>
+
+<p><a href="#/register" data-i18n="_register_"></a></p>
+<p><a href="#/reset-password" data-i18n="_reset_password_"></a></p>

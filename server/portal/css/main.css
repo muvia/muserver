@@ -1,0 +1,9 @@
+/* https://carmenwiki.osu.edu/display/10292/HTML5+Accessibility+Code+Examples
+ Tried and true technique for visually hidden but screen reader accessible text */
+.visually-hidden {
+    position: absolute;
+    left: -9999em;
+    top: auto;
+    width: 1px;
+    height: 1px;
+}

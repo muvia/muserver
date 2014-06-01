@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html ng-app="muPortal"  ng-controller='mainController' lang="{{locale}}">
+	<base href="/muvia/" />
+<head>
+    <meta charset="utf-8">
+    <title data-i18n='_siteTitle_'></title>
+    <meta name="description" content="{{'_siteDesc_'| i18n }}">
+    <meta name="author" content="Cesar Pachon">
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- Needed for styling of HTML5 tags in IE 8 and earlier -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.js"></script>
+    <script src="js/ui-bootstrap-tpls-0.11.0.min.js"></script>
+    <script src="https://app.userapp.io/js/userapp.client.js"></script>
+    <script src="https://app.userapp.io/js/angularjs.userapp.js"></script>
+    <script src="js/muportal.js"></script>
+</head>
+
+<body >
+
+    <header role="banner" aria-labelledby="banner-desc" class="header clearfix" ng-include="'/partials/header.html'"></header>
+
+    <nav role="navigation" aria-labelledby="sitenav-desc">
+        <h2 class="visually-hidden"><span id="sitenav-desc">Site</span> Navigation</h2>
+        <ul>
+            <li ><a href="#/welcome" data-i18n="_welcome_"></a></li>
+            <li ng-hide="user.authenticated" ><a href="#/login" data-i18n="_login_"></a></li>
+            <li ng-hide="user.authenticated" ><a href="#/register" data-i18n="_register_"></a></li>
+            <li ng-show="user.authenticated" ><a href="#/profile" data-i18n="_profile_"></a></li>
+            <li ng-show="user.authenticated" ><a href="#" ua-logout data-i18n="_logout_"></a></li>
+        </ul>
+    </nav>
+
+
+
+    <!-- There should be only one main landmark. -->
+    <main  id="content" class="main-content" role="main" aria-labelledby="main-desc" tabindex="-1">
+        <div ng-view></div>
+    </main>
+
+    <!-- There should be only one content information section -->
+    <footer role="contentinfo" aria-labelledby="footer-desc" class="footer" ng-include="'/partials/footer.html'"></footer>
+
+</body>
+</html>
