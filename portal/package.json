@@ -7,6 +7,7 @@
         "grunt-contrib-concat": "*",
         "grunt-contrib-jasmine": "~0.4.2",
         "jsdoc": "*",
-        "grunt-jsdoc": "*"
+        "grunt-jsdoc": "*",
+        "grunt-contrib-copy":"*"
     }
 }

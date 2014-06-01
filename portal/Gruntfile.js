@@ -40,6 +40,19 @@ module.exports = function (grunt) {
                     destination: 'jsdoc'
                 }
             }
+        },
+        copy: {
+            dist: {
+            	nonull: true,
+                files: [
+	                {expand: true, src: ['index.html'], dest: '../../cesarpachon.github.io/muvia/', filter: 'isFile'},
+	                {expand: true, src: ['js/*'], dest: '../../cesarpachon.github.io/muvia/', filter: 'isFile'},
+	                {expand: true, src: ['css/*'], dest: '../../cesarpachon.github.io/muvia/', filter: 'isFile'},
+	                {expand: true, src: ['i18n/*'], dest: '../../cesarpachon.github.io/muvia/', filter: 'isFile'},
+	                {expand: true, src: ['partials/*'], dest: '../../cesarpachon.github.io/muvia/', filter: 'isFile'},
+	                {expand: true, src: ['img/*'], dest: '../../cesarpachon.github.io/muvia/', filter: 'isFile'}
+                ]
+            }
         }
     });
 
@@ -47,9 +60,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
     grunt.registerTask('test', ['jasmine']);
     grunt.registerTask('default', ['watch']);
     grunt.registerTask('make', ['concat:dist']);
     grunt.registerTask('doc', ['jsdoc:dist']);
+    grunt.registerTask('deploy', ['copy:dist']);
 };
