@@ -6,18 +6,24 @@
   "author": "cesarpachon",
   "license": "MIT",
   "dependencies": {
-      "hapi": "^4.1.0",
-      "travelogue":"*",
-      "yar":"*",
-      "passport":"*",
-      "passport-local":"*",
-      "passport-userapp": "*"
+    "hapi": "^4.1.0",
+    "travelogue": "*",
+    "yar": "*",
+    "passport": "*",
+    "passport-local": "*",
+    "passport-userapp": "*"
   },
-	"devDependencies": {
-  	"grunt": "0.4.2",
-	"frisby": "*",
-	"jasmine-node":"*",
-	"grunt-jasmine-node":"*"
- 	 }
-
+  "devDependencies": {
+    "grunt": "0.4.2",
+    "frisby": "*",
+    "jasmine-node": "*",
+    "grunt-jasmine-node": "*"
+  },
+  "subdomain": "muserver",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
 }
