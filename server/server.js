@@ -22,7 +22,7 @@ var routes = [
     //static content, for the portal
     {
         method: 'GET', path: '/{path*}',
-        handler: { directory: { path: '../portal', listing: true } }
+        handler: { directory: { path: '/portal', listing: true } }
     }
     ];
 
