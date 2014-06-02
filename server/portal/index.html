@@ -35,6 +35,7 @@
             <li ng-hide="user.authenticated" ><a href="#/login" data-i18n="_login_"></a></li>
             <li ng-hide="user.authenticated" ><a href="#/register" data-i18n="_register_"></a></li>
             <li ng-show="user.authenticated" ><a href="#/profile" data-i18n="_profile_"></a></li>
+            <li ng-show="user.authenticated" ><a href="#" ua-logout data-i18n="_virtualworld_"></a></li>
             <li ng-show="user.authenticated" ><a href="#" ua-logout data-i18n="_logout_"></a></li>
         </ul>
     </nav>

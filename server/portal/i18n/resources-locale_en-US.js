@@ -103,6 +103,16 @@
         "key":"_welcome_",
         "value":"welcome",
         "description":"Home page title text"
+    },
+     {
+        "key":"_virtualworld_",
+        "value":"Virtual World",
+        "description":"virtualworld page title"
+    },
+    {
+        "key":"_virtualworld_msg_",
+        "value":"virtual world message",
+        "description":"virtual world text"
     }
 
 ]

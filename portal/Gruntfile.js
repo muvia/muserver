@@ -5,7 +5,7 @@ module.exports = function (grunt) {
         concat: {
             options: {
                 // define a string to put between each file in the concatenated output
-                separator: ''
+                separator: '//------'
             },
             dist: {
                 // the files to concatenate
@@ -21,7 +21,7 @@ module.exports = function (grunt) {
         },
         watch: {
             files: ['<%= concat.dist.src %>'],
-            tasks: ['concat:dist']
+            tasks: ['concat:dist', 'copy:dist']
         },
         jasmine: {
             test: {
