@@ -1,6 +1,6 @@
 {
   "name": "muserver",
-  "version": "0.0.1-2",
+  "version": "0.0.1-3",
   "description": "muserver platform",
   "main": "server.js",
   "author": "cesarpachon",
