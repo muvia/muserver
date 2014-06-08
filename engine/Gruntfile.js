@@ -10,28 +10,28 @@ module.exports = function(grunt) {
 		dist: {
 			// the files to concatenate
 			src: [
-					   'src/header.js',
-					   'src/transform.js',
-					   'src/animator.js',
-					   'src/node.js',
-					   'src/camera.js',
-					   'src/cell.js',
-					   'src/grid.js',
-					   'src/avatar.js',
-					   'src/line.js',
-						 'src/imagehandler.js', 
-						 'src/sprite.js', 
-					   'src/util.js',
-							'src/priority_queue.js',
-						 'src/engine.js'
-					 ],
+				'src/header.js',
+				'src/transform.js',
+				'src/animator.js',
+				'src/node.js',
+				'src/camera.js',
+				'src/cell.js',
+				'src/grid.js',
+				'src/avatar.js',
+				'src/line.js',
+				'src/imagehandler.js', 
+				'src/sprite.js', 
+				'src/util.js',
+				'src/priority_queue.js',
+				'src/engine.js'
+			],
 			// the location of the resulting JS file
 			dest: 'dist/<%= pkg.name %>.js'
 		 }
 		},
 		watch: {
 		  files: ['<%= concat.dist.src %>'],
-			tasks: ['concat:dist']
+			tasks: ['concat:dist', 'copy:dist']
 		},
 		jasmine: {
 			test:{										 
@@ -50,16 +50,32 @@ module.exports = function(grunt) {
                     destination: 'jsdoc'
                 }
             }	
-	}
+	},
+        copy: {
+            dist: {
+            	nonull: true,
+                files: [
+	                {
+	                	expand: true, 
+	                	cwd: 'dist/', 
+		                src: ['<%= pkg.name %>.js'], 
+		                dest: '../server/portal/js/', 
+		                filter: 'isFile'
+		            }
+                ]
+            }
+        }
 });
 
 grunt.loadNpmTasks('grunt-contrib-jasmine');
 grunt.loadNpmTasks('grunt-contrib-watch');
 grunt.loadNpmTasks('grunt-contrib-concat');
 grunt.loadNpmTasks('grunt-jsdoc');
+grunt.loadNpmTasks('grunt-contrib-copy');
+
 
 grunt.registerTask('test', ['jasmine']);
 grunt.registerTask('default', ['watch']);
-grunt.registerTask('make', ['concat:dist']);
+grunt.registerTask('make', ['concat:dist', 'copy:dist']);
 grunt.registerTask('doc', ['jsdoc:dist']);
 };

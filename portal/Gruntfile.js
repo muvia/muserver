@@ -5,7 +5,7 @@ module.exports = function (grunt) {
         concat: {
             options: {
                 // define a string to put between each file in the concatenated output
-                separator: '//------'
+                separator: '//------\n'
             },
             dist: {
                 // the files to concatenate
@@ -64,7 +64,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('test', ['jasmine']);
     grunt.registerTask('default', ['watch']);
-    grunt.registerTask('make', ['concat:dist']);
+    grunt.registerTask('make', ['concat:dist', 'copy:dist']);
     grunt.registerTask('doc', ['jsdoc:dist']);
     grunt.registerTask('deploy', ['copy:dist']);
 };

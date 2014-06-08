@@ -212,6 +212,8 @@ angular.module('localization', [])
         return i18NAttrDirective;
     }]);
 
+//------
+
 /**
  * muportalapp.js
  * app main module
@@ -234,6 +236,8 @@ muPortalApp.run(function($rootScope, user) {
     user.init({ appId: '53739ca105ab1' });
 
 });
+
+//------
 
 /**
  * controllers/mainctrl.js
@@ -260,7 +264,9 @@ muPortalApp.controller('mainController',
             return "partials/"+$scope.locale.substr(0, 2) + "/" + partialname;
         }
 
-    });/**
+    });//------
+
+/**
  * controllers/authctrl.js
  * controller for the index
  */
