@@ -9,6 +9,7 @@
 var hapi = require('hapi');
 
 var muWorldHandler = require('./api/world_handler.js');
+var muconfig = require('./config.js');
 
 var routes = [
 
@@ -39,7 +40,7 @@ var config = {
 var plugins = {
     yar: {
         cookieOptions: {
-            password: 'TheMuServerCookieSecret', // cookie secret
+            password: muconfig.yar_cookieOptions_password, // cookie secret
             isSecure: false // required for non-https applications
         }
     },
@@ -64,7 +65,7 @@ var Passport = server.plugins.travelogue.passport;
 var UserAppStrategy = require('passport-userapp').Strategy;
 
 Passport.use(new UserAppStrategy({
-        appId: '53739ca105ab1'
+        appId: muconfig.passport_UserAppStrategy_appId
     },
     function (userprofile, done) {
         Users.findOrCreate(userprofile, function(err,user) {
