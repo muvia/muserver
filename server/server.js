@@ -9,17 +9,22 @@
 var hapi = require('hapi');
 
 var muWorldHandler = require('./api/world_handler.js');
+var muProfileHandler = require('./api/user_handler.js');
 var muconfig = require('./config.js');
+
+var path_auth_config = { 
+	auth: { strategies: ['passport'], mode: 'required' } 
+};
+
 
 var routes = [
 
     //api related stuff
-    {
-        method: 'GET', path: '/api', handler: function (request, reply) { reply('ok'); }
-    },
-    {
-        method: 'GET', path: '/api/world', handler: muWorldHandler.getWorldHandler
-    },
+    { method: 'GET', path: '/api', handler: function (request, reply) { reply('muserver API version 0.1  copyright 2014 cesarpachon@gmail.com'); }},
+    { method: 'GET', path: '/api/world', handler: muWorldHandler.getWorldHandler, config: path_auth_config},
+    { method: 'GET', path: '/api/profile', handler: muProfileHandler.getProfile, config: path_auth_config},
+    { method: 'POST', path: '/api/profile', handler: muProfileHandler.saveProfile, config: path_auth_config},
+    
     //static content, for the portal
     {
         method: 'GET', path: '/{path*}',
