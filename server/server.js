@@ -7,23 +7,21 @@
 'use strict';
 
 var hapi = require('hapi');
+var passport = require('passport');
 
 var muWorldHandler = require('./api/world_handler.js');
 var muProfileHandler = require('./api/user_handler.js');
 var muconfig = require('./config.js');
 
-var path_auth_config = { 
-	auth: { strategies: ['passport'], mode: 'required' } 
-};
 
 
 var routes = [
 
     //api related stuff
     { method: 'GET', path: '/api', handler: function (request, reply) { reply('muserver API version 0.1  copyright 2014 cesarpachon@gmail.com'); }},
-    { method: 'GET', path: '/api/world', handler: muWorldHandler.getWorldHandler, config: path_auth_config},
-    { method: 'GET', path: '/api/profile', handler: muProfileHandler.getProfile, config: path_auth_config},
-    { method: 'POST', path: '/api/profile', handler: muProfileHandler.saveProfile, config: path_auth_config},
+    { method: 'GET', path: '/api/world', handler: muWorldHandler.getWorldHandler},
+    { method: 'GET', path: '/api/profile', handler: muProfileHandler.getProfile },
+    { method: 'POST', path: '/api/profile', handler: muProfileHandler.saveProfile},
     
     //static content, for the portal
     {
@@ -32,9 +30,10 @@ var routes = [
     }
     ];
 
-var config = {
-    hostname: "0.0.0.0",
-    port:8080,
+
+var travelogue_config = {
+    hostname: muconfig.hostname,
+    port:muconfig.port,
     urls: {
         failureRedirect: '/login',
         successRedirect: '/'
@@ -49,10 +48,11 @@ var plugins = {
             isSecure: false // required for non-https applications
         }
     },
-    travelogue: config
+    travelogue: travelogue_config
 };
 
-var server = new hapi.Server(config.hostname, config.port);
+
+var server = new hapi.Server(muconfig.hostname, muconfig.port);
 
 
 server.pack.require(plugins, function (err) {
@@ -65,7 +65,6 @@ server.pack.require(plugins, function (err) {
 server.auth.strategy('passport', 'passport');
 
 var Passport = server.plugins.travelogue.passport;
-
 
 var UserAppStrategy = require('passport-userapp').Strategy;
 
