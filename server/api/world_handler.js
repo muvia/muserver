@@ -15,7 +15,7 @@ var muWorld = require('../models/world.js');
  * GET /world
  * @returns {{}}
  */
-exports.getWorldHandler = function(request, reply){
+exports.getWorld = function(request, reply){
 
     var res = {
         id: muWorld.id,
