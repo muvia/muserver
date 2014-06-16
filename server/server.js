@@ -8,6 +8,9 @@
 
 var hapi = require('hapi');
 var passport = require('passport');
+var UserAppStrategy = require('passport-userapp').Strategy;
+
+//var Travelogue = require('travelogue');
 
 var muWorldHandler = require('./api/world_handler.js');
 var muProfileHandler = require('./api/user_handler.js');
@@ -20,8 +23,8 @@ var routes = [
     //api related stuff
     { method: 'GET', path: '/api', handler: function (request, reply) { reply('muserver API version 0.1  copyright 2014 cesarpachon@gmail.com'); }},
     { method: 'GET', path: '/api/world', handler: muWorldHandler.getWorldHandler},
-    { method: 'GET', path: '/api/profile', handler: muProfileHandler.getProfile },
-    { method: 'POST', path: '/api/profile', handler: muProfileHandler.saveProfile},
+    { method: 'GET', path: '/api/profile', config: { auth: 'passport' }, handler: muProfileHandler.getProfile },
+    { method: 'POST', path: '/api/profile', config: { auth: 'passport' },  handler: muProfileHandler.saveProfile},
     
     //static content, for the portal
     {
@@ -54,6 +57,9 @@ var plugins = {
 
 var server = new hapi.Server(muconfig.hostname, muconfig.port);
 
+//console.log(Travelogue);
+//Travelogue.configure(server, Passport, plugins);
+
 
 server.pack.require(plugins, function (err) {
     if (err) {
@@ -64,21 +70,27 @@ server.pack.require(plugins, function (err) {
 
 server.auth.strategy('passport', 'passport');
 
-var Passport = server.plugins.travelogue.passport;
+//var Passport = server.plugins.travelogue.passport;
 
-var UserAppStrategy = require('passport-userapp').Strategy;
-
+/*
 Passport.use(new UserAppStrategy({
         appId: muconfig.passport_UserAppStrategy_appId
     },
     function (userprofile, done) {
+    	console.log("hey hey");
         Users.findOrCreate(userprofile, function(err,user) {
-            if(err) return done(err);
-            return done(null, user);
+            if(err){
+            	console.log("UserAppStrategy:error: "+ err);
+            	return done(err);
+            } else{
+            	console.log("UserAppStrategy:success: "+ user);
+	            return done(null, user);            	
+            }
+
         });
     }
 ));
-
+*/
 server.route(routes);
 
 server.start();
