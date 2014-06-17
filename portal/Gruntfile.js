@@ -20,7 +20,7 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-            files: ['<%= concat.dist.src %>'],
+            files: ['<%= concat.dist.src %>', 'partials/*', 'img/*', 'css/*', 'i18n/*'],
             tasks: ['concat:dist', 'copy:dist']
         },
         jasmine: {

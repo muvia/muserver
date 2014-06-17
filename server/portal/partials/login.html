@@ -6,10 +6,10 @@
 <form role="form" aria-labelledby="login-page" ng-controller="authController as auth" ng-submit="auth.doLogin()">
 
     <label for="login" data-i18n="_username_"></label>
-    <input id="login" name="login" placeholder="{{'_username_' | i18n}}" ><br>
+    <input id="login" name="login" placeholder="{{'_username_' | i18n}}" ng-model="auth.usr"><br>
 
     <label for="password" data-i18n="_password_"></label>
-    <input id="password" name="password" placeholder="{{'_password_' | i18n}}" type="password" ><br>
+    <input id="password" name="password" placeholder="{{'_password_' | i18n}}" type="password" ng-model="auth.psw" ><br>
 
     <p><button type="submit" data-i18n="_login_"></button></p>
 
