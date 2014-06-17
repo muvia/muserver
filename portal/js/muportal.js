@@ -255,6 +255,43 @@ muPortalApp.run(function($rootScope, $http) {
 });
 
 //------
+/**
+ * this service encapsulates the /login and /logount api endpoint
+ */
+
+
+
+
+muPortalApp.service("authsrv", [ "$http", function($http){
+
+    /**
+     *
+     * @param usr
+     * @param psw
+     */
+	this.login= function(usr, psw){
+        $http({
+            method: 'POST',
+            url: '/api/login',
+            data: {usr: usr, psw:psw}
+        }).
+            success(function(data, status, headers, config) {
+                console.log("success", data, status, headers, config);
+            }).
+            error(function(data, status, headers, config) {
+                console.log("error",data,status,headers,config);
+            });
+	};
+
+    /**
+     *
+     */
+	this.logout = function(){
+		
+	};
+	
+}]);
+//------
 
 /**
  * controllers/mainctrl.js
@@ -290,13 +327,14 @@ muPortalApp.controller('mainController', ["$scope", "$window",
  * controller for the index
  */
 
-muPortalApp.controller('authController', ["$scope", "$window", function($scope, $window) {
+muPortalApp.controller('authController', ["$scope", "$window", "authsrv", function($scope, $window, authsrv) {
 
     this.usr = null;
     this.psw = null;
 
     this.doLogin = function(){
         console.log("the login2!", this.usr, this.psw);
+        authsrv.login(this.usr, this.psw);
     }
 
 }]);

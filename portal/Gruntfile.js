@@ -12,6 +12,7 @@ module.exports = function (grunt) {
                 src: [
                     'lib/localize.js',
                     'src/muportalapp.js',
+                    'src/services/authsrv.js',
                     'src/controllers/mainctrl.js',
                     'src/controllers/authctrl.js'
                 ],
