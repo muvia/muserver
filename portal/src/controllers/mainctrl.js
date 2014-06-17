@@ -4,7 +4,7 @@
  * controller for the index
  */
 
-muPortalApp.controller('mainController',
+muPortalApp.controller('mainController', ["$scope", "$window",
     function($scope, $window) {
 
         /*var someText = {};
@@ -12,7 +12,7 @@ muPortalApp.controller('mainController',
         $scope.someText = someText;
         */
 
-        $scope.locale = ($window.navigator.userLanguage || $window.navigator.language)
+        $scope.locale = ($window.navigator.userLanguage || $window.navigator.language);
         console.log("your locale is: " +$scope.locale);
 
         /**
@@ -24,4 +24,6 @@ muPortalApp.controller('mainController',
             return "partials/"+$scope.locale.substr(0, 2) + "/" + partialname;
         }
 
-    });
+
+
+    } ]);

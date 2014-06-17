@@ -5,7 +5,7 @@
  */
 'use strict';
 
-var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.bootstrap', 'UserApp']).
+var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.bootstrap']).
     config(['$routeProvider', function ($routeProvider) {
         
     	//configure navigation paths in client side
@@ -20,14 +20,13 @@ var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.boo
     
     }]);
 
-muPortalApp.run(function($rootScope, $http, user) {
-    user.init({
+muPortalApp.run(function($rootScope, $http) {
+    /*user.init({
     	appId: '53739ca105ab1',
 		heartbeatInterval: 0 
-    });
+    });*/
     
 	//add and remove auth token from session headers so they are available on server side 
-    //https://app.userapp.io/#/docs/libs/angularjs/#heartbeats
 	$rootScope.$on('user.login', function() {
 		console.log('adding auth token to headers ' + user.token());
 		$http.defaults.headers.common.Authorization = 'Basic ' + btoa(':' + user.token());

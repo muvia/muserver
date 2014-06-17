@@ -220,7 +220,7 @@ angular.module('localization', [])
  */
 'use strict';
 
-var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.bootstrap', 'UserApp']).
+var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.bootstrap']).
     config(['$routeProvider', function ($routeProvider) {
         
     	//configure navigation paths in client side
@@ -235,14 +235,13 @@ var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.boo
     
     }]);
 
-muPortalApp.run(function($rootScope, $http, user) {
-    user.init({
+muPortalApp.run(function($rootScope, $http) {
+    /*user.init({
     	appId: '53739ca105ab1',
 		heartbeatInterval: 0 
-    });
+    });*/
     
 	//add and remove auth token from session headers so they are available on server side 
-    //https://app.userapp.io/#/docs/libs/angularjs/#heartbeats
 	$rootScope.$on('user.login', function() {
 		console.log('adding auth token to headers ' + user.token());
 		$http.defaults.headers.common.Authorization = 'Basic ' + btoa(':' + user.token());
@@ -262,7 +261,7 @@ muPortalApp.run(function($rootScope, $http, user) {
  * controller for the index
  */
 
-muPortalApp.controller('mainController',
+muPortalApp.controller('mainController', ["$scope", "$window",
     function($scope, $window) {
 
         /*var someText = {};
@@ -270,7 +269,7 @@ muPortalApp.controller('mainController',
         $scope.someText = someText;
         */
 
-        $scope.locale = ($window.navigator.userLanguage || $window.navigator.language)
+        $scope.locale = ($window.navigator.userLanguage || $window.navigator.language);
         console.log("your locale is: " +$scope.locale);
 
         /**
@@ -282,15 +281,19 @@ muPortalApp.controller('mainController',
             return "partials/"+$scope.locale.substr(0, 2) + "/" + partialname;
         }
 
-    });//------
+
+
+    } ]);//------
 
 /**
  * controllers/authctrl.js
  * controller for the index
  */
 
-muPortalApp.controller('authController',
-    function($scope, $window) {
+muPortalApp.controller('authController', ["$scope", "$window", function($scope, $window) {
 
+    this.doLogin = function(){
+        console.log("the login2!");
+    }
 
-    });
+}]);

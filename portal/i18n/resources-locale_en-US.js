@@ -35,11 +35,6 @@
         "description":"login intro paragraph"
     },
     {
-        "key":"_login_alternatives_",
-        "value":"or login with any account of these services:",
-        "description":"login intro paragraph"
-    },
-    {
         "key":"_reset_password_",
         "value":"Forgot your password?",
         "description":"reset password link"

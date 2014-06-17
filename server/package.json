@@ -6,13 +6,8 @@
   "author": "cesarpachon",
   "license": "MIT",
   "dependencies": {
-    "hapi": "^4.1.0",
-    "travelogue": "*",
-    "yar": "*",
-    "passport": "*",
-    "passport-local": "*",
-    "passport-userapp": "*"
-  },
+    "hapi": "^4.1.0"
+    },
   "devDependencies": {
     "grunt": "0.4.2",
     "frisby": "*",
