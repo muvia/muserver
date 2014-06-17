@@ -3,6 +3,8 @@
  */
 "use strict";
 
+var btoa = require('btoa');
+
 /**
  * tokenStore keeps the valid tokens. each token has the following structure:
  * {
@@ -11,7 +13,7 @@
  *  creationtime
  * }
  */
-var tokenStore = [];
+var g_tokenStore = [];
 
 /**
  * login method. if usr, psw are ok, returns an authentication token.
@@ -24,9 +26,18 @@ exports.login = function(usr, psw){
    psw != undefined && psw != null && 
    usr === psw){
    	console.log('ok '+ usr + ' '+ psw);
-   	return "what is the authtoken..";
+    var data = {
+        usr: usr,
+        creation: Date.now()
+    };
+    var token = btoa(JSON.stringify(data));
+    g_tokenStore[token] = data;
+   	return token;
 	}
 	else{
 		return null;
 	}
 };
+
+
+
