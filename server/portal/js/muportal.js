@@ -226,11 +226,12 @@ var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.boo
     	//configure navigation paths in client side
         $routeProvider.
             when('/', {templateUrl:'partials/welcome.html', controller:"mainController"}).
-            when('/login', {templateUrl:'partials/login.html', controller:"authController", public: true}).
-            when('/register', {templateUrl:'partials/register.html', controller:"authController", public: true}).
-            when('/welcome', {templateUrl:'partials/welcome.html', controller:"mainController", login: true}).
-            when('/profile', {templateUrl:'partials/profile.html', controller:"mainController", login: true}).
-            when('/virtualworld', {templateUrl:'partials/virtualworld.html', controller:"mainController", login: true}).
+            when('/login', {templateUrl:'partials/login.html', controller:"authController"}).
+            when('/logout', {templateUrl:'partials/logout.html', controller:"authController"}).
+            when('/register', {templateUrl:'partials/register.html', controller:"authController"}).
+            when('/welcome', {templateUrl:'partials/welcome.html', controller:"mainController"}).
+            when('/profile', {templateUrl:'partials/profile.html', controller:"mainController"}).
+            when('/virtualworld', {templateUrl:'partials/virtualworld.html', controller:"mainController"}).
             otherwise({redirectTo:'/'});
     
     }]);
@@ -240,17 +241,6 @@ muPortalApp.run(function($rootScope, $http) {
     	appId: '53739ca105ab1',
 		heartbeatInterval: 0 
     });*/
-    
-	//add and remove auth token from session headers so they are available on server side 
-	$rootScope.$on('user.login', function() {
-		console.log('adding auth token to headers ' + user.token());
-		$http.defaults.headers.common.Authorization = 'Basic ' + btoa(':' + user.token());
-	});
-	
-	$rootScope.$on('user.logout', function() {
-		console.log('removing auth token from headers ');
-		$http.defaults.headers.common.Authorization = null;
-	});
 
 });
 
@@ -276,10 +266,11 @@ muPortalApp.service("authsrv", [ "$http", function($http){
             data: {usr: usr, psw:psw}
         }).
             success(function(data, status, headers, config) {
-                console.log("success", data, status, headers, config);
+                console.log(data);
+                $http.defaults.headers.common.Authorization = 'Basic '+data;
             }).
             error(function(data, status, headers, config) {
-                console.log("error",data,status,headers,config);
+
             });
 	};
 
@@ -287,7 +278,7 @@ muPortalApp.service("authsrv", [ "$http", function($http){
      *
      */
 	this.logout = function(){
-		
+        $http.defaults.headers.common.Authorization = null;
 	};
 	
 }]);
