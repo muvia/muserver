@@ -6,6 +6,7 @@
 "use strict";
 
 var Hapi = require('hapi');
+var MuAuth = require('../services/muauth');
 
 /**
  * POST /login
@@ -17,12 +18,11 @@ exports.login = function(request, reply){
 
 	var usr = request.payload.usr;
 	var psw = request.payload.psw;
+	
+	var token = MuAuth.login(usr, psw);
 
-	if(usr != undefined && usr != null && 
-	   psw != undefined && psw != null && 
-	   usr === psw){
-	   	console.log('ok '+ usr + ' '+ psw);
-	   	reply("what is the authtoken..");
+    if(token != null){
+		reply({tkn:token});
 	}else{
 		var error = Hapi.error.badRequest('auth error');
 		//return 401 if authorization fails
@@ -39,6 +39,9 @@ exports.login = function(request, reply){
  * @param {Object} reply
  */
 exports.logout = function(request, reply){
+    
+    //MuAuth.logout()
+    
     var res = {
     };
 

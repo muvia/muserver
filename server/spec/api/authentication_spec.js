@@ -18,4 +18,10 @@ frisby.create('must return 200 and auth token if valid usr, psw at /login path')
     	psw: 'prueba'
     })
     .expectStatus(200)
+    .expectHeaderContains('content-type', 'application/json')
+	.inspectJSON()
+    .expectJSONTypes(
+        {
+         tkn: String
+		})
     .toss();
