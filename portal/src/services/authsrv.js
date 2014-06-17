@@ -20,10 +20,10 @@ muPortalApp.service("authsrv", [ "$http", function($http){
         }).
             success(function(data, status, headers, config) {
                 console.log(data);
-                $http.defaults.headers.common.Authorization = 'Basic '+data;
+                $http.defaults.headers.common.Authorization = 'Basic :'+data.tkn;
             }).
             error(function(data, status, headers, config) {
-
+                    console.log("error loggin in", data, status);
             });
 	};
 
@@ -31,7 +31,17 @@ muPortalApp.service("authsrv", [ "$http", function($http){
      *
      */
 	this.logout = function(){
-        $http.defaults.headers.common.Authorization = null;
+        $http({
+            method: 'POST',
+            url: '/api/logout'
+        }).
+            success(function(data, status, headers, config) {
+                console.log("logged out!");
+                $http.defaults.headers.common.Authorization = null;
+            }).
+            error(function(data, status, headers, config) {
+                console.log("error logging out", data, status);
+            });
 	};
 	
 }]);

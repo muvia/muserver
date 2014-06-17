@@ -225,13 +225,13 @@ var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.boo
         
     	//configure navigation paths in client side
         $routeProvider.
-            when('/', {templateUrl:'partials/welcome.html', controller:"mainController"}).
-            when('/login', {templateUrl:'partials/login.html', controller:"authController"}).
-            when('/logout', {templateUrl:'partials/logout.html', controller:"authController"}).
-            when('/register', {templateUrl:'partials/register.html', controller:"authController"}).
-            when('/welcome', {templateUrl:'partials/welcome.html', controller:"mainController"}).
-            when('/profile', {templateUrl:'partials/profile.html', controller:"mainController"}).
-            when('/virtualworld', {templateUrl:'partials/virtualworld.html', controller:"mainController"}).
+            when('/', {templateUrl:'partials/welcome.html'}).
+            when('/login', {templateUrl:'partials/login.html'}).
+            when('/logout', {templateUrl:'partials/logout.html'}).
+            when('/register', {templateUrl:'partials/register.html'}).
+            when('/welcome', {templateUrl:'partials/welcome.html'}).
+            when('/profile', {templateUrl:'partials/profile.html'}).
+            when('/virtualworld', {templateUrl:'partials/virtualworld.html'}).
             otherwise({redirectTo:'/'});
     
     }]);
@@ -267,10 +267,10 @@ muPortalApp.service("authsrv", [ "$http", function($http){
         }).
             success(function(data, status, headers, config) {
                 console.log(data);
-                $http.defaults.headers.common.Authorization = 'Basic '+data;
+                $http.defaults.headers.common.Authorization = 'Basic :'+data.tkn;
             }).
             error(function(data, status, headers, config) {
-
+                    console.log("error loggin in", data, status);
             });
 	};
 
@@ -278,7 +278,17 @@ muPortalApp.service("authsrv", [ "$http", function($http){
      *
      */
 	this.logout = function(){
-        $http.defaults.headers.common.Authorization = null;
+        $http({
+            method: 'POST',
+            url: '/api/logout'
+        }).
+            success(function(data, status, headers, config) {
+                console.log("logged out!");
+                $http.defaults.headers.common.Authorization = null;
+            }).
+            error(function(data, status, headers, config) {
+                console.log("error logging out", data, status);
+            });
 	};
 	
 }]);
@@ -323,8 +333,8 @@ muPortalApp.controller('authController', ["$scope", "$window", "authsrv", functi
     this.usr = null;
     this.psw = null;
 
+
     this.doLogin = function(){
-        console.log("the login2!", this.usr, this.psw);
         authsrv.login(this.usr, this.psw);
     }
 

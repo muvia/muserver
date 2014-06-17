@@ -40,7 +40,7 @@ exports.login = function(request, reply){
  */
 exports.logout = function(request, reply){
     
-    //MuAuth.logout()
+    MuAuth.logout();
     
     var res = {
     };

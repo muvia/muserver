@@ -10,13 +10,13 @@ var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.boo
         
     	//configure navigation paths in client side
         $routeProvider.
-            when('/', {templateUrl:'partials/welcome.html', controller:"mainController"}).
-            when('/login', {templateUrl:'partials/login.html', controller:"authController"}).
-            when('/logout', {templateUrl:'partials/logout.html', controller:"authController"}).
-            when('/register', {templateUrl:'partials/register.html', controller:"authController"}).
-            when('/welcome', {templateUrl:'partials/welcome.html', controller:"mainController"}).
-            when('/profile', {templateUrl:'partials/profile.html', controller:"mainController"}).
-            when('/virtualworld', {templateUrl:'partials/virtualworld.html', controller:"mainController"}).
+            when('/', {templateUrl:'partials/welcome.html'}).
+            when('/login', {templateUrl:'partials/login.html'}).
+            when('/logout', {templateUrl:'partials/logout.html'}).
+            when('/register', {templateUrl:'partials/register.html'}).
+            when('/welcome', {templateUrl:'partials/welcome.html'}).
+            when('/profile', {templateUrl:'partials/profile.html'}).
+            when('/virtualworld', {templateUrl:'partials/virtualworld.html'}).
             otherwise({redirectTo:'/'});
     
     }]);

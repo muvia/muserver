@@ -20,6 +20,7 @@ var routes = [
     //api related stuff
     { method: 'GET', path: '/api', handler: function (request, reply) { reply('muserver API version 0.1  copyright 2014 cesarpachon@gmail.com'); }},
     { method: 'POST', path: '/api/login', handler: muAuthHandler.login},
+    { method: 'POST', path: '/api/logout', handler: muAuthHandler.logout},
     { method: 'GET', path: '/api/world', handler: muWorldHandler.getWorld},
     { method: 'GET', path: '/api/profile', config: { auth: 'muauth' }, handler: muProfileHandler.getProfile },
     { method: 'POST', path: '/api/profile', config: { auth: 'muauth' },  handler: muProfileHandler.saveProfile},

@@ -45,6 +45,10 @@ exports.login = function(usr, psw){
 	}
 };
 
+exports.logout = function(authtoken){
+
+};
+
 /**
  * given an authorization token, returns true if it is valid.
  * false if it does not exist or it exists but it expired.
