@@ -227,7 +227,7 @@ var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.boo
         $routeProvider.
             when('/', {templateUrl:'partials/welcome.html'}).
             when('/login', {templateUrl:'partials/login.html'}).
-            when('/logout', {templateUrl:'partials/logout.html'}).
+            when('/logout', {templateUrl:'partials/logout.html', controller:'logoutController'}).
             when('/register', {templateUrl:'partials/register.html'}).
             when('/welcome', {templateUrl:'partials/welcome.html'}).
             when('/profile', {templateUrl:'partials/profile.html'}).
@@ -337,5 +337,16 @@ muPortalApp.controller('authController', ["$scope", "$window", "authsrv", functi
     this.doLogin = function(){
         authsrv.login(this.usr, this.psw);
     }
+
+}]);//------
+
+/**
+ * controllers/logoutctrl.js
+ * controller for the logout operation. it execute the logout code at construction time.
+ */
+
+muPortalApp.controller('logoutController', ["$scope", "$window", "authsrv", function($scope, $window, authsrv) {
+
+    authsrv.logout();
 
 }]);

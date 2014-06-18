@@ -14,7 +14,8 @@ module.exports = function (grunt) {
                     'src/muportalapp.js',
                     'src/services/authsrv.js',
                     'src/controllers/mainctrl.js',
-                    'src/controllers/authctrl.js'
+                    'src/controllers/authctrl.js',
+                    'src/controllers/logoutctrl.js'
                 ],
                 // the location of the resulting JS file
                 dest: 'js/<%= pkg.name %>.js'
