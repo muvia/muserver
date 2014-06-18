@@ -54,5 +54,15 @@ muPortalApp.service("authsrv", [ "$rootScope", "$http", function($rootScope, $ht
                 console.log("error logging out", data, status);
             });
 	};
+
+    /**
+     * returns true or false if the accesslevel matches the $rootscope.authcode.
+     * the match is done with a logic AND.
+     * @param accesslevel
+     */
+    this.authorize = function(accesslevel){
+        console.log("authsrv.authorize acesslevel ", accesslevel);
+        return $rootScope.authcode & accesslevel;
+    }
 	
 }]);

@@ -13,6 +13,7 @@ module.exports = function (grunt) {
                     'lib/localize.js',
                     'src/muportalapp.js',
                     'src/services/authsrv.js',
+                    'src/directives/authdir.js',
                     'src/controllers/mainctrl.js',
                     'src/controllers/authctrl.js',
                     'src/controllers/logoutctrl.js'
