@@ -1,5 +1,5 @@
 /**
- * this service encapsulates the /login and /logount api endpoint
+ * this service encapsulates the /login and /logout api endpoint
  */
 
 
@@ -20,7 +20,7 @@ muPortalApp.service("authsrv", [ "$http", function($http){
         }).
             success(function(data, status, headers, config) {
                 console.log(data);
-                $http.defaults.headers.common.Authorization = 'Basic :'+data.tkn;
+                $http.defaults.headers.common.Authorization = data.tkn;
             }).
             error(function(data, status, headers, config) {
                     console.log("error loggin in", data, status);

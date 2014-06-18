@@ -6,7 +6,7 @@
   "author": "cesarpachon",
   "license": "MIT",
   "dependencies": {
-    "hapi": "^4.1.0",
+    "hapi": "6.0.2",
     "btoa": "*"
     },
   "devDependencies": {

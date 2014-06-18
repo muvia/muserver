@@ -39,9 +39,8 @@ exports.login = function(request, reply){
  * @param {Object} reply
  */
 exports.logout = function(request, reply){
-    
-    MuAuth.logout();
-    
+
+    MuAuth.logout(request.headers['authorization']);
     var res = {
     };
 

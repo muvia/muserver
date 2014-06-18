@@ -12,16 +12,16 @@ var muAuthHandler = require('./api/auth_handler.js');
 var muWorldHandler = require('./api/world_handler.js');
 var muProfileHandler = require('./api/user_handler.js');
 var muconfig = require('./config.js');
-
+var MuAuth = require('./services/muauth');
 
 
 var routes = [
 
     //api related stuff
     { method: 'GET', path: '/api', handler: function (request, reply) { reply('muserver API version 0.1  copyright 2014 cesarpachon@gmail.com'); }},
-    { method: 'POST', path: '/api/login', handler: muAuthHandler.login},
+    { method: 'POST', path: '/api/login', config:{auth: false}, handler: muAuthHandler.login},
     { method: 'POST', path: '/api/logout', handler: muAuthHandler.logout},
-    { method: 'GET', path: '/api/world', handler: muWorldHandler.getWorld},
+    { method: 'GET', path: '/api/world', config: { auth: 'muauth' }, handler: muWorldHandler.getWorld},
     { method: 'GET', path: '/api/profile', config: { auth: 'muauth' }, handler: muProfileHandler.getProfile },
     { method: 'POST', path: '/api/profile', config: { auth: 'muauth' },  handler: muProfileHandler.saveProfile},
     
@@ -42,10 +42,17 @@ var server = new hapi.Server(muconfig.hostname, muconfig.port);
 var muscheme = function(server, options){
 	return {
 		authenticate: function(request, reply /*function (err, result)*/){
-			/*if done, call reply with err= null and result = { credentials : ?? }*/
-			console.log('muscheme.authenticate. reply true');
-			reply(null, {credentials:true});
-			
+            console.log("muchscheme:authenticating..", request.headers['authorization']);
+			if(MuAuth.authorize(request.headers['authorization'])){
+                console.log("you are in!");
+                reply(null, {credentials:true});
+            }
+            else{
+                console.log("get out!");
+                var error = hapi.error.unauthorized('authentication failed');
+                reply(error);
+            }
+
 		}
 	};
 };
