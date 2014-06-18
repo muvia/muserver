@@ -246,13 +246,22 @@ muPortalApp.run(function($rootScope, $http) {
 
 //------
 /**
- * this service encapsulates the /login and /logount api endpoint
+ * this service encapsulates the /login and /logout api endpoint.
+ * it is in charge of setting and removing the authtoken and propagate
  */
 
 
 
 
-muPortalApp.service("authsrv", [ "$http", function($http){
+muPortalApp.service("authsrv", [ "$rootScope", "$http", function($rootScope, $http){
+
+
+    /**
+     * this property will be used to monitor login/logout events in the whole app.
+     * zero means logged out, >1 logged in. in the future, other values (maybe binary flags)
+     * may enrich the meaning of it.
+    */
+    $rootScope.authcode = 0;
 
     /**
      *
@@ -266,8 +275,9 @@ muPortalApp.service("authsrv", [ "$http", function($http){
             data: {usr: usr, psw:psw}
         }).
             success(function(data, status, headers, config) {
-                console.log(data);
-                $http.defaults.headers.common.Authorization = 'Basic :'+data.tkn;
+                $rootScope.authcode = 1;
+                $http.defaults.headers.common.Authorization = data.tkn;
+                console.log("logged in!", $rootScope.authcode, data);
             }).
             error(function(data, status, headers, config) {
                     console.log("error loggin in", data, status);
@@ -283,8 +293,9 @@ muPortalApp.service("authsrv", [ "$http", function($http){
             url: '/api/logout'
         }).
             success(function(data, status, headers, config) {
-                console.log("logged out!");
+                $rootScope.authcode = 0;
                 $http.defaults.headers.common.Authorization = null;
+                console.log("logged out!", $rootScope.authcode);
             }).
             error(function(data, status, headers, config) {
                 console.log("error logging out", data, status);
