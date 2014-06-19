@@ -50,15 +50,21 @@ exports.login = function(usr, psw){
  * @param authtoken
  */
 exports.logout = function(authtoken){
-    if(authtoken.indexOf("Basic :") == 0){
-        authtoken = authtoken.substring("Basic :".length);
-    }
-    if(g_tokenStore[authtoken] != undefined){
-        console.log("loggin out ", authtoken);
-        delete g_tokenStore[authtoken];
+
+    if(authtoken!=undefined){
+        if(authtoken.indexOf("Basic :") == 0){
+            authtoken = authtoken.substring("Basic :".length);
+        }
+        if(g_tokenStore[authtoken] != undefined){
+            console.log("loggin out ", authtoken);
+            delete g_tokenStore[authtoken];
+        }else{
+            console.log("nothing to do. the token did not exist.", authtoken, g_tokenStore);
+        }
     }else{
-        console.log("nothing to do. the token did not exist.", authtoken, g_tokenStore);
+        console.log("nothing to do. received undefined token");
     }
+
 
 };
 
