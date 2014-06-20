@@ -4,11 +4,15 @@
 "use strict";
 
 var config = require('../config.js');
-var mongodb = require('mongodb').MongoClient;
+var mongodbclient = require('mongodb').MongoClient;
+var mongodb = null;
 
-mongodb.connect(config.dburl, function(err, db) {
+mongodbclient.connect(config.dburl, function(err, db) {
   if(!err) {
 	console.log('mudb.js: connected to DB!'); 
+	mongodb = db; 
+  }else{
+  	console.log("mudb.js: error connecting to db:", err); 
   }
 });
 
