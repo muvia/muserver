@@ -43,8 +43,9 @@ muPortalApp.service("authsrv", [ "$rootScope", "$http", function($rootScope, $ht
      *
      * @param usr
      * @param psw
+     * @cb success callback, signature function(errorcode). if null, it means login was successful.
      */
-	this.login= function(usr, psw){
+	this.login= function(usr, psw, cb){
         var self = this;
         $http({
             method: 'POST',
@@ -54,10 +55,11 @@ muPortalApp.service("authsrv", [ "$rootScope", "$http", function($rootScope, $ht
             success(function(data, status, headers, config) {
                 $rootScope.authcode = self.ROLE_AUTH;
                 $http.defaults.headers.common.Authorization = data.tkn;
-                //console.log("logged in!", $rootScope.authcode, data);
+                cb(null);
             }).
             error(function(data, status, headers, config) {
                 console.log("error loggin in", data, status);
+                cb("AUTHENTICATION_ERROR");
             });
 	};
 

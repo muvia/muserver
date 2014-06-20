@@ -75,6 +75,11 @@
         "description":"logout"
     },
     {
+        "key":"AUTHENTICATION_ERROR",
+        "value":"Error de autenticación",
+        "description":"authentication error"
+    },
+    {
         "key":"INVALID_ARGUMENT_PASSWORD",
         "value":"El valor para la contraseña no es correcto",
         "description":"UserApp error code"
