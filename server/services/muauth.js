@@ -41,9 +41,14 @@ exports.login = function(usr, psw, cb){
               cb(null);
           }else{
               //validate the password
-              phas(user.pswd).verifyAgainst(function(error, verified) {
-                  if(error || !verified)
+              phas(psw).verifyAgainst(user.pswd, function(error, verified) {
+                  if(error){
+                      console.log("muauth.js: error validating psw", error);
                       cb(null);
+                  }else if(!verified){
+                      console.log("muauth.js: incorrect password");
+                      cb(null);
+                  }
                   else{
                       //create a token and return to the user
                       var data = {
