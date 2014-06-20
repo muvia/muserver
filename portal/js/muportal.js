@@ -276,13 +276,15 @@ muPortalApp.service("authsrv", [ "$rootScope", "$http", function($rootScope, $ht
     this.LEVEL_AUTH = 0x2;
 
 
+	this.ROLE_ANON = 0x1;
+	this.ROLE_AUTH = 0x2;
 
     /**
      * this property will be used to monitor login/logout events in the whole app.
      * zero means logged out, >1 logged in. in the future, other values (maybe binary flags)
      * may enrich the meaning of it.
     */
-    $rootScope.authcode = this.LEVEL_ANON;
+    $rootScope.authcode = this.ROLE_ANON;
 
     /**
      *
@@ -297,12 +299,12 @@ muPortalApp.service("authsrv", [ "$rootScope", "$http", function($rootScope, $ht
             data: {usr: usr, psw:psw}
         }).
             success(function(data, status, headers, config) {
-                $rootScope.authcode = self.LEVEL_ALL;
+                $rootScope.authcode = self.ROLE_AUTH;
                 $http.defaults.headers.common.Authorization = data.tkn;
-                console.log("logged in!", $rootScope.authcode, data);
+                //console.log("logged in!", $rootScope.authcode, data);
             }).
             error(function(data, status, headers, config) {
-                    console.log("error loggin in", data, status);
+                console.log("error loggin in", data, status);
             });
 	};
 
@@ -310,29 +312,36 @@ muPortalApp.service("authsrv", [ "$rootScope", "$http", function($rootScope, $ht
      *
      */
 	this.logout = function(){
+		var self = this;
         $http({
             method: 'POST',
             url: '/api/logout'
         }).
             success(function(data, status, headers, config) {
-                $rootScope.authcode = 0;
+                $rootScope.authcode = self.LEVEL_ANON;
                 $http.defaults.headers.common.Authorization = null;
-                console.log("logged out!", $rootScope.authcode);
+                //console.log("logged out!", $rootScope.authcode);
             }).
             error(function(data, status, headers, config) {
-                console.log("error logging out", data, status);
+                //console.log("error logging out", data, status);
             });
 	};
 
     /**
      * returns true or false if the accesslevel matches the $rootscope.authcode.
-     * use the LEVEL_xxxx variables as accesslevel codes
+     * use the LEVEL_xxxx variables as accesslevel integer codes or as strings: 
+     * anon, auth, all, none
      * @param accesslevel
      */
     this.authorize = function(accesslevel){
-        console.log("authsrv.authorize acesslevel ", accesslevel);
-        return $rootScope.authcode & parseInt(accesslevel);
-    }
+    	if(accesslevel === "none") accesslevel = 0;
+    	else if(accesslevel === "anon") accesslevel = 1; 
+    	else if(accesslevel === "auth") accesslevel = 2; 
+    	else if(accesslevel == "all") accesslevel = 3;
+    	else accesslevel =  parseInt(accesslevel);
+        //console.log("authsrv.authorize acesslevel ", accesslevel, $rootScope.authcode, ($rootScope.authcode & accesslevel));
+        return ($rootScope.authcode & accesslevel) > 0;
+    };
 	
 }]);
 //------
