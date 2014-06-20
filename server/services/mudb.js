@@ -53,7 +53,6 @@ exports.getUser = function(username, cb){
             }
         });
     };
-
     retrieveConnection(fn);
 };
 

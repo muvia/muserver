@@ -19,29 +19,13 @@ console.log("retrieving auth for user: ", username, password);
 
 mudb.getUser(username, function(user){
     console.log("retrieved user: ", user);
-
+    phas(password).hash(function(error, hash) {
+        if(error)
+            throw new Error('Something went wrong!');
+        else{
+            console.log("user authentication suceed!");
+        }
+    });
 });
 
 
-/*
-phas(password).hash(function(error, hash) {
-    if(error)
-        throw new Error('Something went wrong!');
-    else{
-
-        var user = {
-            userid: username,
-            pswd: hash,
-            firstname: "first name here",
-            lastname: "last name here",
-            email: "email here",
-            created_at: Date.now(),
-            profile:{
-                renderer: "default",
-                controller: "default"
-            }
-        };
-
-        console.log(JSON.stringify(user));
-    }
-});*/
