@@ -8,7 +8,8 @@
   "dependencies": {
     "hapi": "6.0.x",
     "btoa": "*",
-    "mongodb":"1.4.x"
+    "mongodb":"1.4.x",
+    "password-hash-and-salt": "0.1.x"
     },
   "devDependencies": {
     "grunt": "0.4.x",
