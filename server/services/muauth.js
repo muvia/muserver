@@ -4,6 +4,8 @@
 "use strict";
 
 var btoa = require('btoa');
+var phas = require('password-hash-and-salt');
+var mudb = require('./mudb');
 
 /**
  * tokenStore keeps the valid tokens. each token has the following structure:
@@ -22,27 +24,42 @@ var g_tokenStore = {};
 var G_EXPIRATION_TIME = 60*1000; //60 seconds
 
 /**
- * login method. if usr, psw are ok, returns an authentication token.
- * returns null in other case. 
+ * login method. if usr, psw are ok, invoke the callback with an authentication token.
+ * pass null to the callback in other case.
  * @param {Object} usr
  * @param {Object} psw
+ * @param {function} callback with signature function(authtoken).
  */
-exports.login = function(usr, psw){
-  if(usr != undefined && usr != null && 
-   psw != undefined && psw != null && 
-   usr === psw){
-    var data = {
-        usr: usr,
-        creation: Date.now()
-    };
-    var token = btoa(JSON.stringify(data));
-    console.log('loggin in ', JSON.stringify(data));
-    g_tokenStore[token] = data;
-   	return token;
-	}
-	else{
-		return null;
-	}
+exports.login = function(usr, psw, cb){
+  if(usr === undefined || usr === null ||
+   psw === undefined || psw === null){
+          cb(null);
+  }
+  else{
+      mudb.getUser(usr, function(user){
+          if(user === null){
+              cb(null);
+          }else{
+              //validate the password
+              phas(user.pswd).verifyAgainst(function(error, verified) {
+                  if(error || !verified)
+                      cb(null);
+                  else{
+                      //create a token and return to the user
+                      var data = {
+                          usr: usr,
+                          creation: Date.now()
+                      };
+                      var token = btoa(JSON.stringify(data));
+                      console.log('loggin in ', JSON.stringify(data));
+                      g_tokenStore[token] = data;
+                      cb(data);
+                  }
+              });
+
+          }
+      });
+  };
 };
 
 /**

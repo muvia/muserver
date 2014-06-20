@@ -19,9 +19,17 @@ console.log("retrieving auth for user: ", username, password);
 
 mudb.getUser(username, function(user){
     console.log("retrieved user: ", user);
-    phas(password).hash(function(error, hash) {
+
+    if(user === null){
+        throw new Error('user did not exist');
+    }
+
+    phas(password).verifyAgainst(user.pswd, function(error, verified) {
         if(error)
             throw new Error('Something went wrong!');
+        else if(!verified){
+            throw new Error('auth failure');
+        }
         else{
             console.log("user authentication suceed!");
         }

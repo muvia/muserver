@@ -41,11 +41,12 @@ exports.getUser = function(username, cb){
     var fn = function(){
         mongodb.collection("users", function(err, collection){
             if(err != null){
-                console.log("mudb.js: error opening users collection:", err);
+                throw "mudb.js: error opening users collection:" + err;
             }else{
                 collection.findOne({userid: username}, function(err, userobj){
                     if(err != null){
                         console.log("mudb.js: error getting user ", username, err);
+                        cb(null);
                     }else{
                         cb(userobj);
                     }

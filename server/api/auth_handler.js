@@ -19,18 +19,17 @@ exports.login = function(request, reply){
 	var usr = request.payload.usr;
 	var psw = request.payload.psw;
 	
-	var token = MuAuth.login(usr, psw);
-
-    if(token != null){
-		reply({tkn:token});
-	}else{
-		var error = Hapi.error.badRequest('auth error');
-		//return 401 if authorization fails
-		error.output.statusCode = 401;
-	    error.reformat();
-		reply(error);		
-	}
-
+	var token = MuAuth.login(usr, psw, function(token){
+        if(token != null){
+            reply({tkn:token});
+        }else{
+            var error = Hapi.error.badRequest('auth error');
+            //return 401 if authorization fails
+            error.output.statusCode = 401;
+            error.reformat();
+            reply(error);
+        }
+    });
 };
 
 /**
