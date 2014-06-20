@@ -6,11 +6,12 @@
   "author": "cesarpachon",
   "license": "MIT",
   "dependencies": {
-    "hapi": "6.0.2",
-    "btoa": "*"
+    "hapi": "6.0.x",
+    "btoa": "*",
+    "mongodb":"1.4.x"
     },
   "devDependencies": {
-    "grunt": "0.4.2",
+    "grunt": "0.4.x",
     "frisby": "*",
     "jasmine-node": "*",
     "grunt-jasmine-node": "*"

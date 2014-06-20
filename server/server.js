@@ -8,10 +8,11 @@
 
 var hapi = require('hapi');
 
-var muAuthHandler = require('./api/auth_handler.js');
-var muWorldHandler = require('./api/world_handler.js');
-var muProfileHandler = require('./api/user_handler.js');
-var muconfig = require('./config.js');
+var muAuthHandler = require('./api/auth_handler');
+var muWorldHandler = require('./api/world_handler');
+var muProfileHandler = require('./api/user_handler');
+var muconfig = require('./config');
+var mudb = require('./services/mudb');
 var MuAuth = require('./services/muauth');
 
 
