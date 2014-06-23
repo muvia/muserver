@@ -1,6 +1,6 @@
 {
   "name": "muserver",
-  "version": "0.0.1-4",
+  "version": "0.0.1-6",
   "description": "muserver platform",
   "main": "server.js",
   "author": "cesarpachon",
@@ -8,9 +8,9 @@
   "dependencies": {
     "hapi": "6.0.x",
     "btoa": "*",
-    "mongodb":"1.4.x",
+    "mongodb": "1.4.x",
     "password-hash-and-salt": "0.1.x"
-    },
+  },
   "devDependencies": {
     "grunt": "0.4.x",
     "frisby": "*",
