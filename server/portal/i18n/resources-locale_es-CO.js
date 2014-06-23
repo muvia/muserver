@@ -11,7 +11,7 @@
     },
     {
         "key":"_siteDesc_",
-        "value":"descripción del sitio",
+        "value":"Mundo Virtual Inclusivo y Accesible",
         "description":"Description of the website"
     },
     {
@@ -35,11 +35,6 @@
         "description":"login intro paragraph"
     },
     {
-        "key":"_reset_password_",
-        "value":"Olvidaste tu contraseña?",
-        "description":"reset password link"
-    },
-    {
         "key":"_username_",
         "value":"Nombre de usuario",
         "description":"username"
@@ -55,19 +50,9 @@
         "description":"email"
     },
     {
-        "key":"_email_sent_",
-        "value":"Te hemos enviado un correo electrónico con un link de confirmación. haz click en ese link para activar tu cuenta.",
-        "description":"email sent msg"
-    },
-    {
         "key":"_register_",
         "value":"Registrarse",
         "description":"register button label"
-    },
-    {
-        "key":"_register_msg_",
-        "value":"Crea una nueva cuenta o regístrate usando una cuenta existente de: ",
-        "description":"register page intro paragraph"
     },
     {
         "key":"_logout_",

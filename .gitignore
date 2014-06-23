@@ -25,3 +25,5 @@ node_modules/*
 engine/node_modules/*
 ## PROJECT::SPECIFIC
 npm-debug.log
+server/portal/*
+

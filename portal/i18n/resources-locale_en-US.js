@@ -11,7 +11,7 @@
     },
     {
         "key":"_siteDesc_",
-        "value":"a description for the meta head",
+        "value":"Inclusive and Accesible Virtual World",
         "description":"Description of the website"
     },
     {
@@ -35,11 +35,6 @@
         "description":"login intro paragraph"
     },
     {
-        "key":"_reset_password_",
-        "value":"Forgot your password?",
-        "description":"reset password link"
-    },
-    {
         "key":"_username_",
         "value":"username",
         "description":"username"
@@ -55,19 +50,9 @@
         "description":"email"
     },
     {
-        "key":"_email_sent_",
-        "value":"An email has been sent to your inbox. Click on the link to verify your account.",
-        "description":"email sent msg"
-    },
-    {
         "key":"_register_",
         "value":"Register",
         "description":"register button label"
-    },
-    {
-        "key":"_register_msg_",
-        "value":"Create a new account or register using an existing account from: ",
-        "description":"register page intro paragraph"
     },
     {
         "key":"_logout_",
