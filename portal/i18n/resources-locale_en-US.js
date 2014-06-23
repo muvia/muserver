@@ -6,7 +6,7 @@
     },
     {
         "key":"_siteTitle_",
-        "value":"a title for the browswer tab",
+        "value":"MUVIA",
         "description":"Home page title text"
     },
     {
@@ -21,7 +21,7 @@
     },
     {
         "key":"_bannerTitle_",
-        "value":"Banner Title",
+        "value":"MUVIA: Inclusive and Accesible Virtual World",
         "description":"Title"
     },
     {
@@ -101,7 +101,7 @@
     },
     {
         "key":"_welcome_",
-        "value":"welcome",
+        "value":"Home",
         "description":"Home page title text"
     },
      {

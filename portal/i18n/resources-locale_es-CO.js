@@ -6,7 +6,7 @@
     },
     {
         "key":"_siteTitle_",
-        "value":"título",
+        "value":"MUVIA",
         "description":"Home page title text"
     },
     {
@@ -21,7 +21,7 @@
     },
     {
         "key":"_bannerTitle_",
-        "value":"Título",
+        "value":"MUVIA: MUndo Virtual Inclusivo y Accesible",
         "description":"Title in the banner"
     },
     {
@@ -101,7 +101,7 @@
     },
     {
         "key":"_welcome_",
-        "value":"bienvenida",
+        "value":"Inicio",
         "description":"Home page title text"
     },
      {
