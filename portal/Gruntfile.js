@@ -23,7 +23,7 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-            files: ['<%= concat.dist.src %>', 'partials/*', 'img/*', 'css/*', 'i18n/*'],
+            files: ['<%= concat.dist.src %>', 'partials/**/*', 'img/**/*', 'css/**/', 'i18n/**/*'],
             tasks: ['concat:dist', 'copy:dist']
         },
         jasmine: {
@@ -49,11 +49,11 @@ module.exports = function (grunt) {
             	nonull: true,
                 files: [
 	                {expand: true, src: ['index.html'], dest: '../server/portal/', filter: 'isFile'},
-	                {expand: true, src: ['js/*'], dest: '../server/portal/', filter: 'isFile'},
-	                {expand: true, src: ['css/*'], dest: '../server/portal/', filter: 'isFile'},
-	                {expand: true, src: ['i18n/*'], dest: '../server/portal/', filter: 'isFile'},
-	                {expand: true, src: ['partials/*'], dest: '../server/portal/', filter: 'isFile'},
-	                {expand: true, src: ['img/*'], dest: '../server/portal/', filter: 'isFile'}
+	                {expand: true, src: ['js/**/*'], dest: '../server/portal/', filter: 'isFile'},
+	                {expand: true, src: ['css/**/*'], dest: '../server/portal/', filter: 'isFile'},
+	                {expand: true, src: ['i18n/**/*'], dest: '../server/portal/', filter: 'isFile'},
+	                {expand: true, src: ['partials/**/*'], dest: '../server/portal/', filter: 'isFile'},
+	                {expand: true, src: ['img/**/*'], dest: '../server/portal/', filter: 'isFile'}
                 ]
             }
         }
