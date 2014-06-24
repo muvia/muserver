@@ -10,6 +10,7 @@ var hapi = require('hapi');
 
 var muAuthHandler = require('./api/auth_handler');
 var muWorldHandler = require('./api/world_handler');
+var muContactHandler = require('./api/contact_handler');
 var muProfileHandler = require('./api/user_handler');
 var muconfig = require('./config');
 var mudb = require('./services/mudb');
@@ -22,6 +23,7 @@ var routes = [
     { method: 'GET', path: '/api', handler: function (request, reply) { reply('muserver API version 0.1  copyright 2014 cesarpachon@gmail.com'); }},
     { method: 'POST', path: '/api/login', config:{auth: false}, handler: muAuthHandler.login},
     { method: 'POST', path: '/api/logout', handler: muAuthHandler.logout},
+    { method: 'POST', path: '/api/contact', handler: muContactHandler.contact},
     { method: 'GET', path: '/api/world', config: { auth: 'muauth' }, handler: muWorldHandler.getWorld},
     { method: 'GET', path: '/api/profile', config: { auth: 'muauth' }, handler: muProfileHandler.getProfile },
     { method: 'POST', path: '/api/profile', config: { auth: 'muauth' },  handler: muProfileHandler.saveProfile},

@@ -11,7 +11,6 @@ var MuAuth = require('../services/muauth');
 /**
  * POST /login
  * expects a payload with usr and psw fields. 
- * psw is unencrypted by now. 
  * @returns {{authtoken}}
  */
 exports.login = function(request, reply){
