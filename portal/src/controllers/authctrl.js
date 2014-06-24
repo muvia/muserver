@@ -1,18 +1,24 @@
 
 /**
- * src/controllers/contactctrl.js
- * controller for contact form 
+ * controllers/authctrl.js
+ * controller for the index
  */
 
-muPortalApp.controller('contactController', [function() {
+muPortalApp.controller('authController', ["$scope", "$window", "authsrv", function($scope, $window, authsrv) {
 
-    this.name = null;
-    this.email = null;
-    
-    this.message = null;
+    this.usr = null;
+    this.psw = null;
 
-    this.doContact = function(){
-        console.log("contactController.doContact ", this.name, this.email, this.message);
+    this.error = null;
+
+    this.doLogin = function(){
+        var self = this;
+        authsrv.login(this.usr, this.psw, function(error){
+            self.error = error;
+            if(self.error === null){
+                //succefull login! how to redirect to a new page?
+            }
+        });
     }
 
 }]);

@@ -95,6 +95,16 @@
     	"description":"contact title"
     },
     {
+        "key":"_send_",
+        "value":"Enviar",
+        "description":"send button label"
+    },
+    {
+        "key":"_message_",
+        "value":"Mensaje",
+        "description":"Message field label"
+    },
+    {
     	"key":"_contact_msg_",
     	"value":"Escribe a muvia.info@gmail.com o usa el siguiente formulario para enviar tu mensaje:",
     	"description":"contact title"

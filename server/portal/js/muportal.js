@@ -399,35 +399,6 @@ muPortalApp.controller('mainController', ["$scope", "$window",
     } ]);//------
 
 /**
- * src/controllers/contactctrl.js
- * controller for contact form 
- */
-
-muPortalApp.controller('contactController', [function() {
-
-    this.name = null;
-    this.email = null;
-    
-    this.message = null;
-
-    this.doContact = function(){
-        console.log("contactController.doContact ", this.name, this.email, this.message);
-    }
-
-}]);//------
-
-/**
- * controllers/logoutctrl.js
- * controller for the logout operation. it execute the logout code at construction time.
- */
-
-muPortalApp.controller('logoutController', ["$scope", "$window", "authsrv", function($scope, $window, authsrv) {
-
-    authsrv.logout();
-
-}]);//------
-
-/**
  * controllers/authctrl.js
  * controller for the index
  */
@@ -447,6 +418,35 @@ muPortalApp.controller('authController', ["$scope", "$window", "authsrv", functi
                 //succefull login! how to redirect to a new page?
             }
         });
+    }
+
+}]);//------
+
+/**
+ * controllers/logoutctrl.js
+ * controller for the logout operation. it execute the logout code at construction time.
+ */
+
+muPortalApp.controller('logoutController', ["$scope", "$window", "authsrv", function($scope, $window, authsrv) {
+
+    authsrv.logout();
+
+}]);//------
+
+/**
+ * src/controllers/contactctrl.js
+ * controller for contact form
+ */
+
+muPortalApp.controller('contactController', [function() {
+
+    this.name = null;
+    this.email = null;
+
+    this.message = null;
+
+    this.doContact = function(){
+        console.log("contactController.doContact ", this.name, this.email, this.message);
     }
 
 }]);
