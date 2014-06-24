@@ -16,7 +16,8 @@ module.exports = function (grunt) {
                     'src/directives/authdir.js',
                     'src/controllers/mainctrl.js',
                     'src/controllers/authctrl.js',
-                    'src/controllers/logoutctrl.js'
+                    'src/controllers/logoutctrl.js',
+                    'src/controllers/contactctrl.js'
                 ],
                 // the location of the resulting JS file
                 dest: 'js/<%= pkg.name %>.js'

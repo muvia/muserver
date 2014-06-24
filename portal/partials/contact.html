@@ -1,0 +1,21 @@
+<h2  id="contact-page" data-i18n="_contact_"></h2>
+
+<p data-i18n="_contact_msg_"></p>
+
+<form role="form" aria-labelledby="contact-page" ng-controller="contactController as contact" ng-submit="contact.doContact()">
+
+    <label for="name" data-i18n="_username_"></label>
+    <input id="name" name="name" placeholder="{{'_username_' | i18n}}" ng-model="contact.name"><br>
+
+    <label for="email" data-i18n="_username_"></label>
+    <input id="email" name="name" placeholder="{{'_username_' | i18n}}" ng-model="contact.email"><br>
+
+    <label for="message" data-i18n="_username_"></label>
+    <input id="message" name="message" placeholder="{{'_username_' | i18n}}" ng-model="contact.message"><br>
+
+    <p><button type="submit" data-i18n="_login_"></button></p>
+
+    <p ng-show="contact.error" data-i18n="{{contact.error}}"></p>
+
+</form>
+

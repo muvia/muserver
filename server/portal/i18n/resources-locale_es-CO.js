@@ -89,6 +89,16 @@
         "value":"Inicio",
         "description":"Home page title text"
     },
+    {
+    	"key":"_contact_",
+    	"value":"Contacto",
+    	"description":"contact title"
+    },
+    {
+    	"key":"_contact_msg_",
+    	"value":"Escribe a muvia.info@gmail.com o usa el siguiente formulario para enviar tu mensaje:",
+    	"description":"contact title"
+    },
      {
         "key":"_virtualworld_",
         "value":"Mundo Virtual",

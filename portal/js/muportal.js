@@ -231,6 +231,7 @@ var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.boo
             when('/register', {templateUrl:'partials/register.html'}).
             when('/welcome', {templateUrl:'partials/welcome.html'}).
             when('/profile', {templateUrl:'partials/profile.html'}).
+            when('/contact', {templateUrl:'partials/contact.html'}).
             when('/virtualworld', {templateUrl:'partials/virtualworld.html'}).
             otherwise({redirectTo:'/'});
     
@@ -398,6 +399,35 @@ muPortalApp.controller('mainController', ["$scope", "$window",
     } ]);//------
 
 /**
+ * src/controllers/contactctrl.js
+ * controller for contact form 
+ */
+
+muPortalApp.controller('contactController', [function() {
+
+    this.name = null;
+    this.email = null;
+    
+    this.message = null;
+
+    this.doContact = function(){
+        console.log("contactController.doContact ", this.name, this.email, this.message);
+    }
+
+}]);//------
+
+/**
+ * controllers/logoutctrl.js
+ * controller for the logout operation. it execute the logout code at construction time.
+ */
+
+muPortalApp.controller('logoutController', ["$scope", "$window", "authsrv", function($scope, $window, authsrv) {
+
+    authsrv.logout();
+
+}]);//------
+
+/**
  * controllers/authctrl.js
  * controller for the index
  */
@@ -418,16 +448,5 @@ muPortalApp.controller('authController', ["$scope", "$window", "authsrv", functi
             }
         });
     }
-
-}]);//------
-
-/**
- * controllers/logoutctrl.js
- * controller for the logout operation. it execute the logout code at construction time.
- */
-
-muPortalApp.controller('logoutController', ["$scope", "$window", "authsrv", function($scope, $window, authsrv) {
-
-    authsrv.logout();
 
 }]);

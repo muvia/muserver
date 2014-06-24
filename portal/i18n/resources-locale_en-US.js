@@ -89,6 +89,16 @@
         "value":"Home",
         "description":"Home page title text"
     },
+    {
+    	"key":"_contact_",
+    	"value":"Contact",
+    	"description":"contact title"
+    },
+    {
+    	"key":"_contact_msg_",
+    	"value":"Write to muvia.info@gmail.com or use the following form to send your message:",
+    	"description":"contact title"
+    },
      {
         "key":"_virtualworld_",
         "value":"Virtual World",
