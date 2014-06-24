@@ -9,7 +9,8 @@
     "hapi": "6.0.x",
     "btoa": "*",
     "mongodb": "1.4.x",
-    "password-hash-and-salt": "0.1.x"
+    "password-hash-and-salt": "0.1.x",
+    "nodemailer": "*"
   },
   "devDependencies": {
     "grunt": "0.4.x",

@@ -349,6 +349,39 @@ muPortalApp.service("authsrv", [ "$rootScope", "$http", function($rootScope, $ht
 }]);
 //------
 /**
+ * src/services/contactsrv.js
+ * this service encapsulate the /contact api endpoint
+ */
+
+
+
+
+muPortalApp.service("contactsrv", ["$http", function($http){
+
+    /**
+     * send a contact message filled in the contact form
+     */
+	this.sendMessage = function(name, email, message, cb){
+        var self = this;
+        $http({
+            method: 'POST',
+            url: '/api/contact',
+            data: {name: name, email:email, message: message}
+        }).
+            success(function(data, status, headers, config) {
+                //$rootScope.authcode = self.ROLE_AUTH;
+                //$http.defaults.headers.common.Authorization = data.tkn;
+                cb(null);
+            }).
+            error(function(data, status, headers, config) {
+                console.log("error sending contact message", data, status);
+                cb("API_ERROR");
+            });
+	};
+	
+}]);
+//------
+/**
  * Created by cesar on 6/18/14.
 based on this article:
  http://www.frederiknakstad.com/2013/01/21/authentication-in-single-page-applications-with-angular-js/
@@ -438,15 +471,26 @@ muPortalApp.controller('logoutController', ["$scope", "$window", "authsrv", func
  * controller for contact form
  */
 
-muPortalApp.controller('contactController', [function() {
+muPortalApp.controller('contactController', ['contactsrv', function(contactsrv) {
 
     this.name = null;
     this.email = null;
-
     this.message = null;
 
+    this.error = null;
+
     this.doContact = function(){
-        console.log("contactController.doContact ", this.name, this.email, this.message);
+        var self = this;
+        //console.log("contactController.doContact ", this.name, this.email, this.message);
+        contactsrv.sendMessage(this.name, this.email, this.message, function(error){
+            self.error = error;
+            if(self.error === null){
+                console.log("contact message sent! how to notify the user?");
+            }
+            else{
+                console.log("contact message failed! self.error had been set.");
+            }
+        });
     }
 
 }]);
