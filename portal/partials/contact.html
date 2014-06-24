@@ -2,16 +2,21 @@
 
 <p data-i18n="_contact_msg_"></p>
 
-<form role="form" aria-labelledby="contact-page" ng-controller="contactController as contact" ng-submit="contact.doContact()">
+<form role="form" name="contactForm" aria-labelledby="contact-page" ng-controller="contactController as contact" ng-submit="contact.doContact()">
 
     <label for="name" data-i18n="_username_"></label>
-    <input id="name" name="name" placeholder="{{'_username_' | i18n}}" ng-model="contact.name"><br>
+    <input id="name" name="name" placeholder="{{'_username_' | i18n}}" ng-model="contact.name" required><br>
+    <span class="error" ng-show="contactForm.email.$error.required " data-i18n="_error_name_required_"></span>
 
     <label for="email" data-i18n="_email_"></label>
-    <input id="email" name="email" placeholder="{{'_email_' | i18n}}" ng-model="contact.email"><br>
+    <input id="email" name="email" type="email" placeholder="{{'_email_' | i18n}}" ng-model="contact.email" required><br>
+    <span class="error" ng-show="contactForm.email.$error.required" data-i18n="_error_email_required_"></span>
+    <span class="error" ng-show="contactForm.email.$error.email && contactForm.email.$error.dirty" data-i18n="_error_email_invalid_"></span>
+
 
     <label for="message" data-i18n="_message_"></label>
-    <input id="message" name="message" placeholder="{{'_message_' | i18n}}" ng-model="contact.message"><br>
+    <input id="message" name="message" placeholder="{{'_message_' | i18n}}" ng-model="contact.message" required><br>
+    <span class="error" ng-show="contactForm.email.$error.required" data-i18n="_error_message_required_">></span>
 
     <p><button type="submit" data-i18n="_send_"></button></p>
 

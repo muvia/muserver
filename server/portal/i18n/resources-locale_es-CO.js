@@ -109,6 +109,30 @@
     	"value":"Escribe a muvia.info@gmail.com o usa el siguiente formulario para enviar tu mensaje:",
     	"description":"contact title"
     },
+
+    {
+        "key":"_error_name_required_",
+        "value":"Es necesario que indiques tu nombre!",
+        "description":"contact title"
+    },
+    {
+        "key":"_error_email_required_",
+        "value":"Es necesario que indiques tu correo electrónico!",
+        "description":"contact title"
+    },
+    {
+    "key":"_error_email_invalid_",
+    "value":"Tu dirección de correo electrónico no parece ser válida.",
+    "description":"contact title"
+    },
+
+    {
+        "key":"_error_message_required_",
+        "value":"Es necesario que escribas algún mensaje!",
+        "description":"contact title"
+    },
+
+
      {
         "key":"_virtualworld_",
         "value":"Mundo Virtual",
