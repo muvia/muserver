@@ -11,24 +11,21 @@
             <fieldset>
                 <div>
                 <label for="login" data-i18n="_username_"></label>
-                <input id="login" name="login" placeholder="{{'_username_' | i18n}}" ng-model="auth.usr" aria-describedby="username-tip" aria-required="true" required>
-                <div role="tooltip" id="username-tip">The username</div>
+                <input id="login" name="login" placeholder="{{'_username_' | i18n}}" ng-model="auth.usr" aria-required="true" required>
+                <!--<div role="tooltip" id="username-tip">The username</div>-->
                 </div>
 
                 <div>
                 <label for="password" data-i18n="_password_"></label>
                 <input id="password" name="password" placeholder="{{'_password_' | i18n}}" type="password"
-                       ng-model="auth.psw" aria-describedby="password-tip" aria-required="true" required>
-                    <div role="tooltip" id="password-tip">The username</div>
+                       ng-model="auth.psw"  aria-required="true" required>
+                    <!--<div role="tooltip" id="password-tip">The username</div>-->
                 </div>
             </fieldset>
 
             <p>
                 <button type="submit" data-i18n="_login_"></button>
             </p>
-
-            <p ng-show="loading"><img src="https://app.userapp.io/img/ajax-loader-transparent.gif"></p>
-
 
             <alert role="alert"  aria-live="assertive" type="danger" ng-show="auth.error" data-i18n="{{auth.error}}"></alert>
 

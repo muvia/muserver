@@ -413,6 +413,12 @@ muPortalApp.directive('accessLevel', ['$rootScope', 'authsrv', function($rootSco
 muPortalApp.controller('mainController', ["$scope", "$window",
     function($scope, $window) {
 
+        /**
+         * status inform the current screen and if the user is logged in.
+         * @type {string}
+         */
+        this.status = "_login_anon_";
+
         /*var someText = {};
         someText.message = 'You have started your journey.';
         $scope.someText = someText;
