@@ -292,6 +292,9 @@ muPortalApp.service("authsrv", [ "$rootScope", "$http", function($rootScope, $ht
      * @param usr
      * @param psw
      * @cb success callback, signature function(errorcode). if null, it means login was successful.
+     * error codes:
+     * AUTHENTICATION_ERROR
+     *
      */
 	this.login= function(usr, psw, cb){
         var self = this;
@@ -448,11 +451,11 @@ muPortalApp.controller('authController', ["$scope", "$window", "authsrv", functi
     this.doLogin = function(){
         var self = this;
         authsrv.login(this.usr, this.psw, function(error){
+            //console.log("error: ", error);
             self.error = error;
             if(self.error === null){
-                //succefull login! how to redirect to a new page?
+                //succefull login!
                 self.success = true;
-                console.log("marking success to true");
             }
         });
     }

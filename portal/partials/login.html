@@ -1,27 +1,33 @@
 <!--handling login-->
-<h2  id="login-page" data-i18n="_login_"></h2>
+<h2 id="login-page" data-i18n="_login_"></h2>
 
 <p data-i18n="_login_msg_"></p>
 
 <div class="container">
-<div class="row" ng-hide="auth.success">
-<form role="form" aria-labelledby="login-page" ng-controller="authController as auth" ng-submit="auth.doLogin()">
+    <div class="row" ng-hide="auth.success">
+        <form role="form" aria-labelledby="login-page" ng-controller="authController as auth"
+              ng-submit="auth.doLogin()">
 
-    <label for="login" data-i18n="_username_"></label>
-    <input id="login" name="login" placeholder="{{'_username_' | i18n}}" ng-model="auth.usr"><br>
+            <label for="login" data-i18n="_username_"></label>
+            <input id="login" name="login" placeholder="{{'_username_' | i18n}}" ng-model="auth.usr"><br>
 
-    <label for="password" data-i18n="_password_"></label>
-    <input id="password" name="password" placeholder="{{'_password_' | i18n}}" type="password" ng-model="auth.psw" ><br>
+            <label for="password" data-i18n="_password_"></label>
+            <input id="password" name="password" placeholder="{{'_password_' | i18n}}" type="password"
+                   ng-model="auth.psw"><br>
 
-    <p><button type="submit" data-i18n="_login_"></button></p>
+            <p>
+                <button type="submit" data-i18n="_login_"></button>
+            </p>
 
-    <p ng-show="loading"><img src="https://app.userapp.io/img/ajax-loader-transparent.gif"></p>
-    <p ng-show="auth.error" data-i18n="{{auth.error}}"></p>
+            <p ng-show="loading"><img src="https://app.userapp.io/img/ajax-loader-transparent.gif"></p>
 
-</form>
-</div>
 
-<div class="row" ng-show="auth.success">
-    <p>goooood!</p>
+
+            <alert type="danger" ng-show="auth.error" data-i18n="{{auth.error}}"></alert>
+
+            <alert  type="success" ng-show="auth.success" data-i18n="_login_sucessful_"></alert>
+
+        </form>
     </div>
+
 </div>

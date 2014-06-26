@@ -60,8 +60,13 @@
         "description":"logout"
     },
     {
+        "key":"_login_sucessful_",
+        "value":"Very good! you can continue now",
+        "description":"login ok"
+    },
+    {
         "key":"AUTHENTICATION_ERROR",
-        "value":"Error de autenticación",
+        "value":"Authentication error",
         "description":"authentication error"
     },
     {

@@ -44,6 +44,9 @@ muPortalApp.service("authsrv", [ "$rootScope", "$http", function($rootScope, $ht
      * @param usr
      * @param psw
      * @cb success callback, signature function(errorcode). if null, it means login was successful.
+     * error codes:
+     * AUTHENTICATION_ERROR
+     *
      */
 	this.login= function(usr, psw, cb){
         var self = this;

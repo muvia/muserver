@@ -16,11 +16,11 @@ muPortalApp.controller('authController', ["$scope", "$window", "authsrv", functi
     this.doLogin = function(){
         var self = this;
         authsrv.login(this.usr, this.psw, function(error){
+            //console.log("error: ", error);
             self.error = error;
             if(self.error === null){
-                //succefull login! how to redirect to a new page?
+                //succefull login!
                 self.success = true;
-                console.log("marking success to true");
             }
         });
     }
