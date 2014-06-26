@@ -238,11 +238,6 @@ var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.boo
     }]);
 
 muPortalApp.run(function($rootScope, $http) {
-    /*user.init({
-    	appId: '53739ca105ab1',
-		heartbeatInterval: 0 
-    });*/
-
 });
 
 //------
@@ -410,8 +405,8 @@ muPortalApp.directive('accessLevel', ['$rootScope', 'authsrv', function($rootSco
  * controller for the index
  */
 
-muPortalApp.controller('mainController', ["$scope", "$window",
-    function($scope, $window) {
+muPortalApp.controller('mainController', ["$rootScope", "$scope", "$window",
+   function($rootScope, $scope, $window) {
 
         /**
          * status inform the current screen and if the user is logged in.
@@ -435,6 +430,20 @@ muPortalApp.controller('mainController', ["$scope", "$window",
         $scope.getLocalizedPartial= function(partialname){
             return "partials/"+$scope.locale.substr(0, 2) + "/" + partialname;
         }
+
+       /**
+       *  keep track of changes in route to update the status bar
+        */
+       var self = this;
+       $rootScope.$on("$routeChangeStart",function(event, next, current){
+           console.log("routeChangeStart",next.originalPath);
+           //parse the route (in the form "/path") to the form "_path_". we expect to match some i18n symbol!
+           if(next.originalPath === "/")
+            self.status ="_welcome_";
+           else{
+               self.status = "_"+next.originalPath.substring(1)+"_";
+           }
+       });
 
 
 

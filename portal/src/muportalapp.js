@@ -23,10 +23,5 @@ var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.boo
     }]);
 
 muPortalApp.run(function($rootScope, $http) {
-    /*user.init({
-    	appId: '53739ca105ab1',
-		heartbeatInterval: 0 
-    });*/
-
 });
 

@@ -20,6 +20,11 @@
         "description":"skip to main content in header link"
     },
     {
+        "key":"_status_label_",
+        "value":"You are in the section ",
+        "description":"label for the status bar"
+    },
+    {
         "key":"_bannerTitle_",
         "value":"MUVIA: Inclusive and Accesible Virtual World",
         "description":"Title"
