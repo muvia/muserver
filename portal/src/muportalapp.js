@@ -5,38 +5,23 @@
  */
 'use strict';
 
-var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.bootstrap', 'UserApp']).
+var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.bootstrap']).
     config(['$routeProvider', function ($routeProvider) {
         
     	//configure navigation paths in client side
         $routeProvider.
-            when('/', {templateUrl:'partials/welcome.html', controller:"mainController"}).
-            when('/login', {templateUrl:'partials/login.html', controller:"authController", public: true}).
-            when('/register', {templateUrl:'partials/register.html', controller:"authController", public: true}).
-            when('/welcome', {templateUrl:'partials/welcome.html', controller:"mainController", login: true}).
-            when('/profile', {templateUrl:'partials/profile.html', controller:"mainController", login: true}).
-            when('/virtualworld', {templateUrl:'partials/virtualworld.html', controller:"mainController", login: true}).
+            when('/', {templateUrl:'partials/welcome.html'}).
+            when('/login', {templateUrl:'partials/login.html'}).
+            when('/logout', {templateUrl:'partials/logout.html', controller:'logoutController'}).
+            when('/register', {templateUrl:'partials/register.html'}).
+            when('/welcome', {templateUrl:'partials/welcome.html'}).
+            when('/profile', {templateUrl:'partials/profile.html'}).
+            when('/contact', {templateUrl:'partials/contact.html'}).
+            when('/virtualworld', {templateUrl:'partials/virtualworld.html'}).
             otherwise({redirectTo:'/'});
     
     }]);
 
-muPortalApp.run(function($rootScope, $http, user) {
-    user.init({
-    	appId: '53739ca105ab1',
-		heartbeatInterval: 0 
-    });
-    
-	//add and remove auth token from session headers so they are available on server side 
-    //https://app.userapp.io/#/docs/libs/angularjs/#heartbeats
-	$rootScope.$on('user.login', function() {
-		console.log('adding auth token to headers ' + user.token());
-		$http.defaults.headers.common.Authorization = 'Basic ' + btoa(':' + user.token());
-	});
-	
-	$rootScope.$on('user.logout', function() {
-		console.log('removing auth token from headers ');
-		$http.defaults.headers.common.Authorization = null;
-	});
-
+muPortalApp.run(function($rootScope, $http) {
 });
 

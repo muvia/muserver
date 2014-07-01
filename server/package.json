@@ -1,20 +1,19 @@
 {
   "name": "muserver",
-  "version": "0.0.1-4",
+  "version": "0.0.1-6",
   "description": "muserver platform",
   "main": "server.js",
   "author": "cesarpachon",
   "license": "MIT",
   "dependencies": {
-    "hapi": "^4.1.0",
-    "travelogue": "*",
-    "yar": "*",
-    "passport": "*",
-    "passport-local": "*",
-    "passport-userapp": "*"
+    "hapi": "6.0.x",
+    "btoa": "*",
+    "mongodb": "1.4.x",
+    "password-hash-and-salt": "0.1.x",
+    "nodemailer": "*"
   },
   "devDependencies": {
-    "grunt": "0.4.2",
+    "grunt": "0.4.x",
     "frisby": "*",
     "jasmine-node": "*",
     "grunt-jasmine-node": "*"

@@ -12,15 +12,20 @@ module.exports = function (grunt) {
                 src: [
                     'lib/localize.js',
                     'src/muportalapp.js',
+                    'src/services/authsrv.js',
+                    'src/services/contactsrv.js',
+                    'src/directives/authdir.js',
                     'src/controllers/mainctrl.js',
-                    'src/controllers/authctrl.js'
+                    'src/controllers/authctrl.js',
+                    'src/controllers/logoutctrl.js',
+                    'src/controllers/contactctrl.js'
                 ],
                 // the location of the resulting JS file
                 dest: 'js/<%= pkg.name %>.js'
             }
         },
         watch: {
-            files: ['<%= concat.dist.src %>'],
+            files: ['<%= concat.dist.src %>', 'index.html', 'partials/**/*', 'img/**/*', 'css/**/', 'i18n/**/*'],
             tasks: ['concat:dist', 'copy:dist']
         },
         jasmine: {
@@ -46,11 +51,11 @@ module.exports = function (grunt) {
             	nonull: true,
                 files: [
 	                {expand: true, src: ['index.html'], dest: '../server/portal/', filter: 'isFile'},
-	                {expand: true, src: ['js/*'], dest: '../server/portal/', filter: 'isFile'},
-	                {expand: true, src: ['css/*'], dest: '../server/portal/', filter: 'isFile'},
-	                {expand: true, src: ['i18n/*'], dest: '../server/portal/', filter: 'isFile'},
-	                {expand: true, src: ['partials/*'], dest: '../server/portal/', filter: 'isFile'},
-	                {expand: true, src: ['img/*'], dest: '../server/portal/', filter: 'isFile'}
+	                {expand: true, src: ['js/**/*'], dest: '../server/portal/', filter: 'isFile'},
+	                {expand: true, src: ['css/**/*'], dest: '../server/portal/', filter: 'isFile'},
+	                {expand: true, src: ['i18n/**/*'], dest: '../server/portal/', filter: 'isFile'},
+	                {expand: true, src: ['partials/**/*'], dest: '../server/portal/', filter: 'isFile'},
+	                {expand: true, src: ['img/**/*'], dest: '../server/portal/', filter: 'isFile'}
                 ]
             }
         }

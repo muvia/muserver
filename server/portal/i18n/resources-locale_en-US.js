@@ -6,12 +6,12 @@
     },
     {
         "key":"_siteTitle_",
-        "value":"a title for the browswer tab",
+        "value":"MUVIA",
         "description":"Home page title text"
     },
     {
         "key":"_siteDesc_",
-        "value":"a description for the meta head",
+        "value":"Inclusive and Accesible Virtual World",
         "description":"Description of the website"
     },
     {
@@ -20,8 +20,13 @@
         "description":"skip to main content in header link"
     },
     {
+        "key":"_status_label_",
+        "value":"You are in the section ",
+        "description":"label for the status bar"
+    },
+    {
         "key":"_bannerTitle_",
-        "value":"Banner Title",
+        "value":"MUVIA: Inclusive and Accesible Virtual World",
         "description":"Title"
     },
     {
@@ -33,16 +38,6 @@
         "key":"_login_msg_",
         "value":"Enter your credentials:",
         "description":"login intro paragraph"
-    },
-    {
-        "key":"_login_alternatives_",
-        "value":"or login with any account of these services:",
-        "description":"login intro paragraph"
-    },
-    {
-        "key":"_reset_password_",
-        "value":"Forgot your password?",
-        "description":"reset password link"
     },
     {
         "key":"_username_",
@@ -60,24 +55,24 @@
         "description":"email"
     },
     {
-        "key":"_email_sent_",
-        "value":"An email has been sent to your inbox. Click on the link to verify your account.",
-        "description":"email sent msg"
-    },
-    {
         "key":"_register_",
         "value":"Register",
         "description":"register button label"
     },
     {
-        "key":"_register_msg_",
-        "value":"Create a new account or register using an existing account from: ",
-        "description":"register page intro paragraph"
-    },
-    {
         "key":"_logout_",
         "value":"Log out",
         "description":"logout"
+    },
+    {
+        "key":"_login_sucessful_",
+        "value":"Very good! you can continue now",
+        "description":"login ok"
+    },
+    {
+        "key":"AUTHENTICATION_ERROR",
+        "value":"Authentication error",
+        "description":"authentication error"
     },
     {
         "key":"INVALID_ARGUMENT_PASSWORD",
@@ -101,9 +96,51 @@
     },
     {
         "key":"_welcome_",
-        "value":"welcome",
+        "value":"Home",
         "description":"Home page title text"
     },
+    {
+    	"key":"_contact_",
+    	"value":"Contact",
+    	"description":"contact title"
+    },
+    {
+        "key":"_send_",
+        "value":"Send",
+        "description":"send button label"
+    },
+    {
+        "key":"_message_",
+        "value":"Message",
+        "description":"Message field label"
+    },
+    {
+    	"key":"_contact_msg_",
+    	"value":"Write to muvia.info@gmail.com or use the following form to send your message:",
+    	"description":"contact title"
+    },
+
+    {
+        "key":"_error_name_required_",
+        "value":"It is important to write your name!",
+        "description":"contact title"
+    },
+    {
+        "key":"_error_email_required_",
+        "value":"It is important to write your email address!",
+        "description":"contact title"
+    },
+    {
+        "key":"_error_email_invalid_",
+        "value":"your email address does not seems to be a valid one!",
+        "description":"contact title"
+    },
+    {
+        "key":"_error_message_required_",
+        "value":"It is important to write some message!",
+        "description":"contact title"
+    },
+
      {
         "key":"_virtualworld_",
         "value":"Virtual World",

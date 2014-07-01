@@ -220,57 +220,206 @@ angular.module('localization', [])
  */
 'use strict';
 
-var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.bootstrap', 'UserApp']).
+var muPortalApp = angular.module('muPortal', ['ngRoute', 'localization', 'ui.bootstrap']).
     config(['$routeProvider', function ($routeProvider) {
         
     	//configure navigation paths in client side
         $routeProvider.
-            when('/', {templateUrl:'partials/welcome.html', controller:"mainController"}).
-            when('/login', {templateUrl:'partials/login.html', controller:"authController", public: true}).
-            when('/register', {templateUrl:'partials/register.html', controller:"authController", public: true}).
-            when('/welcome', {templateUrl:'partials/welcome.html', controller:"mainController", login: true}).
-            when('/profile', {templateUrl:'partials/profile.html', controller:"mainController", login: true}).
-            when('/virtualworld', {templateUrl:'partials/virtualworld.html', controller:"mainController", login: true}).
+            when('/', {templateUrl:'partials/welcome.html'}).
+            when('/login', {templateUrl:'partials/login.html'}).
+            when('/logout', {templateUrl:'partials/logout.html', controller:'logoutController'}).
+            when('/register', {templateUrl:'partials/register.html'}).
+            when('/welcome', {templateUrl:'partials/welcome.html'}).
+            when('/profile', {templateUrl:'partials/profile.html'}).
+            when('/contact', {templateUrl:'partials/contact.html'}).
+            when('/virtualworld', {templateUrl:'partials/virtualworld.html'}).
             otherwise({redirectTo:'/'});
     
     }]);
 
-muPortalApp.run(function($rootScope, $http, user) {
-    user.init({
-    	appId: '53739ca105ab1',
-		heartbeatInterval: 0 
-    });
-    
-	//add and remove auth token from session headers so they are available on server side 
-    //https://app.userapp.io/#/docs/libs/angularjs/#heartbeats
-	$rootScope.$on('user.login', function() {
-		console.log('adding auth token to headers ' + user.token());
-		$http.defaults.headers.common.Authorization = 'Basic ' + btoa(':' + user.token());
-	});
-	
-	$rootScope.$on('user.logout', function() {
-		console.log('removing auth token from headers ');
-		$http.defaults.headers.common.Authorization = null;
-	});
-
+muPortalApp.run(function($rootScope, $http) {
 });
 
 //------
+/**
+ * this service encapsulates the /login and /logout api endpoint.
+ * it is in charge of setting and removing the authtoken and propagate
+ */
+
+
+
+
+muPortalApp.service("authsrv", [ "$rootScope", "$http", function($rootScope, $http){
+
+
+    /**
+     * only allow anonymous users
+     * @type {number}
+     */
+    this.LEVEL_ANON = 0x1;
+
+    /**
+     * allow anonymous and logged users
+     * @type {number}
+     */
+    this.LEVEL_ALL = 0x3;
+
+
+    /**
+     * only allow authenticated users
+     * @type {number}
+     */
+    this.LEVEL_AUTH = 0x2;
+
+
+	this.ROLE_ANON = 0x1;
+	this.ROLE_AUTH = 0x2;
+
+    /**
+     * this property will be used to monitor login/logout events in the whole app.
+     * zero means logged out, >1 logged in. in the future, other values (maybe binary flags)
+     * may enrich the meaning of it.
+    */
+    $rootScope.authcode = this.ROLE_ANON;
+
+    /**
+     *
+     * @param usr
+     * @param psw
+     * @cb success callback, signature function(errorcode). if null, it means login was successful.
+     * error codes:
+     * AUTHENTICATION_ERROR
+     *
+     */
+	this.login= function(usr, psw, cb){
+        var self = this;
+        $http({
+            method: 'POST',
+            url: '/api/login',
+            data: {usr: usr, psw:psw}
+        }).
+            success(function(data, status, headers, config) {
+                $rootScope.authcode = self.ROLE_AUTH;
+                $http.defaults.headers.common.Authorization = data.tkn;
+                cb(null);
+            }).
+            error(function(data, status, headers, config) {
+                console.log("error loggin in", data, status);
+                cb("AUTHENTICATION_ERROR");
+            });
+	};
+
+    /**
+     *
+     */
+	this.logout = function(){
+		var self = this;
+        $http({
+            method: 'POST',
+            url: '/api/logout'
+        }).
+            success(function(data, status, headers, config) {
+                $rootScope.authcode = self.LEVEL_ANON;
+                $http.defaults.headers.common.Authorization = null;
+                //console.log("logged out!", $rootScope.authcode);
+            }).
+            error(function(data, status, headers, config) {
+                //console.log("error logging out", data, status);
+            });
+	};
+
+    /**
+     * returns true or false if the accesslevel matches the $rootscope.authcode.
+     * use the LEVEL_xxxx variables as accesslevel integer codes or as strings: 
+     * anon, auth, all, none
+     * @param accesslevel
+     */
+    this.authorize = function(accesslevel){
+    	if(accesslevel === "none") accesslevel = 0;
+    	else if(accesslevel === "anon") accesslevel = 1; 
+    	else if(accesslevel === "auth") accesslevel = 2; 
+    	else if(accesslevel == "all") accesslevel = 3;
+    	else accesslevel =  parseInt(accesslevel);
+        //console.log("authsrv.authorize acesslevel ", accesslevel, $rootScope.authcode, ($rootScope.authcode & accesslevel));
+        return ($rootScope.authcode & accesslevel) > 0;
+    };
+	
+}]);
+//------
+/**
+ * src/services/contactsrv.js
+ * this service encapsulate the /contact api endpoint
+ */
+
+
+
+
+muPortalApp.service("contactsrv", ["$http", function($http){
+
+    /**
+     * send a contact message filled in the contact form
+     */
+	this.sendMessage = function(name, email, message, cb){
+        var self = this;
+        $http({
+            method: 'POST',
+            url: '/api/contact',
+            data: {name: name, email:email, message: message}
+        }).
+            success(function(data, status, headers, config) {
+                //$rootScope.authcode = self.ROLE_AUTH;
+                //$http.defaults.headers.common.Authorization = data.tkn;
+                cb(null);
+            }).
+            error(function(data, status, headers, config) {
+                console.log("error sending contact message", data, status);
+                cb("API_ERROR");
+            });
+	};
+	
+}]);
+//------
+/**
+ * Created by cesar on 6/18/14.
+based on this article:
+ http://www.frederiknakstad.com/2013/01/21/authentication-in-single-page-applications-with-angular-js/
+ */
+
+muPortalApp.directive('accessLevel', ['$rootScope', 'authsrv', function($rootScope, authsrv) {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attrs) {
+                var prevDisp = element.css('display');
+                $rootScope.$watch('authcode', function(role) {
+                    if(!authsrv.authorize(attrs.accessLevel))
+                        element.css('display', 'none');
+                    else
+                        element.css('display', prevDisp);
+                });
+            }
+        };
+    }]);//------
 
 /**
  * controllers/mainctrl.js
  * controller for the index
  */
 
-muPortalApp.controller('mainController',
-    function($scope, $window) {
+muPortalApp.controller('mainController', ["$rootScope", "$scope", "$window",
+   function($rootScope, $scope, $window) {
+
+        /**
+         * status inform the current screen and if the user is logged in.
+         * @type {string}
+         */
+        this.status = "_login_anon_";
 
         /*var someText = {};
         someText.message = 'You have started your journey.';
         $scope.someText = someText;
         */
 
-        $scope.locale = ($window.navigator.userLanguage || $window.navigator.language)
+        $scope.locale = ($window.navigator.userLanguage || $window.navigator.language);
         console.log("your locale is: " +$scope.locale);
 
         /**
@@ -282,15 +431,88 @@ muPortalApp.controller('mainController',
             return "partials/"+$scope.locale.substr(0, 2) + "/" + partialname;
         }
 
-    });//------
+       /**
+       *  keep track of changes in route to update the status bar
+        */
+       var self = this;
+       $rootScope.$on("$routeChangeStart",function(event, next, current){
+           console.log("routeChangeStart",next.originalPath);
+           //parse the route (in the form "/path") to the form "_path_". we expect to match some i18n symbol!
+           if(next.originalPath === "/")
+            self.status ="_welcome_";
+           else{
+               self.status = "_"+next.originalPath.substring(1)+"_";
+           }
+       });
+
+
+
+    } ]);//------
 
 /**
  * controllers/authctrl.js
  * controller for the index
  */
 
-muPortalApp.controller('authController',
-    function($scope, $window) {
+muPortalApp.controller('authController', ["$scope", "$window", "authsrv", function($scope, $window, authsrv) {
 
+    this.usr = null;
+    this.psw = null;
 
-    });
+    this.error = null;
+
+    this.success = false;
+
+    this.doLogin = function(){
+        var self = this;
+        authsrv.login(this.usr, this.psw, function(error){
+            //console.log("error: ", error);
+            self.error = error;
+            if(self.error === null){
+                //succefull login!
+                self.success = true;
+            }
+        });
+    }
+
+}]);//------
+
+/**
+ * controllers/logoutctrl.js
+ * controller for the logout operation. it execute the logout code at construction time.
+ */
+
+muPortalApp.controller('logoutController', ["$scope", "$window", "authsrv", function($scope, $window, authsrv) {
+
+    authsrv.logout();
+
+}]);//------
+
+/**
+ * src/controllers/contactctrl.js
+ * controller for contact form
+ */
+
+muPortalApp.controller('contactController', ['contactsrv', function(contactsrv) {
+
+    this.name = null;
+    this.email = null;
+    this.message = null;
+
+    this.error = null;
+
+    this.doContact = function(){
+        var self = this;
+        //console.log("contactController.doContact ", this.name, this.email, this.message);
+        contactsrv.sendMessage(this.name, this.email, this.message, function(error){
+            self.error = error;
+            if(self.error === null){
+                console.log("contact message sent! how to notify the user?");
+            }
+            else{
+                console.log("contact message failed! self.error had been set.");
+            }
+        });
+    }
+
+}]);
