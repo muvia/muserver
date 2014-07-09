@@ -1,3 +1,22 @@
+/**
+ MuEngine: accesible multiplayer game engine
+ Copyright (C) 2014  Cesar Pachón
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published
+ by the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+ contact: cesarpachon@gmail.com
+ */
 MuEngine  = (function(){
 	
 	MuEngine = {};
@@ -102,6 +121,8 @@ MuEngine  = (function(){
 
  /**
 	* multiply a given point for this.mat, store the result in out
+    * when used within a node object, it is equivalent to a LOCAL transform!
+    * for obtain a GLOBAL transform use the node.multP method.
 	*/
 	MuEngine.Transform.prototype.multP = function(p, out){
 		if(this._dirty) this.update();
@@ -160,20 +181,20 @@ MuEngine.Transform.prototype.setScale = function(scale){
  * N <= 0: infinite loop
  */
 MuEngine.Animator  = function(config){
-//prototype chaining will call this method with empty parameters
+  //prototype chaining will call this method with empty parameters
   if(config === undefined) return;	
-	//configuration parameters
+  //configuration parameters
   this.target = config.target ||  "pos";
-	this.loops = config.loops || 1;
+  this.loops = config.loops || 0;
   this.startVal = config.start || 0.0;
   this.endVal = config.end || 1.0;
   this.duration = config.duration || 1000;
-	this.cb = config.cb;
+  this.cb = config.cb;
 
 	//internal status variables
-  this.starttime = 0;
-	this.status = "idle";  
-	this.step = 0.0;
+  this.elapsedtime = 0;
+  this.status = "idle";
+  this.step = 0.0;
 };
 
 //a few public static constants
@@ -188,12 +209,11 @@ MuEngine.Animator.STATUS_FINISHED = "finished";
 
 
 MuEngine.Animator.prototype.isFinished = function(){
-	return this.status === this.STATUS_FINISHED;
-}
+	return this.status === MuEngine.Animator.STATUS_FINISHED;
+};
 
 
 MuEngine.Animator.prototype.update = function(dt, node){
-//	console.log("status: " + this.status + " step:"+ this.step);
 	if(this.status === MuEngine.Animator.STATUS_IDLE){
 			this.status = MuEngine.Animator.STATUS_RUNNING;
 			this.elapsedtime= 0; 
@@ -203,12 +223,19 @@ MuEngine.Animator.prototype.update = function(dt, node){
 	else if(this.status === MuEngine.Animator.STATUS_RUNNING){
 			this.elapsedtime  += dt;
 			if(this.elapsedtime > this.duration){
-				this.loops--;
-				this.step = 1.0;
-				this.status = MuEngine.Animator.STATUS_FINISHED;
-				this.cb();
-                return;
-			}else{
+                if(this.loops > 0){
+                    this.loops--;
+                    this.step = 1.0;
+                    this.status = MuEngine.Animator.STATUS_FINISHED;
+    				console.log("status: " + this.status + " step:"+ this.step +  " loops "+ this.loops);
+	                if(this.cb !== undefined) this.cb();
+                    //return;
+                }else{
+                    //keep looping..
+                    this.elapsedtime = this.elapsedtime - this.duration;
+                    this.step = this.elapsedtime/this.duration;
+                }
+            }else{
 				this.step = this.elapsedtime/this.duration;
 			}
 			this.apply(node);		
@@ -226,8 +253,8 @@ MuEngine.AnimatorPos  = function(config){
 	MuEngine.Animator.call(this, config);	
 	this.val = vec3.clone(this.startVal);
 };
-
 //chaining prototypes
+
 MuEngine.AnimatorPos.prototype  = new MuEngine.Animator;
 
 MuEngine.AnimatorPos.prototype.apply = function(node){
@@ -339,8 +366,21 @@ MuEngine.Node.prototype.update = function(dt){
 	for(var i=0; i<this.children.length; ++i){
 		this.children[i].update(dt);
 	};	
-}
+};
 
+
+/**
+ * global transform a point. if you want to local transform the point,
+ * use node.transform.multP instead.
+ * @param p
+ * @param out
+ */
+MuEngine.Node.prototype.multP = function(p, out){
+    //local transform..
+    //this.transform.multP(p, out);
+    //local to global..
+    vec3.transformMat4(out, p, this.wm);
+};
 				
 	//-------- CAMERA CLASS -------------
 	/**
@@ -350,8 +390,9 @@ MuEngine.Node.prototype.update = function(dt){
 	 * it performs basic perspective transformation. 
 	 */
 	MuEngine.Camera = function(){
-		this.eye = vec3.fromValues(0, 0, -10);
-		this.fixed_eye = true; 
+        //this must be always a normalized vector
+		this.eye = vec3.fromValues(0, 0, -1);
+		//this.fixed_center = true;
 		this.center = vec3.fromValues( 0, 0, 0);
 		this.up = vec3.fromValues( 0, 1, 0);
 		this.view_mat = mat4.create();
@@ -382,10 +423,13 @@ MuEngine.Node.prototype.update = function(dt){
 	* camera static attributes (mainly helpers)
 	*/		
 	MuEngine.Camera.prototype.g_p0 = vec3.create();
-	MuEngine.Camera.prototype.g_p1 = vec3.create(); 
+	MuEngine.Camera.prototype.g_p1 = vec3.create();
+    MuEngine.Camera.prototype.g_p2 = vec3.create();
+    MuEngine.Camera.prototype.g_p3 = vec3.create();
 
 
-	MuEngine.Camera.prototype.update = function(){
+
+    MuEngine.Camera.prototype.update = function(){
 		mat4.lookAt(this.view_mat, this.eye, this.center, this.up); 
 		//mat4.perspective(this.proj_mat, this.fovy, this.aspect, this.near, this.far);
 		mat4.ortho(this.proj_mat, this.left, this.right, this.bottom, this.top, this.near, this.far);
@@ -400,7 +444,7 @@ MuEngine.Node.prototype.update = function(dt){
 	MuEngine.Camera.prototype.world2eye = function(point, pointout){
 		if(this.dirty) this.update();
 		vec3.transformMat4(pointout, point, this.view_proj_mat); 
-	}
+	};
 
 	/**
 	 * given a point in world space, multiply by view_mat and proj_mat and store 
@@ -430,22 +474,20 @@ MuEngine.Node.prototype.update = function(dt){
 	/**
 	 * move the center of the camera using a delta vector
 	 */
-	MuEngine.Camera.prototype.moveEye = function(delta){
-		var temp =  vec3.create();
-		vec3.add(this.eye, this.eye, delta);
-		if(!this.fixed_center){
-			vec3.add(this.center, this.center, delta);
-		}
+	MuEngine.Camera.prototype.move = function(delta){
+		vec3.add(this.center, this.center, delta);
 		this.dirty = true;
 	};
 
-	MuEngine.Camera.prototype.centerFixed = function(flag){
-		this.fixed_center = flag;
-	};
-
+    /**
+     * receives a global point and update the eye vector so it points toward there.
+     * eye must always be kept normalized
+     * @param pos point in global coords
+     */
   MuEngine.Camera.prototype.setEye = function(pos){
-		this.eye = pos;
-		this.dirty = true;
+      vec3.subtract(this.eye, pos, this.center);
+      vec3.normalize(this.eye, this.eye);
+      this.dirty = true;
 	};
 
 	/**
@@ -486,9 +528,12 @@ MuEngine.Node.prototype.update = function(dt){
 	/**
 	* render a sprite. 
 	* @param ori: point in 3d world coords of the anchor position
+
 	*/
-	MuEngine.Camera.prototype.renderSprite = function(ori, sprite){
-		this.project(ori, this.g_p0);
+	MuEngine.Camera.prototype.renderSprite = function(node, sprite){
+        var img = sprite.imghandler.img;
+        if(!sprite._3d){
+		this.project(node.wp, this.g_p0);
 		//w, h are in world coords.. transform to pixels:
 		var wpx = (sprite.width * g_canvas.width) / (this.right - this.left);  
 		var wpy = (sprite.height * g_canvas.height) / (this.top - this.bottom);  
@@ -496,10 +541,145 @@ MuEngine.Node.prototype.update = function(dt){
 		var offy = ((1 & sprite.anchor) > 0) ? 0 : (((2 & sprite.anchor) > 0)? -wpy :-(wpy>>1)); 
 		var offx = ((4 & sprite.anchor) > 0) ? 0 : (((8 & sprite.anchor) > 0)? -wpx :-(wpx>>1)); 
 		if(sprite.tilew != null && sprite.tileh != null)
-			g_ctx.drawImage(sprite.imghandler.img, sprite.tilex*sprite.tilew, sprite.tiley*sprite.tileh, sprite.tilew, sprite.tileh, this.g_p0[0]+offx, this.g_p0[1]+offy, wpx, wpy);
+			g_ctx.drawImage(img, sprite.tilex*sprite.tilew, sprite.tiley*sprite.tileh, sprite.tilew, sprite.tileh, this.g_p0[0]+offx, this.g_p0[1]+offy, wpx, wpy);
 		else
-			g_ctx.drawImage(sprite.imghandler.img, this.g_p0[0]+offx, this.g_p0[1]+offy, wpx, wpy);
-	}
+			g_ctx.drawImage(img, this.g_p0[0]+offx, this.g_p0[1]+offy, wpx, wpy);
+	  }else{
+            //this is a 3d sprite!
+
+        var w2 =sprite.width*0.5;
+        var h2 = sprite.height*0.5;
+
+        //compute the projected corners and paint as lines
+        //notice that for 2dsprites the anchor computation is done in screen space (pixels) but for 3d it must be done in world space
+        var offy = ((1 & sprite.anchor) > 0) ? 0 : (((2 & sprite.anchor) > 0)? 0:h2);
+        var offx = ((4 & sprite.anchor) > 0) ? 0 : (((8 & sprite.anchor) > 0)? -sprite.width:-w2);
+
+        //lower left corner:
+        vec3.set(this.g_p0, offx, offy, 0);
+        node.multP(this.g_p0, this.g_p0);
+        this.project(this.g_p0, this.g_p0);
+        //lower right corner:
+        vec3.set(this.g_p1, sprite.width+offx, offy, 0);
+        node.multP(this.g_p1, this.g_p1);
+        this.project(this.g_p1, this.g_p1);
+       //upper left corner:
+       vec3.set(this.g_p2, sprite.width+offx, sprite.height+offy, 0);
+       node.multP(this.g_p2, this.g_p2);
+        this.project(this.g_p2, this.g_p2);
+       //upper right corner:
+       vec3.set(this.g_p3, offx, sprite.height+offy, 0);
+       node.multP(this.g_p3, this.g_p3);
+        this.project(this.g_p3, this.g_p3);
+
+
+        this.drawTriangle(img,
+            this.g_p0[0],this.g_p0[1], this.g_p1[0],this.g_p1[1], this.g_p2[0],this.g_p2[1],
+            0, img.height, img.width, img.height, img.width, 0);
+
+        this.drawTriangle(img,
+            this.g_p0[0],this.g_p0[1], this.g_p2[0],this.g_p2[1], this.g_p3[0],this.g_p3[1],
+            0, img.height, img.width, 0, 0, 0);
+
+            /*
+            //for debugging
+           g_ctx.beginPath();
+           g_ctx.moveTo(this.g_p0[0],this.g_p0[1]);
+           g_ctx.lineTo(this.g_p1[0],this.g_p1[1]);
+           g_ctx.lineTo(this.g_p2[0],this.g_p2[1]);
+           g_ctx.lineTo(this.g_p3[0],this.g_p3[1]);
+           g_ctx.lineTo(this.g_p0[0],this.g_p0[1]);
+           g_ctx.closePath();
+           g_ctx.strokeStyle =  "#00FFFF";
+           g_ctx.stroke();
+            */
+       }
+    };
+
+
+    /*
+     this code is adapted from:
+     http://tulrich.com/geekstuff/canvas/jsgl.js
+     https://github.com/cesarpachon/pre3d/blob/master/pre3d.js
+     refered by dean McNamee
+     https://github.com/deanm
+    */
+    MuEngine.Camera.prototype.drawTriangle = function(im, x0, y0, x1, y1, x2, y2,
+     sx0, sy0, sx1, sy1, sx2, sy2) {
+        g_ctx.save();
+
+     // Clip the output to the on-screen triangle boundaries.
+        g_ctx.beginPath();
+        g_ctx.moveTo(x0, y0);
+        g_ctx.lineTo(x1, y1);
+        g_ctx.lineTo(x2, y2);
+        g_ctx.closePath();
+     //ctx.stroke();//xxxxxxx for wireframe
+        g_ctx.clip();
+
+     /*
+     ctx.transform(m11, m12, m21, m22, dx, dy) sets the context transform matrix.
+
+     The context matrix is:
+
+     [ m11 m21 dx ]
+     [ m12 m22 dy ]
+     [  0   0   1 ]
+
+     Coords are column vectors with a 1 in the z coord, so the transform is:
+     x_out = m11 * x + m21 * y + dx;
+     y_out = m12 * x + m22 * y + dy;
+
+     From Maxima, these are the transform values that map the source
+     coords to the dest coords:
+
+     sy0 (x2 - x1) - sy1 x2 + sy2 x1 + (sy1 - sy2) x0
+     [m11 = - -----------------------------------------------------,
+     sx0 (sy2 - sy1) - sx1 sy2 + sx2 sy1 + (sx1 - sx2) sy0
+
+     sy1 y2 + sy0 (y1 - y2) - sy2 y1 + (sy2 - sy1) y0
+     m12 = -----------------------------------------------------,
+     sx0 (sy2 - sy1) - sx1 sy2 + sx2 sy1 + (sx1 - sx2) sy0
+
+     sx0 (x2 - x1) - sx1 x2 + sx2 x1 + (sx1 - sx2) x0
+     m21 = -----------------------------------------------------,
+     sx0 (sy2 - sy1) - sx1 sy2 + sx2 sy1 + (sx1 - sx2) sy0
+
+     sx1 y2 + sx0 (y1 - y2) - sx2 y1 + (sx2 - sx1) y0
+     m22 = - -----------------------------------------------------,
+     sx0 (sy2 - sy1) - sx1 sy2 + sx2 sy1 + (sx1 - sx2) sy0
+
+     sx0 (sy2 x1 - sy1 x2) + sy0 (sx1 x2 - sx2 x1) + (sx2 sy1 - sx1 sy2) x0
+     dx = ----------------------------------------------------------------------,
+     sx0 (sy2 - sy1) - sx1 sy2 + sx2 sy1 + (sx1 - sx2) sy0
+
+     sx0 (sy2 y1 - sy1 y2) + sy0 (sx1 y2 - sx2 y1) + (sx2 sy1 - sx1 sy2) y0
+     dy = ----------------------------------------------------------------------]
+     sx0 (sy2 - sy1) - sx1 sy2 + sx2 sy1 + (sx1 - sx2) sy0
+     */
+
+    // TODO: eliminate common subexpressions.
+    var denom = sx0 * (sy2 - sy1) - sx1 * sy2 + sx2 * sy1 + (sx1 - sx2) * sy0;
+    if (denom == 0) {
+        return;
+    }
+    var m11 = - (sy0 * (x2 - x1) - sy1 * x2 + sy2 * x1 + (sy1 - sy2) * x0) / denom;
+    var m12 = (sy1 * y2 + sy0 * (y1 - y2) - sy2 * y1 + (sy2 - sy1) * y0) / denom;
+    var m21 = (sx0 * (x2 - x1) - sx1 * x2 + sx2 * x1 + (sx1 - sx2) * x0) / denom;
+    var m22 = - (sx1 * y2 + sx0 * (y1 - y2) - sx2 * y1 + (sx2 - sx1) * y0) / denom;
+    var dx = (sx0 * (sy2 * x1 - sy1 * x2) + sy0 * (sx1 * x2 - sx2 * x1) + (sx2 * sy1 - sx1 * sy2) * x0) / denom;
+    var dy = (sx0 * (sy2 * y1 - sy1 * y2) + sy0 * (sx1 * y2 - sx2 * y1) + (sx2 * sy1 - sx1 * sy2) * y0) / denom;
+
+        g_ctx.transform(m11, m12, m21, m22, dx, dy);
+
+    // Draw the whole image.  Transform and clip will map it onto the
+    // correct output triangle.
+    //
+    // TODO: figure out if drawImage goes faster if we specify the rectangle that
+    // bounds the source coords.
+        g_ctx.drawImage(im, 0, 0);
+        g_ctx.restore();
+    };
 //------- CELL CLASS EXTENDS NODE ------------
 
 /**
@@ -546,11 +726,14 @@ Cell.prototype.isWalkable = function(){
 	 	this.cellsize = cellsize;
 		this.color = color || "#cccccc"; 
 		this.cells = new Array(width * height);
-		this.queue = new MuEngine.PriorityQueue(_compareCellsByEyePos);
+		//this.queue = new MuEngine.PriorityQueue(_compareCellsByEyePos);
+		this.sorted_cells = new Array(width * height);
 		for(var i=0; i<this.width; ++i){
 				for(var j=0; j< this.height; ++j){
 					var cell = new Cell(i, j, cellsize);
-					this.cells[(i*this.height)+j] = cell;
+					var p = (i*this.height)+j;
+					this.cells[p] = cell;
+					this.sorted_cells[p] = cell;
 				}
 		};
 	};
@@ -572,23 +755,36 @@ Cell.prototype.isWalkable = function(){
 		return this.cells[(i*this.height)+ j];	
 	};
 
+/**
+ * 
+ * @param {Object} node
+ * @param {Object} cam
+ */
 	MuEngine.Grid.prototype.render = function(node, cam){
 		this._renderGrid(node, cam);
 		for(var i=0; i<this.cells.length; ++i){
 			var cell = this.cells[i];
-			cam.world2eye(cell.transform.pos, cell.eyePos);
+			cam.world2eye(cell.wp, cell.eyePos);
 			//here its a good point to perform occlusion culling..
-			this.queue.push(cell);
+			//this.queue.push(cell);
 		}	
+		this.sorted_cells.sort(_compareCellsByEyePos);
 		//hopefully, here we have a list of visible cells sorted by depth..
-		var cell = this.queue.pop();
-		while(cell!=null){
+		//var cell = this.queue.pop();
+		//while(cell!=null){
+	    for(var i=0; i<this.sorted_cells.length; ++i){
+			var cell = this.sorted_cells[i];
 			cell.render(node.wm);
-			cell = this.queue.pop();
+			//cell = this.queue.pop();
 		} 
 		
 	};
 
+/**
+ * 
+ * @param {Object} node
+ * @param {Object} cam
+ */
 	MuEngine.Grid.prototype._renderGrid = function(node, cam){
 		var w = this.width*this.cellsize;
 		//draw rows
@@ -596,8 +792,8 @@ Cell.prototype.isWalkable = function(){
 		for(var i=0; i<=this.height; ++i){
 			vec3.set(this.g_p0, aux, 0, 0);
 			vec3.set(this.g_p1, aux, 0, w);
-			node.transform.multP(this.g_p0, this.g_p0);
-			node.transform.multP(this.g_p1, this.g_p1);
+			node.multP(this.g_p0, this.g_p0);
+			node.multP(this.g_p1, this.g_p1);
 			cam.renderLine(this.g_p0, this.g_p1, this.color);
 			aux += this.cellsize;
 		};
@@ -606,8 +802,8 @@ Cell.prototype.isWalkable = function(){
 		for(var j=0; j<=this.width; ++j){
 			vec3.set(this.g_p0, 0, 0, aux);
 			vec3.set(this.g_p1, h, 0, aux);
-			node.transform.multP(this.g_p0, this.g_p0);
-			node.transform.multP(this.g_p1, this.g_p1);
+			node.multP(this.g_p0, this.g_p0);
+			node.multP(this.g_p1, this.g_p1);
 			cam.renderLine(this.g_p0, this.g_p1, this.color);
 			aux += this.cellsize;
 		};
@@ -769,6 +965,7 @@ MuEngine.Avatar.prototype.move = function(_dir){
 		this.tiley = 0;
 		this.tilew = null;
 		this.tileh = null;
+        this._3d = false; //flag that force the sprite to be rendered in 3d mode
 	};
 
 	/*
@@ -784,7 +981,7 @@ MuEngine.Avatar.prototype.move = function(_dir){
 	MuEngine.Sprite.prototype.ANCHOR_RIGHT = 8;
 
 	MuEngine.Sprite.prototype.render = function(node, cam){
-		cam.renderSprite(node.wp, this);
+		cam.renderSprite(node, this);
 
 	};
 

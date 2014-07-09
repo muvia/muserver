@@ -1,0 +1,101 @@
+<html>
+<head>
+</head>
+<body>
+<div>before</div>
+<div id="menu1" class="menu">
+    <button id="enter" >Enter Menu</button>
+
+    <ul id="level1" class="level">
+        <!--option 1-->
+        <li>
+            <ul id="level11" class="level">
+                <li>option 1</li>
+                <li>option 2</li>
+                <li>option 3</li>
+                <li>option 4</li>
+            </ul>
+        </li>
+        <!--option 2-->
+        <li>
+            <ul id="level12" class="level">
+                <li>option 1</li>
+                <li>option 2</li>
+                <li>option 3</li>
+                <li>option 4</li>
+            </ul>
+        </li>
+        <!--option 3-->
+        <li>
+            <ul id="level13" class="level">
+            <li>option 1</li>
+            <li>option 2</li>
+            <li>option 3</li>
+            <li>option 4</li>
+          </ul>
+        </li>
+        <!--option 4-->
+        <li>
+           <ul id="level14" class="level">
+            <li>option 1</li>
+            <li>option 2</li>
+            <li>option 3</li>
+            <li>option 4</li>
+          </ul>
+        </li>
+    </ul>
+
+</div>
+
+<div>after</div>
+</body>
+
+<script>
+
+    var AccesibleMenu = (function(){
+
+        //constructor
+        var menu = function(divid){
+            this.menudiv = document.getElementById(divid);
+
+            //ul for the root level
+            this.root = null;
+
+            var self = this;
+
+            var entermenubtn = this.menudiv.querySelector("button#enter");
+            entermenubtn.addEventListener("click", function(ev){self.onEnterMenu();});
+
+            this.parseOptions();
+
+        };
+
+        /**
+         * iterate over the nested collection of ul and li, to build a model of them, while flatting the dom
+         */
+        menu.prototype.parseOptions = function(){
+            //this is the level 1
+            this.root = this.menudiv.querySelector("ul");
+
+        };
+
+        /**
+         *
+         */
+        menu.prototype.onEnterMenu = function(){
+           console.log("entering menu");
+        };
+
+
+
+
+        return menu;
+    })();
+
+    var menu1 = new AccesibleMenu("menu1");
+
+
+
+</script>
+
+</html>
