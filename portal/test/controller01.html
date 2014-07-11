@@ -1,49 +1,120 @@
 <html>
 <head>
+<style type="text/css">
+
+    .menu{
+    }
+
+    .menubarcontainer{
+        border: 1px;
+        border-color: black;
+        border-style: solid;
+        padding: 5px;
+        display: block;
+    }
+
+    .menubarcontainer .menubar{
+        border: 1px;
+        border-color: black;
+        border-style: solid;
+        padding: 5px;
+        margin: 2px;
+        background-color: gold;
+        float: left;
+        display: block;
+        width: 200px;
+    }
+
+    .menubarcontainer .menubar .entry{
+        border: 1px;
+        border-color: black;
+        border-style: solid;
+        padding: 5px;
+        background-color: greenyellow;
+        display: block;
+    }
+
+    .menubarcontainer .menubar .menuentry{
+        border: 1px;
+        border-color: black;
+        border-style: solid;
+        padding: 5px;
+        background-color: #b8abd8;
+        display: block;
+    }
+
+
+</style>
 </head>
 <body>
 <div>before</div>
 <div id="menu1" class="menu">
     <button id="enter" >Enter Menu</button>
 
-    <ul id="level1" class="level">
+    <menu id="root" title="root">
         <!--option 1-->
-        <li>
-            <ul id="level11" class="level">
-                <li>option 1</li>
-                <li>option 2</li>
-                <li>option 3</li>
-                <li>option 4</li>
-            </ul>
-        </li>
+        <menu id="menu1" title="Menu 1">
+            <menu id="menu1.1" title="Menu 1.1">
+                <menu id="menu1.1.1" title="Menu 1.1.1">
+                    <entry id="entry1111">option 1111</entry>
+                    <entry id="entry1112">option 1112</entry>
+                    <entry id="entry1113">option 1113</entry>
+                    <entry id="entry1114">option 1114</entry>
+                </menu>
+                <menu id="menu1.1.2" title="Menu 1.1.2">
+                    <menu id="menu1.1.2.1" title="menu 1.1.2.1">
+                        <entry id="entry1121">option 1121</entry>
+                        <entry id="entry1122">option 1122</entry>
+                        <entry id="entry1123">option 1123</entry>
+                        <entry id="entry1124">option 1124</entry>
+                    </menu>
+                </menu>
+                <menu id="menu1.1.3" title="menu 1.1.3">
+                    <menu id="menu1.1.3.1" title="Menu 1.1.3.1">
+                        <entry id="entry1131">option 1131</entry>
+                        <entry id="entry1132">option 1132</entry>
+                        <entry id="entry1133">option 1133</entry>
+                        <entry id="entry1134">option 1134</entry>
+                    </menu>
+                </menu>
+                <menu id="menu1.1.4" title="Menu 1.1.4">
+                    <menu id="menu1.1.4" title="Menu 1.1.4.1">
+                        <entry id="entry1141">option 1141</entry>
+                        <entry id="entry1142">option 1142</entry>
+                        <entry id="entry1143">option 1143</entry>
+                        <entry id="entry1144">option 1144</entry>
+                    </menu>
+                </menu>
+            </menu>
+        </menu>
         <!--option 2-->
-        <li>
-            <ul id="level12" class="level">
-                <li>option 1</li>
-                <li>option 2</li>
-                <li>option 3</li>
-                <li>option 4</li>
-            </ul>
-        </li>
+        <menu id="menu2" title="Menu 2">
+            <menu id="menu2.1" title="Menu 2.1">
+                <entry id="entry121">option 21</entry>
+                <entry id="entry122">option 22</entry>
+                <entry id="entry123">option 23</entry>
+                <entry id="entry124">option 24</entry>
+            </menu>
+        </menu>
         <!--option 3-->
-        <li>
-            <ul id="level13" class="level">
-            <li>option 1</li>
-            <li>option 2</li>
-            <li>option 3</li>
-            <li>option 4</li>
-          </ul>
-        </li>
+        <menu id="menu3" title="Menu 3">
+            <menu id="menu3.1" title="Menu 3.1">
+                <entry id="entry131">option 31</entry>
+                <entry id="entry132">option 32</entry>
+                <entry id="entry123">option 33</entry>
+                <entry id="entry124">option 34</entry>
+          </menu>
+        </menu>
         <!--option 4-->
-        <li>
-           <ul id="level14" class="level">
-            <li>option 1</li>
-            <li>option 2</li>
-            <li>option 3</li>
-            <li>option 4</li>
-          </ul>
-        </li>
-    </ul>
+        <menu id="menu4" title="Menu 4">
+            <menu id="menu4.1" title="Menu 4.1">
+                <entry id="entry141">option 41</entry>
+                <entry id="entry142">option 42</entry>
+                <entry id="entry143">option 43</entry>
+                <entry id="entry144">option 44</entry>
+          </menu>
+        </menu>
+    </menu>
 
 </div>
 
@@ -51,45 +122,128 @@
 </body>
 
 <script>
-
+'use strict';
     var AccesibleMenu = (function(){
 
+        //----- menu bar class ------------
+        var MenuBar = function(menuElement, parentMenuBar, mainMenu){
+            this.parent = parentMenuBar;
+            this.id = null;
+            this.title = null;
+            this.submenus= [];
+            this.entries = [];
+            var tagname = menuElement.tagName.toLowerCase();
+            this.id = menuElement.id;
+            this.title = menuElement.title;
+            //this is the main div for this menuBar. all hidden except the first level
+            this.el = _createDiv(this.id, parentMenuBar === null);
+            this.el.className = 'menubar';
+            mainMenu.menuBarContainer.appendChild(this.el);
+            //but we also must add a entry to the parent menuBar
+            if(this.parent != null){
+                this.parent.addMenuEntry(this);
+            }
+            console.log("menu found " +this.id + ": "+ this.title);
+            if(tagname === "menu"){
+                //iterate over children, look for entries and sub-menus
+                for(var i=0; i< menuElement.children.length; ++i){
+                    var child = menuElement.children[i];
+                    if(child.tagName.toLowerCase() === 'menu'){
+                        //mainMenu.appendChild(this.el);
+                        this.submenus.push(new MenuBar(child, this, mainMenu));
+                    }else if(child.tagName.toLowerCase() === 'entry'){
+                        this.entries.push(new MenuEntry(child, this, mainMenu));
+                    }
+                }
+            }
+        };
+
+        /**
+         * at difference with a normal entry, a menuEntry is only for showing a submenubar.
+         */
+        MenuBar.prototype.addMenuEntry = function(menubar){
+            var menuentry = _createDiv(this.id, true);
+            menuentry.innerHTML = this.title;
+            menuentry.className = "menuentry";
+            this.el.appendChild(menuentry);
+
+        };
+
+        /**
+         * receives the focus, display contents
+         */
+        MenuBar.prototype.activate = function(){
+
+        }
+
+        //------- menu entry class ----------
+        var MenuEntry = function(entryElement, menuBarParent){
+            this.parent = menuBarParent;
+            this.id = entryElement.id;
+            this.title = entryElement.innerHTML;
+            this.el = _createDiv(this.id, true);
+            this.el.innerHTML = this.title;
+            this.el.className = 'entry';
+            menuBarParent.el.appendChild(this.el);
+            console.log("entry found " +this.id + ": "+ this.title);
+        };
+
+
+        //------------ main Menu class --------------
         //constructor
-        var menu = function(divid){
+        var Menu = function(divid){
             this.menudiv = document.getElementById(divid);
 
-            //ul for the root level
-            this.root = null;
+            this.rootMenuBar = null;
+
+            this.menuBarContainer = null;
 
             var self = this;
 
             var entermenubtn = this.menudiv.querySelector("button#enter");
             entermenubtn.addEventListener("click", function(ev){self.onEnterMenu();});
 
-            this.parseOptions();
+            this.build();
 
         };
 
         /**
          * iterate over the nested collection of ul and li, to build a model of them, while flatting the dom
          */
-        menu.prototype.parseOptions = function(){
+        Menu.prototype.build = function(){
             //this is the level 1
-            this.root = this.menudiv.querySelector("ul");
-
+            var menu = this.menudiv.querySelector("menu");
+            this.menudiv.removeChild(menu);
+            this.menuBarContainer = _createDiv("menuBarContainer", true);
+            this.menuBarContainer.className = 'menubarcontainer';
+            this.menudiv.appendChild(this.menuBarContainer);
+            this.rootMenuBar =new MenuBar(menu, null, this);
         };
+
 
         /**
          *
          */
-        menu.prototype.onEnterMenu = function(){
+        Menu.prototype.onEnterMenu = function(){
            console.log("entering menu");
         };
 
+        //--- private module methods ---
 
+        function _createDiv(id, visible){
+            var div = document.createElement("div");
+            div.id = id;
+            _showDiv(div, visible);
+            return div;
+        };
 
+        function _showDiv(div, visible){
+            var style = window.getComputedStyle(div);
+            var display = style.getPropertyValue('display');
+            div.setAttribute("style", "display:"+(visible?display:"none"));
+        };
 
-        return menu;
+        return Menu;
     })();
 
     var menu1 = new AccesibleMenu("menu1");
