@@ -135,15 +135,22 @@
             var tagname = menuElement.tagName.toLowerCase();
             this.id = menuElement.id;
             this.title = menuElement.title;
+
             //this is the main div for this menuBar. all hidden except the first level
-            this.el = _createDiv(this.id, parentMenuBar === null);
-            this.el.className = 'menubar';
-            mainMenu.menuBarContainer.appendChild(this.el);
+            this.el = _createDiv(this.id, parentMenuBar === null, 'menubar');
+
+            //create a title div for the menubar
+            this.titlediv = _createDiv((this.id + "_title"), true, 'menutitle');
+            this.titlediv.innerHTML = this.title;
+            this.el.appendChild(this.titlediv);
+
             //but we also must add a entry to the parent menuBar
             if(this.parent != null){
                 this.parent.addMenuEntry(this);
             }
-            console.log("menu found " +this.id + ": "+ this.title);
+
+            mainMenu.menuBarContainer.appendChild(this.el);
+
             if(tagname === "menu"){
                 //iterate over children, look for entries and sub-menus
                 for(var i=0; i< menuElement.children.length; ++i){
@@ -162,9 +169,8 @@
          * at difference with a normal entry, a menuEntry is only for showing a submenubar.
          */
         MenuBar.prototype.addMenuEntry = function(menubar){
-            var menuentry = _createDiv(this.id, true);
-            menuentry.innerHTML = this.title;
-            menuentry.className = "menuentry";
+            var menuentry = _createDiv(menubar.id, true, "menuentry");
+            menuentry.innerHTML = menubar.title;
             this.el.appendChild(menuentry);
 
         };
@@ -181,11 +187,10 @@
             this.parent = menuBarParent;
             this.id = entryElement.id;
             this.title = entryElement.innerHTML;
-            this.el = _createDiv(this.id, true);
+            this.el = _createDiv(this.id, true, 'entry');
             this.el.innerHTML = this.title;
-            this.el.className = 'entry';
             menuBarParent.el.appendChild(this.el);
-            console.log("entry found " +this.id + ": "+ this.title);
+            //console.log("entry found " +this.id + ": "+ this.title);
         };
 
 
@@ -205,6 +210,13 @@
 
             this.build();
 
+            //status variables
+            this.status = {
+                menubar: this.rootMenubar,
+                menuitem: null //may be either a MenuEntry or a
+            };
+
+
         };
 
         /**
@@ -214,8 +226,7 @@
             //this is the level 1
             var menu = this.menudiv.querySelector("menu");
             this.menudiv.removeChild(menu);
-            this.menuBarContainer = _createDiv("menuBarContainer", true);
-            this.menuBarContainer.className = 'menubarcontainer';
+            this.menuBarContainer = _createDiv("menuBarContainer", true, 'menubarcontainer');
             this.menudiv.appendChild(this.menuBarContainer);
             this.rootMenuBar =new MenuBar(menu, null, this);
         };
@@ -230,9 +241,12 @@
 
         //--- private module methods ---
 
-        function _createDiv(id, visible){
+        function _createDiv(id, visible, classname){
             var div = document.createElement("div");
             div.id = id;
+            if(classname !== undefined){
+                div.className = classname;
+            }
             _showDiv(div, visible);
             return div;
         };
@@ -240,6 +254,7 @@
         function _showDiv(div, visible){
             var style = window.getComputedStyle(div);
             var display = style.getPropertyValue('display');
+            if(display === '') display = 'block';
             div.setAttribute("style", "display:"+(visible?display:"none"));
         };
 
