@@ -43,6 +43,15 @@
         display: block;
     }
 
+    .menubarcontainer .menubar .menuentry.selected{
+        border: 3px;
+        border-color: yellow;
+        border-style: solid;
+        padding: 5px;
+        background-color: #b8abd8;
+        display: block;
+    }
+
 
 </style>
 </head>
@@ -141,12 +150,13 @@
 
             //create a title div for the menubar
             this.titlediv = _createDiv((this.id + "_title"), true, 'menutitle');
-            this.titlediv.innerHTML = this.title;
+            this.titlediv.innerText = this.title;
             this.el.appendChild(this.titlediv);
 
             //but we also must add a entry to the parent menuBar
             if(this.parent != null){
-                this.parent.addMenuEntry(this);
+                this.entries.push(new MenuEntry(this.el, this.parent, this));
+                //this.parent.addMenuEntry(this);
             }
 
             mainMenu.menuBarContainer.appendChild(this.el);
@@ -156,24 +166,15 @@
                 for(var i=0; i< menuElement.children.length; ++i){
                     var child = menuElement.children[i];
                     if(child.tagName.toLowerCase() === 'menu'){
-                        //mainMenu.appendChild(this.el);
                         this.submenus.push(new MenuBar(child, this, mainMenu));
                     }else if(child.tagName.toLowerCase() === 'entry'){
-                        this.entries.push(new MenuEntry(child, this, mainMenu));
+                        this.entries.push(new MenuEntry(child, this));
                     }
                 }
             }
         };
 
-        /**
-         * at difference with a normal entry, a menuEntry is only for showing a submenubar.
-         */
-        MenuBar.prototype.addMenuEntry = function(menubar){
-            var menuentry = _createDiv(menubar.id, true, "menuentry");
-            menuentry.innerHTML = menubar.title;
-            this.el.appendChild(menuentry);
 
-        };
 
         /**
          * receives the focus, display contents
@@ -182,15 +183,80 @@
 
         }
 
+        /**
+         * retrieves and entry by id over the whole menubar tree
+         */
+        MenuBar.prototype.findEntry = function(id){
+            for(var i=0; i<this.entries.length; ++i){
+                if(this.entries[i].id === id)
+                    return this.entries[i];
+            }
+            for(var j=0; j<this.submenus.length; ++j){
+                var entry = this.submenus[j].findEntry(id);
+                if(entry != null)
+                    return entry;
+            }
+            return null;
+        }
+
+
         //------- menu entry class ----------
-        var MenuEntry = function(entryElement, menuBarParent){
+
+        /**
+         * if target = Menubar, this is an entry that controls a submenu.
+         */
+        var MenuEntry = function(entryElement, menuBarParent, target){
             this.parent = menuBarParent;
             this.id = entryElement.id;
-            this.title = entryElement.innerHTML;
-            this.el = _createDiv(this.id, true, 'entry');
+            this.title = entryElement.innerText;
+            this.target = target;
+            var classname = 'entry';
+            if(target !== undefined && target instanceof MenuBar){
+                classname = 'menuentry';
+            }
+            this.el = _createDiv(this.id, true, classname);
             this.el.innerHTML = this.title;
             menuBarParent.el.appendChild(this.el);
-            //console.log("entry found " +this.id + ": "+ this.title);
+        };
+
+
+        /**
+         * main entry point for perform things. based on context status it will decide
+         * wich specific action (select, trigger) will be executed, and what other objects
+         * must be notified.
+         */
+        MenuEntry.prototype.execute = function(context){
+            if(context.currentry != this){
+                //a selection. unselect previous?
+                if(context.currentry != null)
+                    context.currentry.unselect();
+                context.currentry = this;
+                this.select();
+            }else{
+                //a execution.
+                this.trigger();
+            }
+        };
+
+        /**
+         *
+         */
+        MenuEntry.prototype.unselect = function(){
+
+        };
+
+        /**
+         *
+         */
+        MenuEntry.prototype.select = function(){
+            console.log("hey someone selected me! MenuEntry ", this.id);
+        };
+
+        /**
+         *
+         */
+        MenuEntry.prototype.trigger = function(){
+            console.log("hey someone triggered me! MenuEntry ", this.id);
         };
 
 
@@ -203,6 +269,14 @@
 
             this.menuBarContainer = null;
 
+            //status variables
+            this.context = {
+                triggerOnSelect: false,
+                confirmBeforeTrigger: false,
+                menubar: this.rootMenubar,
+                currentry: null
+            };
+
             var self = this;
 
             var entermenubtn = this.menudiv.querySelector("button#enter");
@@ -210,13 +284,8 @@
 
             this.build();
 
-            //status variables
-            this.status = {
-                menubar: this.rootMenubar,
-                menuitem: null //may be either a MenuEntry or a
-            };
 
-
+            this.menudiv.addEventListener("click", function(ev){self.onClick(ev.srcElement);});
         };
 
         /**
@@ -230,6 +299,27 @@
             this.menudiv.appendChild(this.menuBarContainer);
             this.rootMenuBar =new MenuBar(menu, null, this);
         };
+
+        /**
+         * handles on click events. receives the source DOM element
+         */
+        Menu.prototype.onClick = function(srcElement){
+
+            console.log("onClick ", srcElement.id , srcElement.className);
+
+            if(srcElement.className === "menutitle"){
+
+            }else if(srcElement.className === "menucontainer"){
+
+            }else if(srcElement.className === "menubar"){
+
+            }else if(srcElement.className === "menuentry" || srcElement.className === "entry"){
+                var entry = this.rootMenuBar.findEntry(srcElement.id);
+                if(entry != null) entry.execute(this.context);
+            }
+        };
+
+
 
 
         /**
