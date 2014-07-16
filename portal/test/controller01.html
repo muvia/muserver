@@ -47,8 +47,6 @@
         border: 3px;
         border-color: yellow;
         border-style: solid;
-        padding: 5px;
-        background-color: #b8abd8;
         display: block;
     }
 
@@ -132,14 +130,17 @@
 
 <script>
 'use strict';
+
+
+
     var AccesibleMenu = (function(){
 
         //----- menu bar class ------------
         var MenuBar = function(menuElement, parentMenuBar, mainMenu){
             this.parent = parentMenuBar;
-            this.id = null;
             this.title = null;
             this.submenus= [];
+            this.activesubmenu = null;
             this.entries = [];
             var tagname = menuElement.tagName.toLowerCase();
             this.id = menuElement.id;
@@ -149,9 +150,9 @@
             this.el = _createDiv(this.id, parentMenuBar === null, 'menubar');
 
             //create a title div for the menubar
-            this.titlediv = _createDiv((this.id + "_title"), true, 'menutitle');
-            this.titlediv.innerText = this.title;
-            this.el.appendChild(this.titlediv);
+            var titlediv = _createDiv((this.id + '_title'), true, 'menutitle');
+            titlediv.innerText = this.title;
+            this.el.appendChild(titlediv);
 
             //but we also must add a entry to the parent menuBar
             if(this.parent != null){
@@ -161,7 +162,7 @@
 
             mainMenu.menuBarContainer.appendChild(this.el);
 
-            if(tagname === "menu"){
+            if(tagname === 'menu'){
                 //iterate over children, look for entries and sub-menus
                 for(var i=0; i< menuElement.children.length; ++i){
                     var child = menuElement.children[i];
@@ -175,11 +176,52 @@
         };
 
 
+        /**
+         * triggering a menubar implies to make it visible and put the focus on it.
+         */
+        MenuBar.prototype.trigger = function(context){
+            console.log("triggering menubar "+ this.id);
+            if(context.currmenubar !== null){
+                //only hide if is not my ancestor
+                if(context.currmenubar != this.parent){
+                    context.currmenubar.hide();
+                }
+
+                context.currmenubar.unselect(context);
+
+            }
+            context.currmenubar = this;
+            _showDiv(this.el, true);
+        }
 
         /**
-         * receives the focus, display contents
+         *
+        MenuBar.prototype.isAncestor = function(menubar){
+           var mb = this.parent;
+           do while(this.parent != menubar && this.parent != null){
+
+           }
+        };
          */
-        MenuBar.prototype.activate = function(){
+
+
+        /**
+         * change stylus?
+         */
+        MenuBar.prototype.unselect = function(context){
+            console.log("unselecting MenuBar "+ this.id);
+            context.currmenubar = null;
+        }
+
+        /**
+         *
+         */
+        MenuBar.prototype.hide = function(context){
+            if(this.activesubmenu != null){
+                this.activesubmenu.hide();
+                this.activesubmenu = null;
+            }
+            _showDiv(this.el, false);
 
         }
 
@@ -228,13 +270,14 @@
         MenuEntry.prototype.execute = function(context){
             if(context.currentry != this){
                 //a selection. unselect previous?
-                if(context.currentry != null)
+                if(context.currentry != null){
                     context.currentry.unselect();
+                }
                 context.currentry = this;
                 this.select();
             }else{
                 //a execution.
-                this.trigger();
+                this.trigger(context);
             }
         };
 
@@ -242,7 +285,10 @@
          *
          */
         MenuEntry.prototype.unselect = function(){
-
+            if(this.target){
+                this.target.hide();
+            }
+            removeClass(this.el, 'selected');
         };
 
         /**
@@ -250,13 +296,23 @@
          */
         MenuEntry.prototype.select = function(){
             console.log("hey someone selected me! MenuEntry ", this.id);
+            addClass(this.el, 'selected');
         };
 
         /**
          *
          */
-        MenuEntry.prototype.trigger = function(){
-            console.log("hey someone triggered me! MenuEntry ", this.id);
+        MenuEntry.prototype.trigger = function(context){
+            console.log("trigger MenuEntry ", this.id);
+            if(this.target){
+                //we control a submenu! lets make it visible!
+                if(this.parent.activesubmenu != null){
+                    this.parent.activesubmenu.hide();
+                }
+                this.parent.activesubmenu = this.target;
+                this.target.trigger(context);
+
+            }
         };
 
 
@@ -273,7 +329,7 @@
             this.context = {
                 triggerOnSelect: false,
                 confirmBeforeTrigger: false,
-                menubar: this.rootMenubar,
+                currmenubar: this.rootMenuBar,
                 currentry: null
             };
 
@@ -283,7 +339,6 @@
             entermenubtn.addEventListener("click", function(ev){self.onEnterMenu();});
 
             this.build();
-
 
             this.menudiv.addEventListener("click", function(ev){self.onClick(ev.srcElement);});
         };
@@ -307,13 +362,13 @@
 
             console.log("onClick ", srcElement.id , srcElement.className);
 
-            if(srcElement.className === "menutitle"){
+            if(hasClass(srcElement, 'menutitle')){
 
-            }else if(srcElement.className === "menucontainer"){
+            }else if(hasClass(srcElement, 'menucontainer')){
 
-            }else if(srcElement.className === "menubar"){
+            }else if(hasClass(srcElement, 'menubar')){
 
-            }else if(srcElement.className === "menuentry" || srcElement.className === "entry"){
+            }else if(hasClass(srcElement, 'menuentry') || hasClass(srcElement, 'entry')){
                 var entry = this.rootMenuBar.findEntry(srcElement.id);
                 if(entry != null) entry.execute(this.context);
             }
@@ -344,9 +399,25 @@
         function _showDiv(div, visible){
             var style = window.getComputedStyle(div);
             var display = style.getPropertyValue('display');
-            if(display === '') display = 'block';
+            if(display === '' || display=='none') display = 'block';
             div.setAttribute("style", "display:"+(visible?display:"none"));
         };
+
+
+        //http://blog.adtile.me/2014/01/16/a-dive-into-plain-javascript/
+        function removeClass(el, cls) {
+            var reg = new RegExp("(\\s|^)" + cls + "(\\s|$)");
+            el.className = el.className.replace(reg, " ").replace(/(^\s*)|(\s*$)/g,"");
+        }
+
+        //http://blog.adtile.me/2014/01/16/a-dive-into-plain-javascript/
+        function hasClass(el, cls) {
+            return el.className && new RegExp("(\\s|^)" + cls + "(\\s|$)").test(el.className);
+        }
+
+        function addClass(el, cls){
+            el.className += " "+cls;
+        }
 
         return Menu;
     })();
