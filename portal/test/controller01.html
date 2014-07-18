@@ -271,7 +271,7 @@
             if(context.currentry != this){
                 //a selection. unselect previous?
                 if(context.currentry != null){
-                    context.currentry.unselect();
+                    context.currentry.unselect(context);
                 }
                 context.currentry = this;
                 this.select();
@@ -282,11 +282,12 @@
         };
 
         /**
-         *
+         * unselect must hide its target, but only if the new selected menu
          */
-        MenuEntry.prototype.unselect = function(){
+        MenuEntry.prototype.unselect = function(context){
+            console.log("MenuEntry.unselect #", this.id);
             if(this.target){
-                this.target.hide();
+                //this.target.hide();
             }
             removeClass(this.el, 'selected');
         };
@@ -295,7 +296,7 @@
          *
          */
         MenuEntry.prototype.select = function(){
-            console.log("hey someone selected me! MenuEntry ", this.id);
+            console.log("MenuEntry.select #", this.id);
             addClass(this.el, 'selected');
         };
 
@@ -303,7 +304,7 @@
          *
          */
         MenuEntry.prototype.trigger = function(context){
-            console.log("trigger MenuEntry ", this.id);
+            console.log("MenuEntry.trigger #", this.id);
             if(this.target){
                 //we control a submenu! lets make it visible!
                 if(this.parent.activesubmenu != null){
@@ -360,7 +361,7 @@
          */
         Menu.prototype.onClick = function(srcElement){
 
-            console.log("onClick ", srcElement.id , srcElement.className);
+            console.log("Menu.onClick ", srcElement.id , srcElement.className);
 
             if(hasClass(srcElement, 'menutitle')){
 
@@ -381,7 +382,7 @@
          *
          */
         Menu.prototype.onEnterMenu = function(){
-           console.log("entering menu");
+           console.log("Menu.onEnterMenu ");
         };
 
         //--- private module methods ---
