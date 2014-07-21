@@ -1,0 +1,47 @@
+.menu{
+}
+
+.menubarcontainer{
+    border: 1px;
+    border-color: black;
+    border-style: solid;
+    padding: 5px;
+    display: block;
+}
+
+.menubarcontainer .menubar{
+    border: 1px;
+    border-color: black;
+    border-style: solid;
+    padding: 5px;
+    margin: 2px;
+    /*background-color: gold;*/
+    float: left;
+    display: block;
+    width: 200px;
+}
+
+.menubarcontainer .menubar .entry{
+    border: 1px;
+    border-color: black;
+    border-style: solid;
+    padding: 5px;
+    /*background-color: greenyellow;*/
+    display: block;
+}
+
+.menubarcontainer .menubar .menuentry{
+    border: 1px;
+    border-color: black;
+    border-style: solid;
+    padding: 5px;
+    /*background-color: #b8abd8;*/
+    display: block;
+}
+
+.menubarcontainer .menubar .menuentry.selected{
+    border: 3px;
+    border-color: yellow;
+    border-style: solid;
+    display: block;
+}
