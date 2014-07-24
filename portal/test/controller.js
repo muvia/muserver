@@ -108,6 +108,19 @@ var AccesibleMenu = (function(){
         return null;
     }
 
+    /**
+     * retrieves a submenu (menubar) children of this container
+     * @param id
+     */
+    MenuBar.prototype.findMenuBar = function(id){
+        for(var j=0; j<this.submenus.length; ++j){
+            var menu = this.submenus[j];
+            if(menu.id === id)
+                return menu;
+        }
+        return null;
+    }
+
 
     //------- menu entry class ----------
 
@@ -228,7 +241,7 @@ var AccesibleMenu = (function(){
 
         this.build();
 
-        this.menudiv.addEventListener("click", function(ev){self.onClick(ev.srcElement);});
+        this.menudiv.addEventListener("click", function(ev){self.onClick(ev.srcElement); return false;});
 
     };
 
@@ -261,7 +274,16 @@ var AccesibleMenu = (function(){
             if(!this.focused){
                 this.onEnterMenu();
             }else{
-                console.log("eeenteer");
+                if(this.context.currentry != null){
+                    this.onClick(this.context.currentry);
+                } else if(this.context.currmenubar != null){
+                    //there is no menuentry selected, but there is a menubar selected
+                    this.onClick(this.context.currmenubar);
+                }
+                else{
+                    //there is no menubar nor menuentry selected..
+                    console.log("no menubar nor menuentry.. select the first menubar?", this.context);
+                }
             }
         }else{
             console.log(event.keyCode);
@@ -274,14 +296,15 @@ var AccesibleMenu = (function(){
      */
     Menu.prototype.onClick = function(srcElement){
 
-        console.log("Menu.onClick ", srcElement.id , srcElement.className);
+        //console.log("Menu.onClick ", ev.keyCode, srcElement.id , srcElement.className);
 
         if(hasClass(srcElement, 'menutitle')){
 
         }else if(hasClass(srcElement, 'menucontainer')){
 
         }else if(hasClass(srcElement, 'menubar')){
-
+            var menubar = this.rootMenuBar.findMenuBar(srcElement.id);
+            if(menubar != null) menubar.execute(this.context);
         }else if(hasClass(srcElement, 'menuentry') || hasClass(srcElement, 'entry')){
             var entry = this.rootMenuBar.findEntry(srcElement.id);
             if(entry != null) entry.execute(this.context);
@@ -296,8 +319,8 @@ var AccesibleMenu = (function(){
      */
     Menu.prototype.onEnterMenu = function(){
         if(!this.focused){
+            console.log("Menu.onEnterMenu ", this.focused);
             this.focused = true;
-            console.log("Menu.onEnterMenu ");
         }
     };
 
@@ -325,16 +348,16 @@ var AccesibleMenu = (function(){
     function removeClass(el, cls) {
         var reg = new RegExp("(\\s|^)" + cls + "(\\s|$)");
         el.className = el.className.replace(reg, " ").replace(/(^\s*)|(\s*$)/g,"");
-    }
+    };
 
     //http://blog.adtile.me/2014/01/16/a-dive-into-plain-javascript/
     function hasClass(el, cls) {
         return el.className && new RegExp("(\\s|^)" + cls + "(\\s|$)").test(el.className);
-    }
+    };
 
     function addClass(el, cls){
         el.className += " "+cls;
-    }
+    };
 
     return Menu;
 })();
