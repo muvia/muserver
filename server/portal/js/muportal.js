@@ -218,10 +218,11 @@ angular.module('localization', [])
  * muportalapp.js
  * app main module
  */
-'use strict';
 
-var muPortalApp = angular.module('muPortal', ['ngRoute', 'ui.bootstrap']).
+var muPortalApp = angular.module('muPortal', ['ngRoute', 'ui.bootstrap', 'localization']).
     config(['$routeProvider', function ($routeProvider) {
+    	'use strict';
+
         
     	//configure navigation paths in client side
         $routeProvider.
