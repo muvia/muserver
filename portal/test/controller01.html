@@ -5,10 +5,10 @@
 <body>
 <div>before</div>
 
-<div id="menu1" class="menu">
-    <button type="button" id="enter" >Enter Menu</button>
+<div id="menu" class="menu" tabindex="0" >
 
-    <menu id="root" title="root">
+    <!--all this node is going to be removed from the DOM. is used as template for the real menu structure -->
+    <menu id="root" title="root" >
         <!--option 1-->
         <menu id="menu1" title="Menu 1">
             <menu id="menu1.1" title="Menu 1.1">
@@ -35,7 +35,7 @@
                     </menu>
                 </menu>
                 <menu id="menu1.1.4" title="Menu 1.1.4">
-                    <menu id="menu1.1.4" title="Menu 1.1.4.1">
+                    <menu id="menu1.1.4.1" title="Menu 1.1.4.1">
                         <entry id="entry1141">option 1141</entry>
                         <entry id="entry1142">option 1142</entry>
                         <entry id="entry1143">option 1143</entry>
@@ -58,8 +58,8 @@
             <menu id="menu3.1" title="Menu 3.1">
                 <entry id="entry131">option 31</entry>
                 <entry id="entry132">option 32</entry>
-                <entry id="entry123">option 33</entry>
-                <entry id="entry124">option 34</entry>
+                <entry id="entry133">option 33</entry>
+                <entry id="entry134">option 34</entry>
           </menu>
         </menu>
         <!--option 4-->
@@ -80,7 +80,7 @@
 <script src="controller.js"></script>
 <script>
 'use strict';
- var menu1 = new AccesibleMenu("menu1", "enter");
+ var menu1 = new AccesibleMenu("menu", "enter");
 </script>
 
 </html>

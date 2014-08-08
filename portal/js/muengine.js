@@ -18,8 +18,9 @@
  contact: cesarpachon@gmail.com
  */
 MuEngine  = (function(){
+    'use strict';
 	
-	MuEngine = {};
+	var MuEngine = {};
 
 	//--- INTERNAL ATTRIBUTES ----
 	
@@ -472,10 +473,11 @@ MuEngine.Node.prototype.multP = function(p, out){
 	};
 
 	/**
-	 * move the center of the camera using a delta vector
+	 * move the center and the eye of the camera using a delta vector
 	 */
 	MuEngine.Camera.prototype.move = function(delta){
 		vec3.add(this.center, this.center, delta);
+        vec3.add(this.eye, this.eye, delta);
 		this.dirty = true;
 	};
 
@@ -510,8 +512,12 @@ MuEngine.Node.prototype.multP = function(p, out){
 		
 	};
 
+    MuEngine.Camera.prototype.log = function(){
+        console.log("Camera: center:", this.center, " eye:", this.eye);
+    };
 
- /**
+
+    /**
 	* lines are expected in world coordinates
 	*/
 	MuEngine.Camera.prototype.renderLine = function(ori, end, color){
@@ -709,7 +715,7 @@ Cell.prototype.isWalkable = function(){
 	/**
 	 * helper sort function for the render queue of the grid
 	 */
-	_compareCellsByEyePos = function(cellA, cellB){
+	var _compareCellsByEyePos = function(cellA, cellB){
 		return cellA.eyePos[2] < cellB.eyePos[2];
 	};
 
