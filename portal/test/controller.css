@@ -7,6 +7,14 @@
     border-style: solid;
     padding: 5px;
     display: block;
+    cursor:default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
 }
 
 .menubarcontainer .menubar{
@@ -17,7 +25,6 @@
     margin: 2px;
     /*background-color: gold;*/
     float: left;
-    display: block;
     width: 200px;
 }
 
@@ -27,7 +34,12 @@
     border-style: solid;
     padding: 5px;
     /*background-color: greenyellow;*/
-    display: block;
+}
+
+.menubarcontainer .menubar .entry.selected{
+    border: 3px;
+    border-color: red;
+    border-style: solid;
 }
 
 .menubarcontainer .menubar .menuentry{
@@ -36,12 +48,10 @@
     border-style: solid;
     padding: 5px;
     /*background-color: #b8abd8;*/
-    display: block;
 }
 
 .menubarcontainer .menubar .menuentry.selected{
     border: 3px;
     border-color: yellow;
     border-style: solid;
-    display: block;
 }

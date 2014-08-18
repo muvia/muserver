@@ -18,8 +18,9 @@
  contact: http://www.mundopato.com
  */
 MuEngine  = (function(){
+    'use strict';
 	
-	MuEngine = {};
+	var MuEngine = {};
 
 	//--- INTERNAL ATTRIBUTES ----
 	
@@ -714,7 +715,7 @@ Cell.prototype.isWalkable = function(){
 	/**
 	 * helper sort function for the render queue of the grid
 	 */
-	_compareCellsByEyePos = function(cellA, cellB){
+	var _compareCellsByEyePos = function(cellA, cellB){
 		return cellA.eyePos[2] < cellB.eyePos[2];
 	};
 

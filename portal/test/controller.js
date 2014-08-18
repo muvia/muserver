@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ *
+ */
 var AccesibleMenu = (function(){
 
     //----- menu bar class ------------
@@ -11,14 +14,13 @@ var AccesibleMenu = (function(){
         this.entries = [];
         var tagname = menuElement.tagName.toLowerCase();
         this.id = menuElement.id;
-        this.title = menuElement.title;
+        this.title = (menuElement.title ? menuElement.title : menuElement.getAttribute("title"));
 
         //this is the main div for this menuBar. all hidden except the first level
         this.el = _createDiv(this.id, parentMenuBar === null, 'menubar');
 
         //create a title div for the menubar
-        var titlediv = _createDiv((this.id + '_title'), true, 'menutitle');
-        titlediv.innerText = this.title;
+        var titlediv = _createDiv((this.id + '_title'), true, 'menutitle', this.title);
         this.el.appendChild(titlediv);
 
         //but we also must add a entry to the parent menuBar
@@ -42,6 +44,24 @@ var AccesibleMenu = (function(){
         }
     };
 
+    /**
+     * main entry point for perform things. based on context status it will decide
+     * wich specific action (select, trigger) will be executed, and what other objects
+     * must be notified.
+     */
+    MenuBar.prototype.execute = function(context){
+        if(context.currmenubar != this){
+            //a selection. unselect previous?
+            if(context.currmenubar != null){
+                context.currmenubar.unselect(context);
+            }
+            context.currmenubar = this;
+            this.select();
+        }else{
+            //a execution.
+            this.trigger(context);
+        }
+    };
 
     /**
      * triggering a menubar implies to make it visible and put the focus on it.
@@ -130,14 +150,13 @@ var AccesibleMenu = (function(){
     var MenuEntry = function(entryElement, menuBarParent, target){
         this.parent = menuBarParent;
         this.id = entryElement.id;
-        this.title = entryElement.innerText;
+        this.title = entryElement.innerHTML? entryElement.innerHTML : (entryElement.innerText ? entryElement.innerText : "error");
         this.target = target;
         var classname = 'entry';
         if(target !== undefined && target instanceof MenuBar){
             classname = 'menuentry';
         }
-        this.el = _createDiv(this.id, true, classname);
-        this.el.innerHTML = this.title;
+        this.el = _createDiv(this.id, true, classname, this.title);
         menuBarParent.el.appendChild(this.el);
     };
 
@@ -218,30 +237,23 @@ var AccesibleMenu = (function(){
             currentry: null
         };
 
-        /*
-         * affects the way key events are processed on the entermenu button callback.
-         * focus can be also gained through clicking.
-         */
-        this.focused = false;
+
 
         var self = this;
 
-        var entermenubtn = document.getElementById(buttonid);
-        entermenubtn.addEventListener("click", function(ev){
-            self.onEnterMenu();
-        });
 
-        entermenubtn.addEventListener('keydown',function(ev){
-            if(self.focused){
+        var _keydownCallback = function(ev){
                 self.onKeyDown(ev);
-            }else{
-                self.onEnterMenu();
-            }
-        },true);
+        }
 
         this.build();
 
-        this.menudiv.addEventListener("click", function(ev){self.onClick(ev.srcElement); return false;});
+        this.menudiv.addEventListener("click", function(ev){
+            self.onClick(ev.srcElement? ev.srcElement: ev.target);
+            return false;
+        });
+
+        this.menudiv.addEventListener('keydown', _keydownCallback, true);
 
     };
 
@@ -253,6 +265,7 @@ var AccesibleMenu = (function(){
         var menu = this.menudiv.querySelector("menu");
         this.menudiv.removeChild(menu);
         this.menuBarContainer = _createDiv("menuBarContainer", true, 'menubarcontainer');
+        this.menuBarContainer.tabindex="-1";
         this.menudiv.appendChild(this.menuBarContainer);
         this.rootMenuBar =new MenuBar(menu, null, this);
     };
@@ -266,25 +279,31 @@ var AccesibleMenu = (function(){
             console.log("up");
         }else if(key === 40){//down
             console.log("down");
+
+            if(this.context.currentry){
+                this.context.currentry.execute(this.context);
+            } else{
+                if(!this.context.currmenubar){
+                    this.context.currmenubar = this.rootMenuBar;
+                }
+                this.context.currmenubar.execute(this.context);
+            }
+
         }else if(key === 39){ //left
             console.log("left");
         }else if(key === 37){//right
             console.log("right");
         }else if(key === 13){//enter
-            if(!this.focused){
-                this.onEnterMenu();
-            }else{
-                if(this.context.currentry != null){
-                    this.onClick(this.context.currentry);
-                } else if(this.context.currmenubar != null){
-                    //there is no menuentry selected, but there is a menubar selected
-                    this.onClick(this.context.currmenubar);
+
+            if(this.context.currentry){
+                this.context.currentry.execute(this.context);
+            } else{
+                if(!this.context.currmenubar){
+                    this.context.currmenubar = this.rootMenuBar;
                 }
-                else{
-                    //there is no menubar nor menuentry selected..
-                    console.log("no menubar nor menuentry.. select the first menubar?", this.context);
-                }
+                this.context.currmenubar.execute(this.context);
             }
+
         }else{
             console.log(event.keyCode);
         }
@@ -296,46 +315,63 @@ var AccesibleMenu = (function(){
      */
     Menu.prototype.onClick = function(srcElement){
 
-        //console.log("Menu.onClick ", ev.keyCode, srcElement.id , srcElement.className);
+        if(!srcElement){
+            console.log("undefined srcElement", srcElement);
+        }
 
         if(hasClass(srcElement, 'menutitle')){
+            //the button titles block the click on the divs.. so move to the parent
+            srcElement = srcElement.parentNode?srcElement.parentNode:srcElement.parentElement;
+        }
 
-        }else if(hasClass(srcElement, 'menucontainer')){
+        if(hasClass(srcElement, 'menucontainer')){
 
         }else if(hasClass(srcElement, 'menubar')){
             var menubar = this.rootMenuBar.findMenuBar(srcElement.id);
-            if(menubar != null) menubar.execute(this.context);
+            if(menubar) menubar.execute(this.context);
         }else if(hasClass(srcElement, 'menuentry') || hasClass(srcElement, 'entry')){
             var entry = this.rootMenuBar.findEntry(srcElement.id);
-            if(entry != null) entry.execute(this.context);
-        }
-    };
-
-
-
-
-    /**
-     * invoked by either clicking or pressing enter, be sure to call it only once!
-     */
-    Menu.prototype.onEnterMenu = function(){
-        if(!this.focused){
-            console.log("Menu.onEnterMenu ", this.focused);
-            this.focused = true;
+            if(entry) entry.execute(this.context);
         }
     };
 
     //--- private module methods ---
 
-    function _createDiv(id, visible, classname){
+    /**
+     *
+     * @param id
+     * @param visible
+     * @param classname
+     * @param content (optional)
+     * @returns {*}
+     * @private
+     */
+    function _createDiv(id, visible, classname, content){
         var div = document.createElement("div");
         div.id = id;
-        if(classname !== undefined){
+        if(classname){
             div.className = classname;
+        }
+        if(content){
+            if(div.innerHTML || div.innerHTML === ''){
+                div.innerHTML = content;
+            }else if(div.innerText || div.innerText === ''){
+                div.innerText = content;
+            }else
+            {
+                console.log(div);
+            }
         }
         _showDiv(div, visible);
         return div;
     };
 
+    /**
+     *
+     * @param div
+     * @param visible
+     * @private
+     */
     function _showDiv(div, visible){
         var style = window.getComputedStyle(div);
         var display = style.getPropertyValue('display');
@@ -352,6 +388,9 @@ var AccesibleMenu = (function(){
 
     //http://blog.adtile.me/2014/01/16/a-dive-into-plain-javascript/
     function hasClass(el, cls) {
+        if(!el){
+            throw "undefined element";
+        }
         return el.className && new RegExp("(\\s|^)" + cls + "(\\s|$)").test(el.className);
     };
 
