@@ -233,7 +233,7 @@ var muPortalApp = angular.module('muPortal', ['ngRoute', 'ui.bootstrap', 'locali
             when('/welcome', {templateUrl:'partials/welcome.html'}).
             when('/profile', {templateUrl:'partials/profile.html'}).
             when('/contact', {templateUrl:'partials/contact.html'}).
-            when('/virtualworld', {templateUrl:'partials/virtualworld.html'}).
+            when('/virtualworld', {templateUrl:'partials/virtualworld.html', controller: 'virtualworldController'}).
             otherwise({redirectTo:'/'});
     
     }]);
@@ -515,5 +515,17 @@ muPortalApp.controller('contactController', ['contactsrv', function(contactsrv) 
             }
         });
     }
+
+}]);//------
+
+/**
+ * src/controllers/contactctrl.js
+ * controller for contact form
+ */
+
+muPortalApp.controller('virtualworldController', [function() {
+
+    this.menu1 = new MuController.Menu("menu1", "enter");
+
 
 }]);

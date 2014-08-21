@@ -23,18 +23,28 @@ var MuController = (function(){
         if(classname){
             div.className = classname;
         }
-        if(content){
-            if(div.innerHTML || div.innerHTML === ''){
-                div.innerHTML = content;
-            }else if(div.innerText || div.innerText === ''){
-                div.innerText = content;
-            }else
-            {
-                console.log(div);
-            }
-        }
+        MuController._setContent(div, content);
         MuController._showDiv(div, visible);
         return div;
+    };
+
+    /**
+     * @private
+     * @description set the content of a div
+     * @param div
+     * @param text
+     * @private
+     */
+    MuController._setContent = function(div, content){
+        if(!content) return;
+        if(div.innerHTML || div.innerHTML === ''){
+            div.innerHTML = content;
+        }else if(div.innerText || div.innerText === ''){
+            div.innerText = content;
+        }else
+        {
+            console.log(div);
+        }
     };
 
     /**
@@ -83,22 +93,28 @@ var MuController = (function(){
      * @param divid the div element that contains the menubar
      * @param buttonid the id of the button used to activate the menubar
      */
-    MuController.Menu = function(divid, buttonid){
+    MuController.Menu = function(divid){
         this.menudiv = document.getElementById(divid);
 
         this.rootMenuBar = null;
 
         this.menuBarContainer = null;
 
+        this.alert = this.menudiv.querySelector("div#alert");
+
+        var self = this;
+
         //status variables
         this.context = {
             triggerOnSelect: false,
             confirmBeforeTrigger: false,
             currmenubar: this.rootMenuBar,
-            currentry: null
+            currentry: null,
+            notify: function(msg){
+                MuController._setContent(self.alert, msg);
+            }
         };
 
-        var self = this;
 
         var _keydownCallback = function(ev){
                 self.onKeyDown(ev);
@@ -151,11 +167,23 @@ var MuController = (function(){
               }
             }
           }
-        }else if(key === 39){ //left
-            console.log("left");
-        }else if(key === 37){//right
-            console.log("right");
-        }else if(key === 13){//enter
+        }else if(key === 37){ //left
+          if(this.context.currentry){
+            //move focus to the container toolbar
+              //this.context.currentry.parent
+              this.context.currentry.unselect();
+              this.context.currentry = null;
+          }else if(this.context.currmenubar){
+            //move focus to parent currmenubar, if available
+            var bar = this.context.currmenubar;
+            if(bar.parent){
+                bar.unselect(this.context); //this nulls context.currmenubar
+                bar.parent.select(this.context); //this set context.currmenubar
+                bar.hide();
+            }
+          }
+
+        }else if(key === 13 || key === 39){//enter or right
 
             if(this.context.currentry){
                 this.context.currentry.execute(this.context);
@@ -320,7 +348,6 @@ var MuController = (function(){
      * triggering a menubar implies to make it visible and put the focus on it.
      */
     MuController.MenuBar.prototype.trigger = function(context){
-        console.log("triggering menubar "+ this.id);
 
         if(context.currmenubar === this){
         	/*maybe a keyboard event and the menubar is already displayed..
@@ -359,7 +386,6 @@ var MuController = (function(){
      * change stylus?
      */
     MuController.MenuBar.prototype.unselect = function(context){
-        console.log("unselecting MenuBar "+ this.id);
         context.currmenubar = null;
         MuController.removeClass(this.el, 'selected');
     };
@@ -369,8 +395,9 @@ var MuController = (function(){
      */
     MuController.MenuBar.prototype.select = function(context){
     	context.currmenubar = this;
-		  MuController.addClass(this.el, 'selected');
-      MuController._showDiv(this.el, true);
+		MuController.addClass(this.el, 'selected');
+        MuController._showDiv(this.el, true);
+        context.notify("selected menu "+ this.title);
     };
 
 
@@ -465,10 +492,6 @@ var MuController = (function(){
      * unselect must hide its target, but only if the new selected menu
      */
     MuController.MenuEntry.prototype.unselect = function(context){
-        console.log("MenuEntry.unselect #", this.id);
-        if(this.target){
-            //this.target.hide();
-        }
         MuController.removeClass(this.el, 'selected');
     };
 
@@ -476,16 +499,15 @@ var MuController = (function(){
      *
      */
     MuController.MenuEntry.prototype.select = function(context){
-        console.log("MenuEntry.select #", this.id);
         context.currentry = this;
         MuController.addClass(this.el, 'selected');
+        context.notify("selected option "+ this.title);
     };
 
     /**
      *
      */
     MuController.MenuEntry.prototype.trigger = function(context){
-        console.log("MenuEntry.trigger #", this.id);
         if(this.target){
           //we control a submenu! lets make it visible!
           if(this.parent.activesubmenu != null){
@@ -497,7 +519,7 @@ var MuController = (function(){
           this.parent.activesubmenu = this.target;
           this.target.trigger(context);
         }else{
-          console.log("fire acction ", this.id);
+          context.notify("executing option "+ this.title);
         }
     };
 

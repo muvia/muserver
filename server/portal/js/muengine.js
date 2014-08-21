@@ -1,6 +1,6 @@
 /**
  MuEngine: accesible multiplayer game engine
- Copyright (C) 2014  Cesar Pachón
+ Copyright (C) 2014 mundopato inc 
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU Affero General Public License as published
@@ -15,7 +15,7 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
- contact: cesarpachon@gmail.com
+ contact: http://www.mundopato.com
  */
 MuEngine  = (function(){
 	
@@ -472,10 +472,11 @@ MuEngine.Node.prototype.multP = function(p, out){
 	};
 
 	/**
-	 * move the center of the camera using a delta vector
+	 * move the center and the eye of the camera using a delta vector
 	 */
 	MuEngine.Camera.prototype.move = function(delta){
 		vec3.add(this.center, this.center, delta);
+        vec3.add(this.eye, this.eye, delta);
 		this.dirty = true;
 	};
 
@@ -510,8 +511,12 @@ MuEngine.Node.prototype.multP = function(p, out){
 		
 	};
 
+    MuEngine.Camera.prototype.log = function(){
+        console.log("Camera: center:", this.center, " eye:", this.eye);
+    };
 
- /**
+
+    /**
 	* lines are expected in world coordinates
 	*/
 	MuEngine.Camera.prototype.renderLine = function(ori, end, color){

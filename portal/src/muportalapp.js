@@ -18,7 +18,7 @@ var muPortalApp = angular.module('muPortal', ['ngRoute', 'ui.bootstrap', 'locali
             when('/welcome', {templateUrl:'partials/welcome.html'}).
             when('/profile', {templateUrl:'partials/profile.html'}).
             when('/contact', {templateUrl:'partials/contact.html'}).
-            when('/virtualworld', {templateUrl:'partials/virtualworld.html'}).
+            when('/virtualworld', {templateUrl:'partials/virtualworld.html', controller: 'virtualworldController'}).
             otherwise({redirectTo:'/'});
     
     }]);
