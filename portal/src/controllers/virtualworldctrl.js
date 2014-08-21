@@ -10,7 +10,7 @@ muPortalApp.controller('virtualworldController', [function() {
     this.menu1 = new MuController.Menu("menu1", "enter");
 
     //game engine initialization
-    var canvas = document.getElementById("c");
+    canvas = document.getElementById("c");
 
     MuEngine.setActiveCanvas(canvas);
 
@@ -49,7 +49,7 @@ muPortalApp.controller('virtualworldController', [function() {
     putSprite(2, 2, "assets/flor.png");
 
     //create root node
-    var root = new MuEngine.Node();
+    root = new MuEngine.Node();
     root.addChild(axis);
     root.addChild(gridNode);
 
@@ -112,6 +112,33 @@ muPortalApp.controller('virtualworldController', [function() {
             default: console.log(code); //Everything else
         }
     };
+
+
+    /**
+     * render method to update the engine
+     */
+    render = function(){
+        var dt = MuEngine.tick();
+        MuEngine.clear();
+        MuEngine.updateNode(root, dt);
+        MuEngine.renderNode(root);
+    };
+
+
+
+    window.requestAnimFrame = (function(){
+        return  window.requestAnimationFrame       ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            function( callback ){
+                window.setTimeout(callback, 1000 / 60);
+            };
+    })();
+
+    (function animloop(){
+        requestAnimFrame(animloop);
+        render();
+    })();
 
 
 }]);
