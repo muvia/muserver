@@ -56,7 +56,8 @@ module.exports = function (grunt) {
 	                {expand: true, src: ['css/**/*'], dest: '../server/portal/', filter: 'isFile'},
 	                {expand: true, src: ['i18n/**/*'], dest: '../server/portal/', filter: 'isFile'},
 	                {expand: true, src: ['partials/**/*'], dest: '../server/portal/', filter: 'isFile'},
-	                {expand: true, src: ['img/**/*'], dest: '../server/portal/', filter: 'isFile'}
+	                {expand: true, src: ['img/**/*'], dest: '../server/portal/', filter: 'isFile'},
+                    {expand: true, src: ['assets/**/*'], dest: '../server/portal/', filter: 'isFile'}
                 ]
             }
         }
