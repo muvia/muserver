@@ -128,7 +128,9 @@ var MuController = (function(){
             currentry: null,
             notify: function(msg){
                 MuController._setContent(self.alert, msg);
-            }
+            },
+            triggerEntryCallback: function(entryid){},
+            triggerMenuCallback: function(menuid){}
         };
 
 
@@ -536,6 +538,7 @@ var MuController = (function(){
           this.target.trigger(context);
         }else{
           context.notify("executing option "+ this.title);
+          context.triggerEntryCallback(this.id);
         }
     };
 
