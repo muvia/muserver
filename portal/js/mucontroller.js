@@ -107,9 +107,8 @@ var MuController = (function(){
     /**
      * constructor
      * @param divid the div element that contains the menubar
-     * @param buttonid the id of the button used to activate the menubar
      */
-    MuController.Menu = function(divid){
+    MuController.Menu = function(divid, entryCallback, menuCallback){
         this.menudiv = document.getElementById(divid);
 
         this.rootMenuBar = null;
@@ -129,8 +128,8 @@ var MuController = (function(){
             notify: function(msg){
                 MuController._setContent(self.alert, msg);
             },
-            triggerEntryCallback: function(entryid){},
-            triggerMenuCallback: function(menuid){}
+            triggerEntryCallback: entryCallback || function(entryid){},
+            triggerMenuCallback: menuCallback || function(menuid){}
         };
 
 

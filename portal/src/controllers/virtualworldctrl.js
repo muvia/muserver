@@ -6,8 +6,11 @@
 
 muPortalApp.controller('virtualworldController', [function() {
 
+    var self = this;
     //accessible controller initialization
-    this.menu1 = new MuController.Menu("menu1", "enter");
+    this.menu1 = new MuController.Menu("menu1", function(entryid){
+        self.onMenuEntryTriggered(entryid);
+    });
 
     //game engine initialization
     canvas = document.getElementById("c");
@@ -114,6 +117,9 @@ muPortalApp.controller('virtualworldController', [function() {
     };
     */
 
+    this.onMenuEntryTriggered = function(entryid){
+      console.log("triggered ", entryid);
+    };
 
     /**
      * render method to update the engine
