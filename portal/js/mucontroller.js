@@ -213,7 +213,7 @@ var MuController = (function(){
             }
 
         }else{
-            console.log(event.keyCode);
+            //console.log(event.keyCode);
         }
 
     };
