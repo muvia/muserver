@@ -555,9 +555,9 @@ muPortalApp.controller('virtualworldController', [function() {
     axis.addChild( new MuEngine.Node(linez));
 
     //create the grid
-    var grid = new MuEngine.Grid(8, 8, 1.0, "#888888");
+    var grid = new MuEngine.Grid(9, 9, 1.0, "#888888");
     var gridNode = new MuEngine.Node(grid);
-    gridNode.transform.setPos(0.3, 0.0, 0.3);
+    gridNode.transform.setPos(-4.5, 0.0, -4.5);
 
     putSprite = function(i, j, path){
         sprite = new MuEngine.Sprite(path);
@@ -580,8 +580,33 @@ muPortalApp.controller('virtualworldController', [function() {
 
     MuEngine.setActiveCamera(camera);
 
-    camera.setEye(vec3.fromValues(5, 5, -10));
-    camera.setCenter(vec3.fromValues(0, 0, 0));
+    //the camera is located at 5 units over the floor, ten units toward the monitor.
+    //this setup will produce a view with x to the right, y up and z toward the monitor.
+    camera.setCenter(vec3.fromValues(0, 10, 10));
+    camera.lookAt(vec3.fromValues(0, 0, -5));
+
+
+
+    //create an avatar. it will be an avatar node plus an animated sprite primitive.
+    var avatarNode = new MuEngine.Avatar({
+        row: 5,
+        col: 5,
+        grid: grid,
+        speed:0.1
+    });
+    avatarSprite = new MuEngine.Sprite("assets/personita.png");
+    //invoking "addAnimation" on a normal sprite transform it into an animated sprite
+    sprite.width = 1.0;
+    sprite.height = 1.28;
+    sprite.tilew = 100;
+    sprite.tileh = 128;
+    spriteNode.primitive.addAnimation("side-walk", 0, [0, 1, 0, 2], 1000);
+    spriteNode.primitive.addAnimation("front-walk", 1, [0, 1, 0,  2], 1000);
+    avatarSprite.anchor = sprite.ANCHOR_BOTTOM;
+    avatarNode.primitive = avatarSprite;
+    //attachment of the avatarNode to the grid occurs within avatarNode constructor
+
+
 
 //add an animator to the grid, with default values
     addPosAnimator = function(){

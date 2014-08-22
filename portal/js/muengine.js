@@ -430,7 +430,10 @@ MuEngine.Node.prototype.multP = function(p, out){
 
 
     MuEngine.Camera.prototype.update = function(){
-		mat4.lookAt(this.view_mat, this.eye, this.center, this.up); 
+
+        //pay attention: in glMatrix, eye is the center of the camera, not the "lookAt" vector..
+        vec3.add(this.g_p0, this.center, this.eye);
+		mat4.lookAt(this.view_mat, this.center, this.g_p0, this.up);
 		//mat4.perspective(this.proj_mat, this.fovy, this.aspect, this.near, this.far);
 		mat4.ortho(this.proj_mat, this.left, this.right, this.bottom, this.top, this.near, this.far);
 		mat4.multiply(this.view_proj_mat, this.proj_mat, this.view_mat);		
@@ -462,9 +465,9 @@ MuEngine.Node.prototype.multP = function(p, out){
 		//console.log("Camera.project: device: ",aux2,"->",pointout);
 	};
 
-  /**
-	 * set the center of the camera at the given point. 
-	 * if the eyefixed flag is false, the eye will be updated to keep his relative position to the center.
+    /**
+	 * set the center of the camera at the given point.
+     * @param pos a global position
 	 */
 	MuEngine.Camera.prototype.setCenter = function(pos){
 		vec3.copy(this.center, pos);
