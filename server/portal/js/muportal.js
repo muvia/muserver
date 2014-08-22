@@ -598,7 +598,7 @@ muPortalApp.controller('virtualworldController', [function() {
         gridNode.addAnimator(animator);
     };
 
-    window.addEventListener('keydown', onkeydown,false);
+    /*window.addEventListener('keydown', onkeydown,false);
 
     function onkeydown(e){
         var code = e.keyCode;
@@ -631,6 +631,7 @@ muPortalApp.controller('virtualworldController', [function() {
             default: console.log(code); //Everything else
         }
     };
+    */
 
 
     /**
