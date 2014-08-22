@@ -467,7 +467,7 @@ MuEngine.Node.prototype.multP = function(p, out){
 	 * if the eyefixed flag is false, the eye will be updated to keep his relative position to the center.
 	 */
 	MuEngine.Camera.prototype.setCenter = function(pos){
-		this.center = pos;
+		vec3.copy(this.center, pos);
 		this.dirty = true;	
 	};
 
@@ -485,11 +485,21 @@ MuEngine.Node.prototype.multP = function(p, out){
      * eye must always be kept normalized
      * @param pos point in global coords
      */
-  MuEngine.Camera.prototype.setEye = function(pos){
+    MuEngine.Camera.prototype.lookAt = function(pos){
       vec3.subtract(this.eye, pos, this.center);
       vec3.normalize(this.eye, this.eye);
       this.dirty = true;
 	};
+
+
+    /**
+     * set the eye direction vector
+     * @param dir a normalized vector
+     */
+    MuEngine.Camera.prototype.setEyeDir = function(dir){
+        vec3.copy(this.eye, dir);
+        this.dirty = true;
+    };
 
 	/**
 	* performs frustum culling against a sphere in world coordinates
