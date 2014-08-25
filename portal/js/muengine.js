@@ -18,8 +18,9 @@
  contact: http://www.mundopato.com
  */
 MuEngine  = (function(){
+    'use strict';
 	
-	MuEngine = {};
+	var MuEngine = {};
 
 	//--- INTERNAL ATTRIBUTES ----
 	
@@ -727,7 +728,7 @@ Cell.prototype.isWalkable = function(){
 	/**
 	 * helper sort function for the render queue of the grid
 	 */
-	_compareCellsByEyePos = function(cellA, cellB){
+	var _compareCellsByEyePos = function(cellA, cellB){
 		return cellA.eyePos[2] < cellB.eyePos[2];
 	};
 
@@ -951,7 +952,7 @@ MuEngine.Avatar.prototype.move = function(_dir){
 	 * Image Handler constructor
 	 * it will load imgurl, and use g_defimg while imgurl is fully loaded.
 	 */ 
-	ImageHandler = function(imgurl){
+	var ImageHandler = function(imgurl){
 		this.img = g_defimg;
 		//start the async loading process..
 		var self = this;
@@ -1034,7 +1035,7 @@ MuEngine.Avatar.prototype.move = function(_dir){
 
 	MuEngine.Sprite.prototype.update = function(dt){
 		if(this.animctrl == undefined) return;
-		anim = this.animctrl.curranim;
+		var anim = this.animctrl.curranim;
 		if(anim == undefined || anim == null) return;		
 		this.animctrl.elapsed += dt;
 		if(this.animctrl.elapsed >= anim.duration){
@@ -1250,8 +1251,8 @@ MuEngine.getImageHandler  = function(imgpath){
  * this method will generate recursive calls. 
  */
 MuEngine.renderNode = function(node){
-	//@todo: move this to private module attributes 
-  mat = mat4.create();	
+  //@todo: move this to private module attributes
+  var mat = mat4.create();
   node.render(mat);	
 };
 

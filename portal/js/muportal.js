@@ -524,6 +524,7 @@ muPortalApp.controller('contactController', ['contactsrv', function(contactsrv) 
  */
 
 muPortalApp.controller('virtualworldController', [function() {
+    'use strict';
 
     var self = this;
     //accessible controller initialization
@@ -532,9 +533,9 @@ muPortalApp.controller('virtualworldController', [function() {
     });
 
     //game engine initialization
-    canvas = document.getElementById("c");
+    this.canvas = document.getElementById("c");
 
-    MuEngine.setActiveCanvas(canvas);
+    MuEngine.setActiveCanvas(this.canvas);
 
     var p0  = vec3.fromValues(0, 0,  0);
     var px = vec3.fromValues(1, 0, 0);
@@ -559,10 +560,10 @@ muPortalApp.controller('virtualworldController', [function() {
     var gridNode = new MuEngine.Node(grid);
     gridNode.transform.setPos(-4.5, 0.0, -4.5);
 
-    putSprite = function(i, j, path){
-        sprite = new MuEngine.Sprite(path);
+    var putSprite = function(i, j, path){
+        var sprite = new MuEngine.Sprite(path);
         sprite.anchor = sprite.ANCHOR_BOTTOM;
-        spriteNode = new MuEngine.Node(sprite);
+        var spriteNode = new MuEngine.Node(sprite);
         grid.getCell(i, j).addChild(spriteNode);
     };
 
@@ -571,95 +572,38 @@ muPortalApp.controller('virtualworldController', [function() {
     putSprite(2, 2, "assets/flor.png");
 
     //create root node
-    root = new MuEngine.Node();
-    root.addChild(axis);
-    root.addChild(gridNode);
+    this.root = new MuEngine.Node();
+    this.root.addChild(axis);
+    this.root.addChild(gridNode);
 
     //create the camera
-    camera = new MuEngine.Camera(canvas);
+    this.camera = new MuEngine.Camera(this.canvas);
 
-    MuEngine.setActiveCamera(camera);
+    MuEngine.setActiveCamera(this.camera);
 
     //the camera is located at 5 units over the floor, ten units toward the monitor.
     //this setup will produce a view with x to the right, y up and z toward the monitor.
-    camera.setCenter(vec3.fromValues(0, 10, 10));
-    camera.lookAt(vec3.fromValues(0, 0, -5));
-
-
+    this.camera.setCenter(vec3.fromValues(0, 10, 10));
+    this.camera.lookAt(vec3.fromValues(0, 0, -5));
 
     //create an avatar. it will be an avatar node plus an animated sprite primitive.
-    var avatarNode = new MuEngine.Avatar({
+    this.avatarNode = new MuEngine.Avatar({
         row: 5,
         col: 5,
         grid: grid,
         speed:0.1
     });
-    avatarSprite = new MuEngine.Sprite("assets/personita.png");
+    var avatarSprite = new MuEngine.Sprite("assets/personita.png");
     //invoking "addAnimation" on a normal sprite transform it into an animated sprite
-    sprite.width = 1.0;
-    sprite.height = 1.28;
-    sprite.tilew = 100;
-    sprite.tileh = 128;
-    spriteNode.primitive.addAnimation("side-walk", 0, [0, 1, 0, 2], 1000);
-    spriteNode.primitive.addAnimation("front-walk", 1, [0, 1, 0,  2], 1000);
-    avatarSprite.anchor = sprite.ANCHOR_BOTTOM;
-    avatarNode.primitive = avatarSprite;
+    avatarSprite.width = 1.0;
+    avatarSprite.height = 1.28;
+    avatarSprite.tilew = 100;
+    avatarSprite.tileh = 128;
+    avatarSprite.addAnimation("side-walk", 0, [0, 1, 0, 2], 1000);
+    avatarSprite.addAnimation("front-walk", 1, [0, 1, 0,  2], 1000);
+    avatarSprite.anchor = MuEngine.Sprite.ANCHOR_BOTTOM;
+    this.avatarNode.primitive = avatarSprite;
     //attachment of the avatarNode to the grid occurs within avatarNode constructor
-
-
-
-//add an animator to the grid, with default values
-    addPosAnimator = function(){
-        var animator = new MuEngine.AnimatorPos({
-            start: vec3.fromValues(0, 0, 0),
-            end: vec3.fromValues(1, 0, 1)
-        });
-        gridNode.addAnimator(animator);
-    };
-
-//add an animator to the grid, with default values
-    addRotAnimator = function(){
-        var animator = new MuEngine.AnimatorRotY({
-            start: 0,
-            end: MuEngine.deg2rad(180)
-        });
-        gridNode.addAnimator(animator);
-    };
-
-    /*window.addEventListener('keydown', onkeydown,false);
-
-    function onkeydown(e){
-        var code = e.keyCode;
-
-        switch (code) {
-            case 37://Left key
-                console.log("Left");
-                camera.move(vec3.fromValues(0.1, 0, 0));
-                break;
-            case 38: //Up key
-                console.log("Up");
-                camera.move(vec3.fromValues(0, 0.1, 0));
-                break;
-            case 39: //Right key
-                console.log("Right");
-                camera.move(vec3.fromValues(-0.1, 0, 0));
-                break;
-            case 40: //Down key
-                console.log("Down");
-                camera.move(vec3.fromValues(0, -0.1, 0));
-                break;
-            case 80: //P key
-                console.log("add pos animator");
-                addPosAnimator();
-                break;
-            case 82: //R key
-                console.log("add rot animator");
-                addRotAnimator();
-                break;
-            default: console.log(code); //Everything else
-        }
-    };
-    */
 
     this.onMenuEntryTriggered = function(entryid){
       console.log("triggered ", entryid);
@@ -668,7 +612,7 @@ muPortalApp.controller('virtualworldController', [function() {
     /**
      * render method to update the engine
      */
-    render = function(){
+    this.render = function(){
         var dt = MuEngine.tick();
         MuEngine.clear();
         MuEngine.updateNode(root, dt);
@@ -688,7 +632,7 @@ muPortalApp.controller('virtualworldController', [function() {
 
     (function animloop(){
         requestAnimFrame(animloop);
-        render();
+        self.render();
     })();
 
 
