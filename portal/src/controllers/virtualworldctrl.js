@@ -96,8 +96,8 @@ muPortalApp.controller('virtualworldController', [function() {
     this.render = function(){
         var dt = MuEngine.tick();
         MuEngine.clear();
-        MuEngine.updateNode(root, dt);
-        MuEngine.renderNode(root);
+        MuEngine.updateNode(self.root, dt);
+        MuEngine.renderNode(self.root);
     };
 
 
