@@ -57,10 +57,18 @@ MuEngine  = (function(){
 	var pt2 = vec3.create();
 
  //a reusable, read-only (I hope) zero vector.
-	var g_pZero = vec3.fromValues(0, 0, 0);
+	MuEngine.pZero = vec3.fromValues(0, 0, 0);
 	
   //a reusable, read-only (I hope) unit vector.
-	var g_pOne = vec3.fromValues(1, 1, 1);
+	MuEngine.pOne = vec3.fromValues(1, 1, 1);
+
+    /*
+     * static helper points to avoid temporal vector creations
+     */
+    MuEngine.p0 = vec3.create();
+    MuEngine.p1 = vec3.create();
+    MuEngine.p2 = vec3.create();
+    MuEngine.p3 = vec3.create();
 
 	/**
 	* cache of MuEngine.imageHandler.
@@ -216,30 +224,30 @@ MuEngine.Animator.prototype.isFinished = function(){
 
 MuEngine.Animator.prototype.update = function(dt, node){
 	if(this.status === MuEngine.Animator.STATUS_IDLE){
-			this.status = MuEngine.Animator.STATUS_RUNNING;
-			this.elapsedtime= 0; 
-			this.step = 0;
-			this.apply(node);
+        this.status = MuEngine.Animator.STATUS_RUNNING;
+        this.elapsedtime= 0;
+        this.step = 0;
+        this.apply(node);
 	}
 	else if(this.status === MuEngine.Animator.STATUS_RUNNING){
-			this.elapsedtime  += dt;
-			if(this.elapsedtime > this.duration){
-                if(this.loops > 0){
-                    this.loops--;
-                    this.step = 1.0;
-                    this.status = MuEngine.Animator.STATUS_FINISHED;
-    				console.log("status: " + this.status + " step:"+ this.step +  " loops "+ this.loops);
-	                if(this.cb !== undefined) this.cb();
-                    //return;
-                }else{
-                    //keep looping..
-                    this.elapsedtime = this.elapsedtime - this.duration;
-                    this.step = this.elapsedtime/this.duration;
-                }
+        this.elapsedtime  += dt;
+        if(this.elapsedtime >= this.duration){
+            if(this.loops > 0){
+                this.loops--;
+                this.step = 1.0;
+                this.status = MuEngine.Animator.STATUS_FINISHED;
+                this.apply(node);
+                if(this.cb) this.cb();
+                return;
             }else{
-				this.step = this.elapsedtime/this.duration;
-			}
-			this.apply(node);		
+                //keep looping..
+                this.elapsedtime = this.elapsedtime - this.duration;
+                this.step = this.elapsedtime/this.duration;
+            }
+        }else{
+            this.step = this.elapsedtime/this.duration;
+        }
+        this.apply(node);
 	}
 	else if(this.status === MuEngine.Animator.STATUS_FINISHED){
 	}else throw "unknown animator status: " + this.status; 	
@@ -251,7 +259,11 @@ MuEngine.Animator.prototype.update = function(dt, node){
 
 MuEngine.AnimatorPos  = function(config){
 	config.target =  MuEngine.Animator.TARGET_POS;
-	MuEngine.Animator.call(this, config);	
+	MuEngine.Animator.call(this, config);
+    //in parent constructor, startVal and endVal are passed as references.
+    this.startVal = vec3.clone(this.startVal);
+    this.endVal = vec3.clone(this.endVal);
+    //this is the "current value" that we are going to keep changing
 	this.val = vec3.clone(this.startVal);
 };
 //chaining prototypes
@@ -260,8 +272,9 @@ MuEngine.AnimatorPos.prototype  = new MuEngine.Animator;
 
 MuEngine.AnimatorPos.prototype.apply = function(node){
 	vec3.subtract(this.val, this.endVal, this.startVal);
-	vec3.scale(this.val, this.val, this.step); 
-	node.transform.setPos(this.val[0], this.val[1], this.val[2]);	
+	vec3.scale(this.val, this.val, this.step);
+    vec3.add(this.val, this.val, this.startVal);
+    node.transform.setPos(this.val[0], this.val[1], this.val[2]);
 };
 
 //---------------- class AnimatorRotY extends Animator ----------------
@@ -305,7 +318,7 @@ MuEngine.Node.prototype.addChild = function(node){
 
 
 MuEngine.Node.prototype.removeChild = function(node){
-	for(i=0; i<this.children.length; ++i){
+	for(var i=0; i<this.children.length; ++i){
 		if(this.children[i] === node){
 			this.children.splice(i, 1);
 			return;
@@ -319,7 +332,7 @@ MuEngine.Node.prototype.removeChild = function(node){
 */
 MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 	this.transform.multiply(worldmat, this.wm);
-	vec3.transformMat4(this.wp, g_pZero, this.wm); 
+	vec3.transformMat4(this.wp, MuEngine.pZero, this.wm);
 };
 
 
@@ -419,22 +432,11 @@ MuEngine.Node.prototype.multP = function(p, out){
 		this.dirty = true;
 	};
 
-
-	/*
-	* camera static attributes (mainly helpers)
-	*/		
-	MuEngine.Camera.prototype.g_p0 = vec3.create();
-	MuEngine.Camera.prototype.g_p1 = vec3.create();
-    MuEngine.Camera.prototype.g_p2 = vec3.create();
-    MuEngine.Camera.prototype.g_p3 = vec3.create();
-
-
-
     MuEngine.Camera.prototype.update = function(){
 
         //pay attention: in glMatrix, eye is the center of the camera, not the "lookAt" vector..
-        vec3.add(this.g_p0, this.center, this.eye);
-		mat4.lookAt(this.view_mat, this.center, this.g_p0, this.up);
+        vec3.add(MuEngine.p0, this.center, this.eye);
+		mat4.lookAt(this.view_mat, this.center, MuEngine.p0, this.up);
 		//mat4.perspective(this.proj_mat, this.fovy, this.aspect, this.near, this.far);
 		mat4.ortho(this.proj_mat, this.left, this.right, this.bottom, this.top, this.near, this.far);
 		mat4.multiply(this.view_proj_mat, this.proj_mat, this.view_mat);		
@@ -534,11 +536,11 @@ MuEngine.Node.prototype.multP = function(p, out){
 	* lines are expected in world coordinates
 	*/
 	MuEngine.Camera.prototype.renderLine = function(ori, end, color){
-		this.project(ori,this.g_p0);
-		this.project(end,this.g_p1);
+		this.project(ori,MuEngine.p0);
+		this.project(end,MuEngine.p1);
 		g_ctx.beginPath();
-		g_ctx.moveTo(this.g_p0[0],this.g_p0[1]);
-		g_ctx.lineTo(this.g_p1[0],this.g_p1[1]);
+		g_ctx.moveTo(MuEngine.p0[0],MuEngine.p0[1]);
+		g_ctx.lineTo(MuEngine.p1[0],MuEngine.p1[1]);
 		g_ctx.closePath();
 		g_ctx.strokeStyle = color;
 		g_ctx.stroke();
@@ -552,7 +554,7 @@ MuEngine.Node.prototype.multP = function(p, out){
 	MuEngine.Camera.prototype.renderSprite = function(node, sprite){
         var img = sprite.imghandler.img;
         if(!sprite._3d){
-		this.project(node.wp, this.g_p0);
+		this.project(node.wp, MuEngine.p0);
 		//w, h are in world coords.. transform to pixels:
 		var wpx = (sprite.width * g_canvas.width) / (this.right - this.left);  
 		var wpy = (sprite.height * g_canvas.height) / (this.top - this.bottom);  
@@ -560,9 +562,9 @@ MuEngine.Node.prototype.multP = function(p, out){
 		var offy = ((1 & sprite.anchor) > 0) ? 0 : (((2 & sprite.anchor) > 0)? -wpy :-(wpy>>1)); 
 		var offx = ((4 & sprite.anchor) > 0) ? 0 : (((8 & sprite.anchor) > 0)? -wpx :-(wpx>>1)); 
 		if(sprite.tilew != null && sprite.tileh != null)
-			g_ctx.drawImage(img, sprite.tilex*sprite.tilew, sprite.tiley*sprite.tileh, sprite.tilew, sprite.tileh, this.g_p0[0]+offx, this.g_p0[1]+offy, wpx, wpy);
+			g_ctx.drawImage(img, sprite.tilex*sprite.tilew, sprite.tiley*sprite.tileh, sprite.tilew, sprite.tileh, MuEngine.p0[0]+offx, MuEngine.p0[1]+offy, wpx, wpy);
 		else
-			g_ctx.drawImage(img, this.g_p0[0]+offx, this.g_p0[1]+offy, wpx, wpy);
+			g_ctx.drawImage(img, MuEngine.p0[0]+offx, MuEngine.p0[1]+offy, wpx, wpy);
 	  }else{
             //this is a 3d sprite!
 
@@ -575,39 +577,39 @@ MuEngine.Node.prototype.multP = function(p, out){
         var offx = ((4 & sprite.anchor) > 0) ? 0 : (((8 & sprite.anchor) > 0)? -sprite.width:-w2);
 
         //lower left corner:
-        vec3.set(this.g_p0, offx, offy, 0);
-        node.multP(this.g_p0, this.g_p0);
-        this.project(this.g_p0, this.g_p0);
+        vec3.set(MuEngine.p0, offx, offy, 0);
+        node.multP(MuEngine.p0, MuEngine.p0);
+        this.project(MuEngine.p0, MuEngine.p0);
         //lower right corner:
-        vec3.set(this.g_p1, sprite.width+offx, offy, 0);
-        node.multP(this.g_p1, this.g_p1);
-        this.project(this.g_p1, this.g_p1);
+        vec3.set(MuEngine.p1, sprite.width+offx, offy, 0);
+        node.multP(MuEngine.p1, MuEngine.p1);
+        this.project(MuEngine.p1, MuEngine.p1);
        //upper left corner:
-       vec3.set(this.g_p2, sprite.width+offx, sprite.height+offy, 0);
-       node.multP(this.g_p2, this.g_p2);
-        this.project(this.g_p2, this.g_p2);
+       vec3.set(MuEngine.p2, sprite.width+offx, sprite.height+offy, 0);
+       node.multP(MuEngine.p2, MuEngine.p2);
+        this.project(MuEngine.p2, MuEngine.p2);
        //upper right corner:
-       vec3.set(this.g_p3, offx, sprite.height+offy, 0);
-       node.multP(this.g_p3, this.g_p3);
-        this.project(this.g_p3, this.g_p3);
+       vec3.set(MuEngine.p3, offx, sprite.height+offy, 0);
+       node.multP(MuEngine.p3, MuEngine.p3);
+        this.project(MuEngine.p3, MuEngine.p3);
 
 
         this.drawTriangle(img,
-            this.g_p0[0],this.g_p0[1], this.g_p1[0],this.g_p1[1], this.g_p2[0],this.g_p2[1],
+            MuEngine.p0[0],MuEngine.p0[1], MuEngine.p1[0],MuEngine.p1[1], MuEngine.p2[0],MuEngine.p2[1],
             0, img.height, img.width, img.height, img.width, 0);
 
         this.drawTriangle(img,
-            this.g_p0[0],this.g_p0[1], this.g_p2[0],this.g_p2[1], this.g_p3[0],this.g_p3[1],
+            MuEngine.p0[0],MuEngine.p0[1], MuEngine.p2[0],MuEngine.p2[1], MuEngine.p3[0],MuEngine.p3[1],
             0, img.height, img.width, 0, 0, 0);
 
             /*
             //for debugging
            g_ctx.beginPath();
-           g_ctx.moveTo(this.g_p0[0],this.g_p0[1]);
-           g_ctx.lineTo(this.g_p1[0],this.g_p1[1]);
-           g_ctx.lineTo(this.g_p2[0],this.g_p2[1]);
-           g_ctx.lineTo(this.g_p3[0],this.g_p3[1]);
-           g_ctx.lineTo(this.g_p0[0],this.g_p0[1]);
+           g_ctx.moveTo(MuEngine.p0[0],MuEngine.p0[1]);
+           g_ctx.lineTo(MuEngine.p1[0],MuEngine.p1[1]);
+           g_ctx.lineTo(MuEngine.p2[0],MuEngine.p2[1]);
+           g_ctx.lineTo(MuEngine.p3[0],MuEngine.p3[1]);
+           g_ctx.lineTo(MuEngine.p0[0],MuEngine.p0[1]);
            g_ctx.closePath();
            g_ctx.strokeStyle =  "#00FFFF";
            g_ctx.stroke();
@@ -701,27 +703,50 @@ MuEngine.Node.prototype.multP = function(p, out){
     };
 //------- CELL CLASS EXTENDS NODE ------------
 
-/**
+/*
  * this is a private class, not expected to be instantiated for the user
  */
 
-var Cell = function(i, j, cellsize){
+MuEngine.Cell = function(i, j, cellsize){
 	MuEngine.Node.call(this);
 	this.row = i;
 	this.col = j;
-	//a vector to store eye coordinates
+	//a vector to store eye coordinates. it is using for render sorting
 	this.eyePos = vec3.create();
-	this.transform.setPos(i*cellsize, 0, j*cellsize);
+    MuEngine.Cell.cellsize = cellsize;
+	this.transform.setPos(i*MuEngine.Cell.cellsize, 0, j*MuEngine.Cell.cellsize);
 	this.transform.update();
   this.walkable = true;
 };
 
 //chaining prototypes
-Cell.prototype = new MuEngine.Node();
+MuEngine.Cell.prototype = new MuEngine.Node();
+
+/*
+* we store the cellsize at the prototype level to share it between cell instances.
+* we dont expect to have grids with differents cellsizes at the same time!
+ */
+MuEngine.Cell.prototype.cellsize = 0;
 
 
-Cell.prototype.isWalkable = function(){
+MuEngine.Cell.prototype.isWalkable = function(){
     return this.walkable; // || is full.. || has other dynamic obstacles
+}
+
+/**
+ * returns a new vec3 object with a random point contained within the cell limits.
+ * @param absolute {boolean} a flag to indicate if the returned point must be in local or global coords
+ * @param padding {float} a percentage (eg: 0.1 == 10%) to limit the area of valid random points by adding padding to
+ * each edge. (all four edges will have 10% of padding)
+ */
+MuEngine.Cell.prototype.getRandomPos = function(absolute, padding){
+    var p = vec3.create();
+    var border = padding*MuEngine.Cell.cellsize;
+    var valid = MuEngine.Cell.cellsize - (border+border);
+    p[0] = (absolute?this.wp[0]:0) + border + Math.random()*valid;
+    p[1] = this.wp[1];
+    p[2] = (absolute?this.wp[2]:0) + border + Math.random()*valid;
+    return p;
 }
 	//------- GRID CLASS ------------------
 
@@ -749,7 +774,7 @@ Cell.prototype.isWalkable = function(){
 		this.sorted_cells = new Array(width * height);
 		for(var i=0; i<this.width; ++i){
 				for(var j=0; j< this.height; ++j){
-					var cell = new Cell(i, j, cellsize);
+					var cell = new MuEngine.Cell(i, j, cellsize);
 					var p = (i*this.height)+j;
 					this.cells[p] = cell;
 					this.sorted_cells[p] = cell;
@@ -853,7 +878,7 @@ Cell.prototype.isWalkable = function(){
 MuEngine.Avatar = function(config){
 	MuEngine.Node.call(this);
 	this.grid = config.grid;
-	this.speed = 0.1 | config.speed; 
+	this.speed = config.speed || 0.1;
 	if(this.grid == undefined){
 		throw "Avatar.constructor: grid must be defined"; 
 	}
@@ -861,16 +886,12 @@ MuEngine.Avatar = function(config){
 	this.cell = this.grid.getCell(config.row, config.col);
   this.nextCell = null; //when moving..
   this.cell.addChild(this);
-	this.dir = 0; //zero if not moving. DIR_XX flag if moving.
+	this.moving = false; //false if not moving. "dir" string if moving.
 };
 
 //chaining prototypes
 MuEngine.Avatar.prototype = new MuEngine.Node();
 
-MuEngine.Avatar.DIR_UP = 1;
-MuEngine.Avatar.DIR_DOWN = 2;
-MuEngine.Avatar.DIR_LEFT = 4;
-MuEngine.Avatar.DIR_RIGHT = 8;
 
 /**
  * create an animator that will move the current node from the current cell
@@ -878,13 +899,17 @@ MuEngine.Avatar.DIR_RIGHT = 8;
  * if the target dir does not exist (out of grid boundary) or is now walkable
  * (either for static or dynamic obstacles) the method will return false.
  * in the other hand, if the movement is allowed, it will return true. 
- * @param: dir: binary flag, "OR" combination of Avatar.DIR_xxx constants. 
+ * @param: dir {string} one of "north", "south", "west", "east".
  */
 MuEngine.Avatar.prototype.move = function(_dir){
+    if(!(_dir === "north" || _dir === "south" || _dir === "east" || _dir == "west")){
+        throw "invalid_direction";
+    }
+
   //return if already moving
-  if(this.dir != 0) return;
-    var row = this.cell.row + ((_dir & MuEngine.Avatar.DIR_UP)?1:((_dir & MuEngine.Avatar.DIR_DOWN)?-1:0));
-    var col = this.cell.col + ((_dir & MuEngine.Avatar.DIR_RIGHT)?1:((_dir & MuEngine.Avatar.DIR_LEFT)?-1:0));
+  if(this.moving) return;
+    var row = this.cell.row + ((_dir === "north")?1:((_dir === "south")?-1:0));
+    var col = this.cell.col + ((_dir === "east")?1:((_dir === "west")?-1:0));
     this.nextCell = this.grid.getCell(row, col);
     if(this.nextCell == null){
         //out of boundaries!
@@ -894,21 +919,37 @@ MuEngine.Avatar.prototype.move = function(_dir){
         this.nextCell = null;
         return false;
     }
-    console.log("moving dir ", _dir, " from ", this.cell.row , ",", this.cell.col, " to ", row, ",", col);
-    this.dir = _dir;
-    _this = this;
-  var animator = new MuEngine.AnimatorPos({
-      start: this.cell.wp,
-      end: this.nextCell.wp,
-			cb: function(){
-				_this.cell.removeChild(_this);
-				_this.cell = _this.nextCell;
-				_this.cell.addChild(_this);
-				_this.nextCell = null;	
-				_this.dir = 0;
-				_this.transform.setPos(0, 0, 0);
-				//_this.transform.update();
-			}
+    this.moving = _dir;
+    var self = this;
+
+    /* we must transform the coordinates from the cells to the
+     * local space of the avatar. */
+    var relend = this.nextCell.getRandomPos(false, 0.2);
+    var absend = vec3.create();
+    vec3.add(absend, this.nextCell.wp, relend);
+    //relend is relative to nextCell.wp, relend2 is relative to current pos of avatar.
+    var relend2 = vec3.create();
+    vec3.subtract(relend2, absend, this.wp);
+    //duration must be computed from speed!
+    var duration = vec3.len(relend2) / (this.speed/1000);
+
+    var relend3 = vec3.create();
+    vec3.add(relend3, this.transform.pos, relend2);
+
+     var animator = new MuEngine.AnimatorPos({
+      start: this.transform.pos, // MuEngine.pZero, //
+      end: relend3,
+      duration: duration,
+      loops: 1,
+      cb: function(){
+        self.cell.removeChild(self);
+        self.cell = self.nextCell;
+        self.cell.addChild(self);
+        self.transform.setPos(relend[0], relend[1], relend[2]);
+        self.nextCell = null;
+        self.moving = false;
+        //_this.transform.update();
+      }
     });
     this.addAnimator(animator);
 }
@@ -924,22 +965,15 @@ MuEngine.Avatar.prototype.move = function(_dir){
 		this.color = color || "#cccccc"; 
  	};
 
-
-	/*
-	* line static attributes
-	*/
-	MuEngine.Line.prototype.g_p0 = vec3.create();
-  MuEngine.Line.prototype.g_p1 = vec3.create();
-
 	/*
 	 * renders the primitive (line)
 	 * @param: node: The node this primitive belongs to 
 	 */
 	MuEngine.Line.prototype.render = function(node, cam){
 
-		vec3.transformMat4(this.g_p0, this.ori, node.wm); 
-		vec3.transformMat4(this.g_p1, this.end, node.wm); 
-		cam.renderLine(this.g_p0, this.g_p1, this.color);
+		vec3.transformMat4(MuEngine.p0, this.ori, node.wm);
+		vec3.transformMat4(MuEngine.p1, this.end, node.wm);
+		cam.renderLine(MuEngine.p0, MuEngine.p1, this.color);
 	};
 
 	/*do nothing*/
