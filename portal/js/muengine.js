@@ -865,6 +865,7 @@ MuEngine.Cell.prototype.getRandomPos = function(absolute, padding){
  * an avatar is a special node that is attached to a grid, and provided special animators and callbacks
  * to move through the grid.
  * movement is cell-based: it will move from a cell into another.
+ * we assume that the associated primitive support the play anim interface.
  */
 
 /**
@@ -887,6 +888,10 @@ MuEngine.Avatar = function(config){
   this.nextCell = null; //when moving..
   this.cell.addChild(this);
 	this.moving = false; //false if not moving. "dir" string if moving.
+  //used to store mappings between moving directions and animation names. @see mapWalkAnimation
+  this.walkanims = {};
+  //array of pairs of animname, frequency used for idle behavior. @see addIdleAnimation
+  this.idleanims = [];
 };
 
 //chaining prototypes
@@ -936,6 +941,7 @@ MuEngine.Avatar.prototype.move = function(_dir){
     var relend3 = MuEngine.p2;//vec3.create();
     vec3.add(relend3, this.transform.pos, relend2);
 
+
      var animator = new MuEngine.AnimatorPos({
       start: this.transform.pos, // MuEngine.pZero, //
       end: relend3,
@@ -949,10 +955,78 @@ MuEngine.Avatar.prototype.move = function(_dir){
         self.nextCell = null;
         self.moving = false;
         //_this.transform.update();
+        //play the idle animation..
       }
     });
     this.addAnimator(animator);
+
+    //play sprite animation if available
+    if(this.walkanims[_dir]){
+      this.primitive.play(this.walkanims[_dir], true);
+    }
+
 }
+
+/**
+ * maps the name of an animation to a specific dir, to play the animation along with the move method.
+ * @param animname {string} name of the animation in the animatedsprite associated to this avatar as primitive.
+ * @param dir {string} one of 'north', 'south', 'west', 'east'
+ */
+MuEngine.Avatar.prototype.mapWalkAnimation = function(animname, dir){
+  if(dir === "north"){
+    this.walkanims.north = animname;
+  }
+  else if(dir === "south"){
+    this.walkanims.south = animname;
+  }
+  else if(dir === "east"){
+    this.walkanims.east = animname;
+  }
+  else if(dir === "west"){
+    this.walkanims.west = animname;
+  }
+}
+
+/**
+ * register a new idle animation in the idleAnimation list.
+ * each time the avatar is going to play a idle animation, it will pick a random one from the list.
+ * you can also specify a frequency to affect the percentage of use of each anim.
+ * @param animname {string} name of the animation
+ * @param frequency {number} percentage between 0 and 1
+ */
+MuEngine.Avatar.prototype.addIdleAnimation = function(animname, frequency){
+  this.idleanims.push({
+    name: animname,
+    frequency: frequency
+  });
+}
+
+/**
+ * randomly picks one of the registered idleanimations, taking into account the frecuency of each one.
+ * @return {string} name of the idle animation to play. null if no animations had been registered.
+ */
+MuEngine.Avatar.prototype.pickIdleAnimation = function(){
+  if(!this.idleanims.length){
+    return null;
+  }
+  if(this.idleanims.length === 1){
+    return this.idleanims.length[0];
+  }
+  var r = Math.random();
+  var acum = 0;
+  for(var i=0; i<this.idleanims.length; ++i){
+    var anim = this.idleanims[i];
+    acum += anim.frequency;
+    if(acum >= r){
+      return anim.name;
+    }
+  }
+}
+
+
+
+
+
 	//------- LINE CLASS -------------------
 	
 
@@ -1018,7 +1092,7 @@ MuEngine.Avatar.prototype.move = function(_dir){
 		this.tiley = 0;
 		this.tilew = null;
 		this.tileh = null;
-        this._3d = false; //flag that force the sprite to be rendered in 3d mode
+    this._3d = false; //flag that force the sprite to be rendered in 3d mode
 	};
 
 	/*
@@ -1039,10 +1113,10 @@ MuEngine.Avatar.prototype.move = function(_dir){
 	};
 
 	MuEngine.Sprite.prototype.play = function(anim, loop){
-		if(this["anims"]  == undefined){
+		if(!this["anims"]){
 			throw "calling play in sprite without animation data"; 
 		}
-		if(this["animctrl"] == undefined){
+		if(!this["animctrl"]){
 			this["animctrl"] = {};
 		}	 
 		this.animctrl.curranim = this.anims[anim];
@@ -1059,7 +1133,7 @@ MuEngine.Avatar.prototype.move = function(_dir){
 	* tiles: array of column indexes  
 	*/
 	MuEngine.Sprite.prototype.addAnimation = function(name, row, tiles, duration ){
-		if(this['anims']  == undefined){
+		if(!this['anims']){
 			this.anims = {};
 		}	
 		this.anims[name]= {'row': row, 'tiles': tiles, 'duration': duration};
@@ -1070,7 +1144,7 @@ MuEngine.Avatar.prototype.move = function(_dir){
 	MuEngine.Sprite.prototype.update = function(dt){
 		if(this.animctrl == undefined) return;
 		var anim = this.animctrl.curranim;
-		if(anim == undefined || anim == null) return;		
+		if(!anim) return;
 		this.animctrl.elapsed += dt;
 		if(this.animctrl.elapsed >= anim.duration){
 			if(!this.animctrl.loop){

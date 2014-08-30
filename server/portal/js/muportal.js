@@ -599,8 +599,11 @@ muPortalApp.controller('virtualworldController', [function() {
     avatarSprite.height = 2.48;
     avatarSprite.tilew = 128;
     avatarSprite.tileh = 128;
+    avatarSprite.addAnimation("walk-front", 0, [0, 1, 2, 3, 4, 5, 6, 7], 1000);
+    avatarSprite.addAnimation("walk-right", 1, [0, 1, 2, 3, 4, 5, 6, 7], 1000);
+    avatarSprite.addAnimation("walk-left", 2, [0, 1, 2, 3, 4, 5, 6, 7], 1000);
+    avatarSprite.addAnimation("walk-back", 3, [0, 1, 2, 3, 4, 5, 6, 7], 1000);
     avatarSprite.addAnimation("wave-front", 12, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 1000);
-    avatarSprite.addAnimation("front-walk", 1, [0, 1, 0,  2], 1000);
     avatarSprite.anchor = MuEngine.Sprite.ANCHOR_BOTTOM;
     this.avatarNode.primitive = avatarSprite;
     this.avatarNode.primitive.play("wave-front", true);

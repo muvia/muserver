@@ -863,8 +863,9 @@ MuEngine.Cell.prototype.getRandomPos = function(absolute, padding){
 
 /**
  * an avatar is a special node that is attached to a grid, and provided special animators and callbacks
- * to move through the grid. 
- * movement is cell-based: it will move from a cell into another. 
+ * to move through the grid.
+ * movement is cell-based: it will move from a cell into another.
+ * we assume that the associated primitive support the play anim interface.
  */
 
 /**
@@ -880,13 +881,17 @@ MuEngine.Avatar = function(config){
 	this.grid = config.grid;
 	this.speed = config.speed || 0.1;
 	if(this.grid == undefined){
-		throw "Avatar.constructor: grid must be defined"; 
+		throw "Avatar.constructor: grid must be defined";
 	}
 	//the current cell
 	this.cell = this.grid.getCell(config.row, config.col);
   this.nextCell = null; //when moving..
   this.cell.addChild(this);
 	this.moving = false; //false if not moving. "dir" string if moving.
+  //used to store mappings between moving directions and animation names. @see mapWalkAnimation
+  this.walkanims = {};
+  //array of pairs of animname, frequency used for idle behavior. @see addIdleAnimation
+  this.idleanims = [];
 };
 
 //chaining prototypes
@@ -895,10 +900,10 @@ MuEngine.Avatar.prototype = new MuEngine.Node();
 
 /**
  * create an animator that will move the current node from the current cell
- * to the cell pointed by dir. 
+ * to the cell pointed by dir.
  * if the target dir does not exist (out of grid boundary) or is now walkable
  * (either for static or dynamic obstacles) the method will return false.
- * in the other hand, if the movement is allowed, it will return true. 
+ * in the other hand, if the movement is allowed, it will return true.
  * @param: dir {string} one of "north", "south", "west", "east".
  */
 MuEngine.Avatar.prototype.move = function(_dir){
@@ -925,16 +930,17 @@ MuEngine.Avatar.prototype.move = function(_dir){
     /* we must transform the coordinates from the cells to the
      * local space of the avatar. */
     var relend = this.nextCell.getRandomPos(false, 0.2);
-    var absend = vec3.create();
+    var absend = MuEngine.p0; //vec3.create();
     vec3.add(absend, this.nextCell.wp, relend);
     //relend is relative to nextCell.wp, relend2 is relative to current pos of avatar.
-    var relend2 = vec3.create();
+    var relend2 = MuEngine.p1; //vec3.create();
     vec3.subtract(relend2, absend, this.wp);
     //duration must be computed from speed!
     var duration = vec3.len(relend2) / (this.speed/1000);
 
-    var relend3 = vec3.create();
+    var relend3 = MuEngine.p2;//vec3.create();
     vec3.add(relend3, this.transform.pos, relend2);
+
 
      var animator = new MuEngine.AnimatorPos({
       start: this.transform.pos, // MuEngine.pZero, //
@@ -949,10 +955,78 @@ MuEngine.Avatar.prototype.move = function(_dir){
         self.nextCell = null;
         self.moving = false;
         //_this.transform.update();
+        //play the idle animation..
       }
     });
     this.addAnimator(animator);
+
+    //play sprite animation if available
+    if(this.walkanims[_dir]){
+      this.primitive.play(this.walkanims[_dir], true);
+    }
+
 }
+
+/**
+ * maps the name of an animation to a specific dir, to play the animation along with the move method.
+ * @param animname {string} name of the animation in the animatedsprite associated to this avatar as primitive.
+ * @param dir {string} one of 'north', 'south', 'west', 'east'
+ */
+MuEngine.Avatar.prototype.mapWalkAnimation = function(animname, dir){
+  if(dir === "north"){
+    this.walkanims.north = animname;
+  }
+  else if(dir === "south"){
+    this.walkanims.south = animname;
+  }
+  else if(dir === "east"){
+    this.walkanims.east = animname;
+  }
+  else if(dir === "west"){
+    this.walkanims.west = animname;
+  }
+}
+
+/**
+ * register a new idle animation in the idleAnimation list.
+ * each time the avatar is going to play a idle animation, it will pick a random one from the list.
+ * you can also specify a frequency to affect the percentage of use of each anim.
+ * @param animname {string} name of the animation
+ * @param frequency {number} percentage between 0 and 1
+ */
+MuEngine.Avatar.prototype.addIdleAnimation = function(animname, frequency){
+  this.idleanims.push({
+    name: animname,
+    frequency: frequency
+  });
+}
+
+/**
+ * randomly picks one of the registered idleanimations, taking into account the frecuency of each one.
+ * @return {string} name of the idle animation to play. null if no animations had been registered.
+ */
+MuEngine.Avatar.prototype.pickIdleAnimation = function(){
+  if(!this.idleanims.length){
+    return null;
+  }
+  if(this.idleanims.length === 1){
+    return this.idleanims.length[0];
+  }
+  var r = Math.random();
+  var acum = 0;
+  for(var i=0; i<this.idleanims.length; ++i){
+    var anim = this.idleanims[i];
+    acum += anim.frequency;
+    if(acum >= r){
+      return anim.name;
+    }
+  }
+}
+
+
+
+
+
 	//------- LINE CLASS -------------------
 	
 
@@ -1018,7 +1092,7 @@ MuEngine.Avatar.prototype.move = function(_dir){
 		this.tiley = 0;
 		this.tilew = null;
 		this.tileh = null;
-        this._3d = false; //flag that force the sprite to be rendered in 3d mode
+    this._3d = false; //flag that force the sprite to be rendered in 3d mode
 	};
 
 	/*
@@ -1039,10 +1113,10 @@ MuEngine.Avatar.prototype.move = function(_dir){
 	};
 
 	MuEngine.Sprite.prototype.play = function(anim, loop){
-		if(this["anims"]  == undefined){
+		if(!this["anims"]){
 			throw "calling play in sprite without animation data"; 
 		}
-		if(this["animctrl"] == undefined){
+		if(!this["animctrl"]){
 			this["animctrl"] = {};
 		}	 
 		this.animctrl.curranim = this.anims[anim];
@@ -1059,7 +1133,7 @@ MuEngine.Avatar.prototype.move = function(_dir){
 	* tiles: array of column indexes  
 	*/
 	MuEngine.Sprite.prototype.addAnimation = function(name, row, tiles, duration ){
-		if(this['anims']  == undefined){
+		if(!this['anims']){
 			this.anims = {};
 		}	
 		this.anims[name]= {'row': row, 'tiles': tiles, 'duration': duration};
@@ -1070,7 +1144,7 @@ MuEngine.Avatar.prototype.move = function(_dir){
 	MuEngine.Sprite.prototype.update = function(dt){
 		if(this.animctrl == undefined) return;
 		var anim = this.animctrl.curranim;
-		if(anim == undefined || anim == null) return;		
+		if(!anim) return;
 		this.animctrl.elapsed += dt;
 		if(this.animctrl.elapsed >= anim.duration){
 			if(!this.animctrl.loop){
