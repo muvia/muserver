@@ -880,7 +880,7 @@ MuEngine.Avatar = function(config){
 	MuEngine.Node.call(this);
 	this.grid = config.grid;
 	this.speed = config.speed || 0.1;
-	if(this.grid == undefined){
+	if(!this.grid){
 		throw "Avatar.constructor: grid must be defined";
 	}
 	//the current cell
@@ -907,6 +907,9 @@ MuEngine.Avatar.prototype = new MuEngine.Node();
  * if the target dir does not exist (out of grid boundary) or is now walkable
  * (either for static or dynamic obstacles) the method will return false.
  * in the other hand, if the movement is allowed, it will return true.
+ * about the directions:
+ * we asume a default view with x axis points to the left and +z points to the screen.
+ * then, north is -Z, south is Z, east is +X, east is -X
  * @param: dir {string} one of "north", "south", "west", "east".
  */
 MuEngine.Avatar.prototype.move = function(_dir){
@@ -916,10 +919,10 @@ MuEngine.Avatar.prototype.move = function(_dir){
 
   //return if already moving
   if(this.moving) return;
-    var row = this.cell.row + ((_dir === "north")?1:((_dir === "south")?-1:0));
-    var col = this.cell.col + ((_dir === "east")?1:((_dir === "west")?-1:0));
+    var col = this.cell.col + ((_dir === "south")?1:((_dir === "north")?-1:0));
+    var row = this.cell.row + ((_dir === "west")?1:((_dir === "east")?-1:0));
     this.nextCell = this.grid.getCell(row, col);
-    if(this.nextCell == null){
+    if(!this.nextCell){
         //out of boundaries!
         return false;
     }

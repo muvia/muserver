@@ -591,7 +591,7 @@ muPortalApp.controller('virtualworldController', [function() {
         row: 5,
         col: 5,
         grid: grid,
-        speed:0.1
+        speed:1.0
     });
     var avatarSprite = new MuEngine.Sprite("assets/muvia.png");
     //invoking "addAnimation" on a normal sprite transform it into an animated sprite
@@ -605,12 +605,31 @@ muPortalApp.controller('virtualworldController', [function() {
     avatarSprite.addAnimation("walk-back", 3, [0, 1, 2, 3, 4, 5, 6, 7], 1000);
     avatarSprite.addAnimation("wave-front", 12, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 1000);
     avatarSprite.anchor = MuEngine.Sprite.ANCHOR_BOTTOM;
+
     this.avatarNode.primitive = avatarSprite;
+    this.avatarNode.mapWalkAnimation("walk-front","south");
+    this.avatarNode.mapWalkAnimation("walk-back","north");
+    this.avatarNode.mapWalkAnimation("walk-right","west");
+    this.avatarNode.mapWalkAnimation("walk-left","east");
+
     this.avatarNode.primitive.play("wave-front", true);
     //attachment of the avatarNode to the grid occurs within avatarNode constructor
 
     this.onMenuEntryTriggered = function(entryid){
       console.log("triggered ", entryid);
+
+      if(entryid === "caminar_norte"){
+        this.avatarNode.move("north");
+      }
+      else if(entryid === "caminar_sur"){
+        this.avatarNode.move("south");
+      }
+      else if(entryid === "caminar_oriente"){
+        this.avatarNode.move("west");
+      }
+      else if(entryid === "caminar_occidente"){
+        this.avatarNode.move("east");
+      }
     };
 
     /**
