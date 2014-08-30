@@ -300,14 +300,14 @@ MuEngine.AnimatorRotY.prototype.apply = function(node){
 /**
  * Node Constructor
  * implements scene graph.
- * a node has a transform, a primitive and a list of children nodes.  
-	*/ 
+ * a node has a transform, a primitive and a list of children nodes.
+	*/
 MuEngine.Node = function(primitive){
-	this.transform = new MuEngine.Transform();	
-	this.primitive = primitive || null; 
+	this.transform = new MuEngine.Transform();
+	this.primitive = primitive || null;
 	this.children = [ ];
 	//world matrix.
-	this.wm = mat4.create(); 
+	this.wm = mat4.create();
 	//world position
 	this.wp = vec3.create();
 };
@@ -337,33 +337,33 @@ MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 
 
 /**
- * recursive function 
- */ 
+ * recursive function
+ */
 MuEngine.Node.prototype.render = function(mat){
 	this.updateWorldMat(mat);
-	if(this.primitive != null){
+	if(this.primitive){
 			this.primitive.render(this, g_camera);
 	};
 	for(var i=0; i<this.children.length; ++i){
 		this.children[i].render(this.wm);
-	};	  
+	};
 };
 
 
 /**
 * animators are temporal objects. they are added on demand, and once they
-* reach the finished status, they are removed from the collection. 
+* reach the finished status, they are removed from the collection.
 */
 MuEngine.Node.prototype.addAnimator= function (animator){
-	if(this.animators == undefined){
+	if(!this.animators){
 		this.animators = [];
-	}		
+	}
 	this.animators.push(animator);
 };
 
 
 MuEngine.Node.prototype.update = function(dt){
-	if(this.animators != undefined){
+	if(this.animators){
 		for(var i=0; i<this.animators.length; ){
 			var animator = this.animators[i];
 			animator.update(dt, this);
@@ -374,12 +374,12 @@ MuEngine.Node.prototype.update = function(dt){
 			}
 		}
 	}
-	if(this.primitive != null){
+	if(this.primitive){
 		this.primitive.update(dt);
 	}
 	for(var i=0; i<this.children.length; ++i){
 		this.children[i].update(dt);
-	};	
+	};
 };
 
 
@@ -886,8 +886,11 @@ MuEngine.Avatar = function(config){
 	//the current cell
 	this.cell = this.grid.getCell(config.row, config.col);
   this.nextCell = null; //when moving..
+  var offset = this.cell.getRandomPos(false, 0.3);
+  this.transform.setPos(offset[0],offset[1],offset[2]);
+  //this.transform.update();
   this.cell.addChild(this);
-	this.moving = false; //false if not moving. "dir" string if moving.
+  this.moving = false; //false if not moving. "dir" string if moving.
   //used to store mappings between moving directions and animation names. @see mapWalkAnimation
   this.walkanims = {};
   //array of pairs of animname, frequency used for idle behavior. @see addIdleAnimation
@@ -1086,8 +1089,8 @@ MuEngine.Avatar.prototype.pickIdleAnimation = function(){
 		this.height = 1.0;
 		this.path = path;
 		this.imghandler = MuEngine.getImageHandler(path);
-		//bit flag to control anchor. ORed of ANCHOR_XXX flags. 
-		this.anchor = 0; 
+		//bit flag to control anchor. ORed of ANCHOR_XXX flags.
+		this.anchor = 0;
 		this.tilex = 0;
 		this.tiley = 0;
 		this.tilew = null;
@@ -1098,11 +1101,11 @@ MuEngine.Avatar.prototype.pickIdleAnimation = function(){
 	/*
 	* sprite static attributes
 	*/
-	
+
 	MuEngine.Sprite.prototype.ANCHOR_HCENTER = 0;
 	MuEngine.Sprite.prototype.ANCHOR_VCENTER = 0;
 	MuEngine.Sprite.prototype.ANCHOR_CENTER = 0;
-	MuEngine.Sprite.prototype.ANCHOR_TOP = 1; 
+	MuEngine.Sprite.prototype.ANCHOR_TOP = 1;
 	MuEngine.Sprite.prototype.ANCHOR_BOTTOM = 2;
 	MuEngine.Sprite.prototype.ANCHOR_LEFT = 4;
 	MuEngine.Sprite.prototype.ANCHOR_RIGHT = 8;
@@ -1114,50 +1117,50 @@ MuEngine.Avatar.prototype.pickIdleAnimation = function(){
 
 	MuEngine.Sprite.prototype.play = function(anim, loop){
 		if(!this["anims"]){
-			throw "calling play in sprite without animation data"; 
+			throw "calling play in sprite without animation data";
 		}
 		if(!this["animctrl"]){
 			this["animctrl"] = {};
-		}	 
+		}
 		this.animctrl.curranim = this.anims[anim];
 		this.animctrl.elapsed = 0;
-	  this.animctrl.loop = loop;		
+	  this.animctrl.loop = loop;
 		this.tiley = this.animctrl.curranim.row;
 		this.tilex = this.animctrl.curranim.tiles[0];
 	};
-	
+
 	/**
-	* add a new animation to this sprite 
+	* add a new animation to this sprite
 	* name: name of the animation
 	* row: row that contains the tiles
-	* tiles: array of column indexes  
+	* tiles: array of column indexes
 	*/
 	MuEngine.Sprite.prototype.addAnimation = function(name, row, tiles, duration ){
 		if(!this['anims']){
 			this.anims = {};
-		}	
+		}
 		this.anims[name]= {'row': row, 'tiles': tiles, 'duration': duration};
-	};	
+	};
 
 
 
 	MuEngine.Sprite.prototype.update = function(dt){
-		if(this.animctrl == undefined) return;
+		if(!this.animctrl) return;
 		var anim = this.animctrl.curranim;
 		if(!anim) return;
 		this.animctrl.elapsed += dt;
 		if(this.animctrl.elapsed >= anim.duration){
 			if(!this.animctrl.loop){
 				this.tilex = anim.tiles[anim.tiles.length-1];
-				this.animctrl.curranim = null; 
+				this.animctrl.curranim = null;
 				return;
 			}
 			else{
-				this.animctrl.elapsed = this.animctrl.elapsed % anim.duration; 
+				this.animctrl.elapsed = this.animctrl.elapsed % anim.duration;
 			}
 		}
 		this.tilex = anim.tiles[Math.floor((anim.tiles.length-1)*(this.animctrl.elapsed/anim.duration))];
-		console.log("anim x "+ this.tilex + " y "+ this.tiley + " elapsed "+ this.animctrl.elapsed + " duration "+ anim.duration);
+		//console.log("anim x "+ this.tilex + " y "+ this.tiley + " elapsed "+ this.animctrl.elapsed + " duration "+ anim.duration);
 	};
 
 /**
