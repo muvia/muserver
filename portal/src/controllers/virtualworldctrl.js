@@ -39,7 +39,7 @@ muPortalApp.controller('virtualworldController', [function() {
     //create the grid
     var grid = new MuEngine.Grid(9, 9, 1.0, "#888888");
     var gridNode = new MuEngine.Node(grid);
-    gridNode.transform.setPos(-4.5, 0.0, -4.5);
+    //gridNode.transform.setPos(-4.5, 0.0, -4.5);
 
     var putSprite = function(i, j, path){
         var sprite = new MuEngine.Sprite(path);
@@ -49,8 +49,8 @@ muPortalApp.controller('virtualworldController', [function() {
     };
 
     putSprite(0, 0, "assets/arbol.png");
-    putSprite(1, 1, "assets/casa.png");
-    putSprite(2, 2, "assets/flor.png");
+    putSprite(0, 1, "assets/casa.png");
+    putSprite(0, 2, "assets/flor.png");
 
     //create root node
     this.root = new MuEngine.Node();
@@ -69,8 +69,8 @@ muPortalApp.controller('virtualworldController', [function() {
 
     //create an avatar. it will be an avatar node plus an animated sprite primitive.
     this.avatarNode = new MuEngine.Avatar({
-        row: 5,
-        col: 5,
+        row: 0,
+        col: 0,
         grid: grid,
         speed:1.0
     });
@@ -119,6 +119,13 @@ muPortalApp.controller('virtualworldController', [function() {
     this.render = function(){
         var dt = MuEngine.tick();
         MuEngine.clear();
+
+        //update of camera position. it is a feature that must be offered by the engine.
+        /*MuEngine.p0[0] = this.avatarNode.wp[0];
+        MuEngine.p0[1] = this.camera.center[1];
+        MuEngine.p0[2] = this.avatarNode.wp[2]+10;
+        this.camera.setCenter(MuEngine.p0);
+      */
         MuEngine.updateNode(self.root, dt);
         MuEngine.renderNode(self.root);
     };
