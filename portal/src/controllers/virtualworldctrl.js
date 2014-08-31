@@ -85,7 +85,7 @@ muPortalApp.controller('virtualworldController', [function() {
     avatarSprite.addAnimation("walk-left", 2, [0, 1, 2, 3, 4, 5, 6, 7], 1000);
     avatarSprite.addAnimation("walk-back", 3, [0, 1, 2, 3, 4, 5, 6, 7], 1000);
     avatarSprite.addAnimation("wave-front", 12, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 1000);
-    avatarSprite.anchor = MuEngine.Sprite.ANCHOR_BOTTOM;
+    avatarSprite.anchor = MuEngine.Sprite.prototype.ANCHOR_BOTTOM;
 
     this.avatarNode.primitive = avatarSprite;
     this.avatarNode.mapWalkAnimation("walk-front","south");
@@ -113,6 +113,10 @@ muPortalApp.controller('virtualworldController', [function() {
       }
     };
 
+    //temporal, just for debug!
+    window.avatarNode = this.avatarNode;
+    window.gridNode = gridNode;
+
     /**
      * render method to update the engine
      */
@@ -126,7 +130,7 @@ muPortalApp.controller('virtualworldController', [function() {
         MuEngine.p0[2] = this.avatarNode.wp[2]+10;
         this.camera.setCenter(MuEngine.p0);
         this.camera.update();
-      
+
         MuEngine.updateNode(self.root, dt);
         MuEngine.renderNode(self.root);
     };
