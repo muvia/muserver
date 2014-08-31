@@ -640,11 +640,12 @@ muPortalApp.controller('virtualworldController', [function() {
         MuEngine.clear();
 
         //update of camera position. it is a feature that must be offered by the engine.
-        /*MuEngine.p0[0] = this.avatarNode.wp[0];
+        MuEngine.p0[0] = this.avatarNode.wp[0];
         MuEngine.p0[1] = this.camera.center[1];
         MuEngine.p0[2] = this.avatarNode.wp[2]+10;
         this.camera.setCenter(MuEngine.p0);
-      */
+        this.camera.update();
+      
         MuEngine.updateNode(self.root, dt);
         MuEngine.renderNode(self.root);
     };

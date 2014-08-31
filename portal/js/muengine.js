@@ -438,11 +438,11 @@ MuEngine.Node.prototype.multP = function(p, out){
 
     //pay attention: in glMatrix, eye is the center of the camera, not the "lookAt" vector..
     vec3.add(MuEngine.p0, this.center, this.eye);
-		mat4.lookAt(this.view_mat, this.center, MuEngine.p0, this.up);
-		//mat4.perspective(this.proj_mat, this.fovy, this.aspect, this.near, this.far);
-		mat4.ortho(this.proj_mat, this.left, this.right, this.bottom, this.top, this.near, this.far);
-		mat4.multiply(this.view_proj_mat, this.proj_mat, this.view_mat);
-		this.dirty = false;
+	mat4.lookAt(this.view_mat, this.center, MuEngine.p0, this.up);
+	//mat4.perspective(this.proj_mat, this.fovy, this.aspect, this.near, this.far);
+	mat4.ortho(this.proj_mat, this.left, this.right, this.bottom, this.top, this.near, this.far);
+	mat4.multiply(this.view_proj_mat, this.proj_mat, this.view_mat);
+	this.dirty = false;
 	};
 
 
