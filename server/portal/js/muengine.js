@@ -756,21 +756,21 @@ MuEngine.Cell.prototype.getRandomPos = function(absolute, padding){
 	 * helper sort function for the render queue of the grid
 	 */
 	var _compareCellsByEyePos = function(cellA, cellB){
-		return cellA.eyePos[2] < cellB.eyePos[2];
+    return cellA.eyePos[2] < cellB.eyePos[2]? 1 : cellA.eyePos[2] > cellB.eyePos[2]? -1 : 0;
 	};
 
 	/**
-	 * Grid constructor 
+	 * Grid constructor
 	 * width x height
 	 * @param width num of rows
 	 * @param height num of columns
-	 * @param cellsize length of a cell side 
+	 * @param cellsize length of a cell side
 	 */
 	MuEngine.Grid = function(width, height, cellsize, color){
 		this.width = width;
 		this.height = height;
 	 	this.cellsize = cellsize;
-		this.color = color || "#cccccc"; 
+		this.color = color || "#cccccc";
 		this.cells = new Array(width * height);
 		//this.queue = new MuEngine.PriorityQueue(_compareCellsByEyePos);
 		this.sorted_cells = new Array(width * height);
@@ -793,27 +793,27 @@ MuEngine.Cell.prototype.getRandomPos = function(absolute, padding){
 
 	/**
 	 * return a Cell object for the given i,j coordinate.
-	 * null if wrong coords. 
-	 */ 
+	 * null if wrong coords.
+	 */
 	MuEngine.Grid.prototype.getCell = function(i, j){
-		if(i < 0 || j < 0 || i >= this.width || j >= this.height) 
+		if(i < 0 || j < 0 || i >= this.width || j >= this.height)
 			return null;
-		return this.cells[(i*this.height)+ j];	
+		return this.cells[(i*this.height)+ j];
 	};
 
 /**
- * 
+ *
  * @param {Object} node
  * @param {Object} cam
  */
 	MuEngine.Grid.prototype.render = function(node, cam){
 		this._renderGrid(node, cam);
-		for(var i=0; i<this.cells.length; ++i){
+    for(var i=0; i<this.cells.length; ++i){
 			var cell = this.cells[i];
 			cam.world2eye(cell.wp, cell.eyePos);
-			//here its a good point to perform occlusion culling..
+      //here its a good point to perform occlusion culling..
 			//this.queue.push(cell);
-		}	
+		}
 		this.sorted_cells.sort(_compareCellsByEyePos);
 		//hopefully, here we have a list of visible cells sorted by depth..
 		//var cell = this.queue.pop();
@@ -822,12 +822,12 @@ MuEngine.Cell.prototype.getRandomPos = function(absolute, padding){
 			var cell = this.sorted_cells[i];
 			cell.render(node.wm);
 			//cell = this.queue.pop();
-		} 
-		
+		}
+
 	};
 
 /**
- * 
+ *
  * @param {Object} node
  * @param {Object} cam
  */
@@ -859,7 +859,7 @@ MuEngine.Cell.prototype.getRandomPos = function(absolute, padding){
 	MuEngine.Grid.prototype.update = function(dt){
 		for(var i=0; i<this.cells.length; i++){
 			this.cells[i].update(dt);
-		}	
+		}
 	};
 //------- AVATAR CLASS EXTENDS NODE ------------
 
@@ -962,8 +962,11 @@ MuEngine.Avatar.prototype.move = function(_dir){
         self.transform.setPos(relend[0], relend[1], relend[2]);
         self.nextCell = null;
         self.moving = false;
-        //_this.transform.update();
         //play the idle animation..
+        var idleanim = self.pickIdleAnimation();
+        if(idleanim){
+          self.primitive.play(idleanim, true);
+        }
       }
     });
     this.addAnimator(animator);
@@ -1018,7 +1021,7 @@ MuEngine.Avatar.prototype.pickIdleAnimation = function(){
     return null;
   }
   if(this.idleanims.length === 1){
-    return this.idleanims.length[0];
+    return this.idleanims[0].name;
   }
   var r = Math.random();
   var acum = 0;

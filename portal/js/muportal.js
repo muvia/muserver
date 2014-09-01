@@ -562,6 +562,8 @@ muPortalApp.controller('virtualworldController', [function() {
 
     var putSprite = function(i, j, path){
         var sprite = new MuEngine.Sprite(path);
+        sprite.width = 2.0;
+        sprite.height = 2.0;
         sprite.anchor = sprite.ANCHOR_BOTTOM;
         var spriteNode = new MuEngine.Node(sprite);
         grid.getCell(i, j).addChild(spriteNode);
@@ -611,6 +613,8 @@ muPortalApp.controller('virtualworldController', [function() {
     this.avatarNode.mapWalkAnimation("walk-back","north");
     this.avatarNode.mapWalkAnimation("walk-right","west");
     this.avatarNode.mapWalkAnimation("walk-left","east");
+
+    this.avatarNode.addIdleAnimation("wave-front");
 
     this.avatarNode.primitive.play("wave-front", true);
     //attachment of the avatarNode to the grid occurs within avatarNode constructor
