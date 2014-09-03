@@ -5,7 +5,7 @@
  * http://codingsmackdown.tv
  *
  */
-
+'use strict';
 angular.module('localization', [])
     // localization service responsible for retrieving resource files from the server and
     // managing the translation dictionary
@@ -157,7 +157,7 @@ angular.module('localization', [])
                         }
                         // insert the text into the element
                         elm.text(tag);
-                    };
+                    }
                 }
             },
 
@@ -218,12 +218,11 @@ angular.module('localization', [])
  * muportalapp.js
  * app main module
  */
+'use strict';
 
 var muPortalApp = angular.module('muPortal', ['ngRoute', 'ui.bootstrap', 'localization']).
     config(['$routeProvider', function ($routeProvider) {
-    	'use strict';
 
-        
     	//configure navigation paths in client side
         $routeProvider.
             when('/', {templateUrl:'partials/welcome.html'}).
@@ -251,7 +250,7 @@ muPortalApp.run(function($rootScope, $http) {
 
 
 muPortalApp.service("authsrv", [ "$rootScope", "$http", function($rootScope, $http){
-
+  'use strict';
 
     /**
      * only allow anonymous users
@@ -356,7 +355,7 @@ muPortalApp.service("authsrv", [ "$rootScope", "$http", function($rootScope, $ht
 
 
 muPortalApp.service("contactsrv", ["$http", function($http){
-
+  'use strict';
     /**
      * send a contact message filled in the contact form
      */
@@ -387,6 +386,7 @@ based on this article:
  */
 
 muPortalApp.directive('accessLevel', ['$rootScope', 'authsrv', function($rootScope, authsrv) {
+  'use strict';
         return {
             restrict: 'A',
             link: function(scope, element, attrs) {
@@ -408,7 +408,7 @@ muPortalApp.directive('accessLevel', ['$rootScope', 'authsrv', function($rootSco
 
 muPortalApp.controller('mainController', ["$rootScope", "$scope", "$window",
    function($rootScope, $scope, $window) {
-
+     'use strict';
         /**
          * status inform the current screen and if the user is logged in.
          * @type {string}
@@ -430,7 +430,7 @@ muPortalApp.controller('mainController', ["$rootScope", "$scope", "$window",
          */
         $scope.getLocalizedPartial= function(partialname){
             return "partials/"+$scope.locale.substr(0, 2) + "/" + partialname;
-        }
+        };
 
        /**
        *  keep track of changes in route to update the status bar
@@ -456,7 +456,7 @@ muPortalApp.controller('mainController', ["$rootScope", "$scope", "$window",
  */
 
 muPortalApp.controller('authController', ["$scope", "$window", "authsrv", function($scope, $window, authsrv) {
-
+  'use strict';
     this.usr = null;
     this.psw = null;
 
@@ -474,7 +474,7 @@ muPortalApp.controller('authController', ["$scope", "$window", "authsrv", functi
                 self.success = true;
             }
         });
-    }
+    };
 
 }]);//------
 
@@ -484,7 +484,7 @@ muPortalApp.controller('authController', ["$scope", "$window", "authsrv", functi
  */
 
 muPortalApp.controller('logoutController', ["$scope", "$window", "authsrv", function($scope, $window, authsrv) {
-
+  'use strict';
     authsrv.logout();
 
 }]);//------
@@ -495,7 +495,7 @@ muPortalApp.controller('logoutController', ["$scope", "$window", "authsrv", func
  */
 
 muPortalApp.controller('contactController', ['contactsrv', function(contactsrv) {
-
+  'use strict';
     this.name = null;
     this.email = null;
     this.message = null;
@@ -514,7 +514,7 @@ muPortalApp.controller('contactController', ['contactsrv', function(contactsrv) 
                 console.log("contact message failed! self.error had been set.");
             }
         });
-    }
+    };
 
 }]);//------
 
@@ -595,7 +595,7 @@ muPortalApp.controller('virtualworldController', [function() {
         spriteNode.transform.setPos(0.5, 0, 0.9);
         grid.getCell(i, j).addChild(spriteNode);
         return spriteNode;
-    }
+    };
 
     this.fruits.push(putFruit(1, 0, 0));
     this.fruits.push(putFruit(2, 0, 1));

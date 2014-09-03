@@ -5,7 +5,7 @@
  */
 
 muPortalApp.controller('authController', ["$scope", "$window", "authsrv", function($scope, $window, authsrv) {
-
+  'use strict';
     this.usr = null;
     this.psw = null;
 
@@ -23,6 +23,6 @@ muPortalApp.controller('authController', ["$scope", "$window", "authsrv", functi
                 self.success = true;
             }
         });
-    }
+    };
 
 }]);

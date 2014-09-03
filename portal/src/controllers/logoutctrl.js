@@ -5,7 +5,7 @@
  */
 
 muPortalApp.controller('logoutController', ["$scope", "$window", "authsrv", function($scope, $window, authsrv) {
-
+  'use strict';
     authsrv.logout();
 
 }]);

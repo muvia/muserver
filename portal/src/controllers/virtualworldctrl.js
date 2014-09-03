@@ -76,7 +76,7 @@ muPortalApp.controller('virtualworldController', [function() {
         spriteNode.transform.setPos(0.5, 0, 0.9);
         grid.getCell(i, j).addChild(spriteNode);
         return spriteNode;
-    }
+    };
 
     this.fruits.push(putFruit(1, 0, 0));
     this.fruits.push(putFruit(2, 0, 1));

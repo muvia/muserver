@@ -5,6 +5,7 @@ based on this article:
  */
 
 muPortalApp.directive('accessLevel', ['$rootScope', 'authsrv', function($rootScope, authsrv) {
+  'use strict';
         return {
             restrict: 'A',
             link: function(scope, element, attrs) {

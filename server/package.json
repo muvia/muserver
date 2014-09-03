@@ -16,7 +16,7 @@
     "grunt": "0.4.x",
     "frisby": "*",
     "jasmine-node": "*",
-    "grunt-jasmine-node": "*"
+    "grunt-jasmine-node": "^0.2.1"
   },
   "subdomain": "muserver",
   "scripts": {

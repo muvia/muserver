@@ -7,7 +7,7 @@
 
 
 muPortalApp.service("authsrv", [ "$rootScope", "$http", function($rootScope, $http){
-
+  'use strict';
 
     /**
      * only allow anonymous users

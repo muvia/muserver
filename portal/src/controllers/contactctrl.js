@@ -5,7 +5,7 @@
  */
 
 muPortalApp.controller('contactController', ['contactsrv', function(contactsrv) {
-
+  'use strict';
     this.name = null;
     this.email = null;
     this.message = null;
@@ -24,6 +24,6 @@ muPortalApp.controller('contactController', ['contactsrv', function(contactsrv) 
                 console.log("contact message failed! self.error had been set.");
             }
         });
-    }
+    };
 
 }]);

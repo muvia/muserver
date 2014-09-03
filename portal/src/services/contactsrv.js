@@ -7,7 +7,7 @@
 
 
 muPortalApp.service("contactsrv", ["$http", function($http){
-
+  'use strict';
     /**
      * send a contact message filled in the contact form
      */

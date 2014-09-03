@@ -5,9 +5,10 @@
         "grunt": "0.4.2",
         "grunt-contrib-watch": "~0.2.0",
         "grunt-contrib-concat": "*",
-        "grunt-contrib-jasmine": "~0.4.2",
+        "grunt-contrib-jasmine": "~0.6",
         "jsdoc": "*",
         "grunt-jsdoc": "*",
-        "grunt-contrib-copy":"*"
+        "grunt-contrib-copy":"*",
+      "grunt-contrib-jshint": "^0.10.0"
     }
 }
