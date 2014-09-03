@@ -718,7 +718,21 @@ MuEngine.Cell = function(i, j, cellsize){
     MuEngine.Cell.cellsize = cellsize;
 	this.transform.setPos(i*MuEngine.Cell.cellsize, 0, j*MuEngine.Cell.cellsize);
 	this.transform.update();
-  this.walkable = true;
+  /**
+   * binary field. if zero, means the cell is walkable (no blocking flags)
+   * we expect this field to be used for types of terrain.. water, mud..
+   * @type {number}
+   */
+  this.walkable = 0;
+  /**
+   * binary field. first four bits means a wall in a dir.
+   * north: 0x1
+   * south: 0x2
+   * east: 0x4
+   * west:0x8
+   * @type {number}
+   */
+  this.walls = 0;
 };
 
 //chaining prototypes
@@ -731,8 +745,58 @@ MuEngine.Cell.prototype = new MuEngine.Node();
 MuEngine.Cell.prototype.cellsize = 0;
 
 
+MuEngine.Cell.prototype.setWalkable = function(flag){
+  this.walkable = flag?0:1;
+}
+
+/**
+ * may I enter to this cell (no matters the original direction?)
+ * @returns {boolean}
+ */
 MuEngine.Cell.prototype.isWalkable = function(){
-    return this.walkable; // || is full.. || has other dynamic obstacles
+    if(this.walkable === 0){
+      //no blocking flags!
+      return true;
+    }
+    else{
+     return false;
+    }
+}
+
+/**
+ * returns true if an avatar in the current cell can move out of the cell in the current direction,
+ * this method only test for the existence of inner walls in the cell. it does not test for walls in the
+ * next cell, nor if there is a next cell at all.
+ * use it as a quick filter to reject invalid movements in a cheap way before testing for neighbors existence.
+ * @param dir {string} direction "north", "south"..
+ */
+MuEngine.Cell.prototype.hasWall = function(dir){
+  if(dir === "north"){
+    return (this.walls & 0x1) > 0;
+  }else if(dir === "south"){
+    return (this.walls & 0x2) > 0;
+  }else if(dir === "east"){
+    return (this.walls & 0x4) > 0;
+  }else if(dir === "west"){
+    return (this.walls & 0x8) > 0;
+  }
+}
+
+/**
+ * set a wall in the given dir.
+ * @todo: test all this stuff!
+ * @param dir
+ */
+MuEngine.Cell.prototype.setWall = function(dir){
+  if(dir === "north"){
+    this.walls = this.walls | 0x1;
+  }else if(dir === "south"){
+    this.walls = this.walls | 0x2;
+  }else if(dir === "east"){
+    this.walls = this.walls | 0x4;
+  }else if(dir === "west"){
+    this.walls = this.walls | 0x8;
+  }
 }
 
 /**
@@ -921,6 +985,12 @@ MuEngine.Avatar.prototype.move = function(_dir){
 
   //return if already moving
   if(this.moving) return;
+
+  //return if there is a wall that prevent movement in the desired dir
+  if(this.cell.hasWall(_dir)){
+    return;
+  }
+
     var col = this.cell.col + ((_dir === "south")?1:((_dir === "north")?-1:0));
     var row = this.cell.row + ((_dir === "west")?1:((_dir === "east")?-1:0));
     this.nextCell = this.grid.getCell(row, col);

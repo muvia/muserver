@@ -567,6 +567,7 @@ muPortalApp.controller('virtualworldController', [function() {
         sprite.anchor = sprite.ANCHOR_BOTTOM;
         var spriteNode = new MuEngine.Node(sprite);
         grid.getCell(i, j).addChild(spriteNode);
+        return spriteNode;
     };
 
     putSprite(0, 0, "assets/arbol.png");
@@ -577,6 +578,30 @@ muPortalApp.controller('virtualworldController', [function() {
     this.root = new MuEngine.Node();
     this.root.addChild(axis);
     this.root.addChild(gridNode);
+
+
+
+    this.fruits = [];
+
+    var putFruit = function(i, j, tiley){
+        var sprite = new MuEngine.Sprite("assets/fruits.png");
+        sprite.width = 1.5;
+        sprite.height = 1.5;
+        sprite.anchor = sprite.ANCHOR_BOTTOM;
+        sprite.tilew = 64;
+        sprite.tileh = 64;
+        sprite.tiley = tiley;
+        var spriteNode = new MuEngine.Node(sprite);
+        spriteNode.transform.setPos(0.5, 0, 0.9);
+        grid.getCell(i, j).addChild(spriteNode);
+        return spriteNode;
+    }
+
+    this.fruits.push(putFruit(1, 0, 0));
+    this.fruits.push(putFruit(2, 0, 1));
+    this.fruits.push(putFruit(3, 0, 2));
+    this.fruits.push(putFruit(4, 0, 3));
+    this.fruits.push(putFruit(5, 0, 4));
 
     //create the camera
     this.camera = new MuEngine.Camera(this.canvas);
