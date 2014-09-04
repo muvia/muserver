@@ -310,6 +310,8 @@ MuEngine.Node = function(primitive){
 	this.wm = mat4.create();
 	//world position
 	this.wp = vec3.create();
+  //eye position
+  this.ep = vec3.create();
 };
 
 MuEngine.Node.prototype.addChild = function(node){
@@ -333,6 +335,7 @@ MuEngine.Node.prototype.removeChild = function(node){
 MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 	this.transform.multiply(worldmat, this.wm);
 	vec3.transformMat4(this.wp, MuEngine.pZero, this.wm);
+  g_camera.project(this.wp, this.ep);
 };
 
 
@@ -554,21 +557,22 @@ MuEngine.Node.prototype.multP = function(p, out){
 
 	*/
 	MuEngine.Camera.prototype.renderSprite = function(node, sprite){
-        var img = sprite.imghandler.img;
-        if(!sprite._3d){
-		this.project(node.wp, MuEngine.p0);
-		//w, h are in world coords.. transform to pixels:
-		var wpx = (sprite.width * g_canvas.width) / (this.right - this.left);
-		var wpy = (sprite.height * g_canvas.height) / (this.top - this.bottom);
-		//how about the anchor?
-		var offy = ((1 & sprite.anchor) > 0) ? 0 : (((2 & sprite.anchor) > 0)? -wpy :-(wpy>>1));
-		var offx = ((4 & sprite.anchor) > 0) ? 0 : (((8 & sprite.anchor) > 0)? -wpx :-(wpx>>1));
-		if(sprite.tilew != null && sprite.tileh != null)
-			g_ctx.drawImage(img, sprite.tilex*sprite.tilew, sprite.tiley*sprite.tileh, sprite.tilew, sprite.tileh, MuEngine.p0[0]+offx, MuEngine.p0[1]+offy, wpx, wpy);
-		else
-			g_ctx.drawImage(img, MuEngine.p0[0]+offx, MuEngine.p0[1]+offy, wpx, wpy);
-	  }else{
-            //this is a 3d sprite!
+   var img = sprite.imghandler.img;
+   if(!sprite._3d){
+     //use node.ep instead of this: this.project(node.wp, MuEngine.p0);
+      //w, h are in world coords.. transform to pixels:
+      var wpx = (sprite.width * g_canvas.width) / (this.right - this.left);
+      var wpy = (sprite.height * g_canvas.height) / (this.top - this.bottom);
+      //how about the anchor?
+      var offy = ((1 & sprite.anchor) > 0) ? 0 : (((2 & sprite.anchor) > 0)? -wpy :-(wpy>>1));
+      var offx = ((4 & sprite.anchor) > 0) ? 0 : (((8 & sprite.anchor) > 0)? -wpx :-(wpx>>1));
+      if(sprite.tilew != null && sprite.tileh != null)
+        g_ctx.drawImage(img, sprite.tilex*sprite.tilew, sprite.tiley*sprite.tileh, sprite.tilew, sprite.tileh, node.ep[0]+offx, node.ep[1]+offy, wpx, wpy);
+		  else
+			  g_ctx.drawImage(img, node.ep[0]+offx, node.ep[1]+offy, wpx, wpy);
+	  }
+    else{
+        //this is a 3d sprite!
 
         var w2 =sprite.width*0.5;
         var h2 = sprite.height*0.5;
@@ -705,6 +709,14 @@ MuEngine.Node.prototype.multP = function(p, out){
     };
 //------- CELL CLASS EXTENDS NODE ------------
 
+
+/**
+	 * helper sort function for the internal render in the cell
+	 */
+	var _compareNodesByEyePos = function(nodeA, nodeB){
+    return nodeA.ep[2] < nodeB.ep[2]? 1 : nodeA.ep[2] > nodeB.ep[2]? -1 : 0;
+	};
+
 /*
  * this is a private class, not expected to be instantiated for the user
  */
@@ -814,6 +826,27 @@ MuEngine.Cell.prototype.getRandomPos = function(absolute, padding){
     p[2] = (absolute?this.wp[2]:0) + border + Math.random()*valid;
     return p;
 }
+
+
+/**
+ * @override Node.render.
+ * original method assume the node has a primitive before iterating over children (we not).
+ * second, it invokes in each children the render method, that updates worldmat and render in each step.
+ * here, we separate those steps in two different loops: first update the children matrixes,
+ * then, compute eyepos, sort by eyepos and finally render.
+ * @todo: if we know that a grid is going to stay static, we dont need to update world mats in each step!
+ * @todo: also, if we know some sprites are static, we dont need to update them too.
+ */
+MuEngine.Cell.prototype.render = function(mat){
+	this.updateWorldMat(mat);
+	for(var i=0; i<this.children.length; ++i){
+		this.children[i].updateWorldMat(this.wm);
+  };
+  this.children.sort(_compareNodesByEyePos);
+ for(var i=0; i<this.children.length; ++i){
+		this.children[i].render(this.wm);
+	};
+};
 	//------- GRID CLASS ------------------
 
 	/**
