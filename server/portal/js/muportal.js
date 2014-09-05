@@ -230,7 +230,18 @@ window.requestAnimFrame = (function(){
  */
 var World01Manager = (function(engine){
 
-  //PRIVATE MODULE VARS
+
+  //----- PRIVATE CONSTANTS --------------
+
+  //distance between the camera and the avatar
+  var CAMERA_DISTANCE = 10;
+
+  //number of cells by side of the grid
+  var GRID_SIZE = 9;
+
+  var CELL_SIZE = 1.5;
+
+  //----- PRIVATE MODULE VARS ------------
   var grid = null;
 
   //root node
@@ -285,9 +296,10 @@ var World01Manager = (function(engine){
     axis.addChild( new MuEngine.Node(linez));
 
     //create the grid
-    grid = new MuEngine.Grid(9, 9, 1.0, "#888888");
+    grid = new MuEngine.Grid(GRID_SIZE, GRID_SIZE, CELL_SIZE, "#888888");
     var gridNode = new MuEngine.Node(grid);
-    //gridNode.transform.setPos(-4.5, 0.0, -4.5);
+    //center the grid
+    gridNode.transform.setPos(GRID_SIZE*CELL_SIZE*-0.5, 0.0, GRID_SIZE*CELL_SIZE*-0.5);
 
     putSprite(0, 0, "assets/arbol.png");
     putSprite(0, 1, "assets/casa.png");
@@ -308,6 +320,7 @@ var World01Manager = (function(engine){
 
     //create the camera
     camera = new MuEngine.Camera(this.canvas);
+    camera.setOrtho(0, 10, -10, 10, -5, 5);
 
     MuEngine.setActiveCamera(camera);
 
@@ -318,8 +331,8 @@ var World01Manager = (function(engine){
 
     //create an avatar. it will be an avatar node plus an animated sprite primitive.
     avatarNode = new MuEngine.Avatar({
-      row: 0,
-      col: 0,
+      row: 5,
+      col: 5,
       grid: grid,
       speed:1.0
     });
@@ -372,7 +385,7 @@ var World01Manager = (function(engine){
     //update of camera position. it is a feature that must be offered by the engine.
     MuEngine.p0[0] = avatarNode.wp[0];
     MuEngine.p0[1] = camera.center[1];
-    MuEngine.p0[2] = avatarNode.wp[2]+10;
+    MuEngine.p0[2] = Math.min(avatarNode.wp[2]+CAMERA_DISTANCE, CAMERA_DISTANCE);
     camera.setCenter(MuEngine.p0);
     camera.update();
 

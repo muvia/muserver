@@ -417,24 +417,33 @@ MuEngine.Node.prototype.multP = function(p, out){
 
 		//this is for a projection matrix, but we are going to try first
 		//with a ortographic view
-		this.fovy = Math.PI / 180.0;
+		/*this.fovy = Math.PI / 180.0;
 		this.aspect = g_canvas.width / g_canvas.height;
 		this.near = 0.0;
 		this.far = 10000.0;
-
+    */
 		//orthographic
-		this.near = 0;
-		this.far = 10;
-		this.left = -5;
-		this.right = 5;
-		this.top = 5;
-		this.bottom = -5;
-
+		this.setOrtho(0, 10, -5, 5, -5, 5);
 		//store the view and proj matrix product to avoid constant multiplication of them.
 		this.view_proj_mat = mat4.create();
-		this.dirty = true;
 	};
 
+  /**
+  *
+  */
+  MuEngine.Camera.prototype.setOrtho = function(near, far, left, right, bottom, top){
+    this.near = near;
+		this.far = far;
+		this.left = left;
+		this.right = right;
+		this.top = top;
+		this.bottom = bottom;
+    this.dirty = true;
+  };
+
+  /**
+  *
+  */
   MuEngine.Camera.prototype.update = function(){
 
     if(!this.dirty) return;
