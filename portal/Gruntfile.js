@@ -11,6 +11,7 @@ module.exports = function (grunt) {
         // the files to concatenate
         src: [
           'lib/localize.js',
+          'src/world01/world01manager.js',
           'src/muportalapp.js',
           'src/services/authsrv.js',
           'src/services/contactsrv.js',
@@ -70,8 +71,10 @@ module.exports = function (grunt) {
           {expand: false, src: ['vendor/angular-route-unstable/angular-route.js'], dest: 'js/angular-route.js', filter: 'isFile'},
           {expand: false, src: ['vendor/angular-bootstrap/ui-bootstrap-tpls.js'], dest: 'js/ui-bootstrap-tpls.js', filter: 'isFile'},
           {expand: false, src: ['vendor/gl-matrix/dist/gl-matrix.js'], dest: 'js/gl-matrix.js', filter: 'isFile'},
+          {expand: false, src: ['vendor/howler/howler.js'], dest: 'js/howler.js', filter: 'isFile'},
           {expand: false, src: ['vendor/bootstrap/dist/css/bootstrap.min.css'], dest: 'css/bootstrap.min.css', filter: 'isFile'},
-          {expand: false, src: ['vendor/bootstrap/dist/css/bootstrap-theme.min.css'], dest: 'css/bootstrap-theme.min.css', filter: 'isFile'}
+          {expand: false, src: ['vendor/bootstrap/dist/css/bootstrap-theme.min.css'], dest: 'css/bootstrap-theme.min.css', filter: 'isFile'},
+          {expand: false, src: ['vendor/howler/howler.js'], dest: 'js/howler.js', filter: 'isFile'}
         ]
       },
       dist: {

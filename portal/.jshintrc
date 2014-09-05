@@ -24,7 +24,8 @@
     "MuEngine":true,
     "MuController":true,
     "vec3":true,
-    "mat4":true
-
+    "mat4":true,
+    "Howl":true,
+    "World01Manager":true
 }
 }

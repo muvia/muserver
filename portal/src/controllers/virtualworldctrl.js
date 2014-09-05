@@ -4,181 +4,32 @@
  * controller for contact form
  */
 
-muPortalApp.controller('virtualworldController', [function() {
+muPortalApp.controller('virtualworldController', ["$scope", function($scope) {
     'use strict';
 
+
     var self = this;
-    //accessible controller initialization
-    this.menu1 = new MuController.Menu("menu1", function(entryid){
-        self.onMenuEntryTriggered(entryid);
-    });
 
     //game engine initialization
     this.canvas = document.getElementById("c");
 
-    MuEngine.setActiveCanvas(this.canvas);
 
-    var p0  = vec3.fromValues(0, 0,  0);
-    var px = vec3.fromValues(1, 0, 0);
-    var py = vec3.fromValues(0, 1, 0);
-    var pz = vec3.fromValues(0, 0, 1);
+    this.manager  = new World01Manager(this.canvas);
 
-    //create the axis
-    var axis = new MuEngine.Node();
-
-    var linex = new MuEngine.Line(p0, px, "#ff0000");
-    var nodex = new MuEngine.Node(linex);
-    axis.addChild(nodex);
-
-    var liney = new MuEngine.Line(p0, py, "#00ff00");
-    axis.addChild( new MuEngine.Node(liney));
-
-    var linez= new MuEngine.Line(p0, pz, "#0000ff");
-    axis.addChild( new MuEngine.Node(linez));
-
-    //create the grid
-    var grid = new MuEngine.Grid(9, 9, 1.0, "#888888");
-    var gridNode = new MuEngine.Node(grid);
-    //gridNode.transform.setPos(-4.5, 0.0, -4.5);
-
-    var putSprite = function(i, j, path){
-        var sprite = new MuEngine.Sprite(path);
-        sprite.width = 2.0;
-        sprite.height = 2.0;
-        sprite.anchor = sprite.ANCHOR_BOTTOM;
-        var spriteNode = new MuEngine.Node(sprite);
-        grid.getCell(i, j).addChild(spriteNode);
-        return spriteNode;
-    };
-
-    putSprite(0, 0, "assets/arbol.png");
-    putSprite(0, 1, "assets/casa.png");
-    putSprite(0, 2, "assets/flor.png");
-
-    //create root node
-    this.root = new MuEngine.Node();
-    this.root.addChild(axis);
-    this.root.addChild(gridNode);
+  //accessible controller initialization
+  this.menu1 = new MuController.Menu("menu1", function(entryid){
+    self.manager.onMenuEntryTriggered(entryid);
+  });
 
 
-
-    this.fruits = [];
-
-    var putFruit = function(i, j, tiley){
-        var sprite = new MuEngine.Sprite("assets/fruits.png");
-        sprite.width = 1.5;
-        sprite.height = 1.5;
-        sprite.anchor = sprite.ANCHOR_BOTTOM;
-        sprite.tilew = 64;
-        sprite.tileh = 64;
-        sprite.tiley = tiley;
-        var spriteNode = new MuEngine.Node(sprite);
-        spriteNode.transform.setPos(0.5, 0, 0.9);
-        grid.getCell(i, j).addChild(spriteNode);
-        return spriteNode;
-    };
-
-    this.fruits.push(putFruit(1, 0, 0));
-    this.fruits.push(putFruit(2, 0, 1));
-    this.fruits.push(putFruit(3, 0, 2));
-    this.fruits.push(putFruit(4, 0, 3));
-    this.fruits.push(putFruit(5, 0, 4));
-
-    //create the camera
-    this.camera = new MuEngine.Camera(this.canvas);
-
-    MuEngine.setActiveCamera(this.camera);
-
-    //the camera is located at 5 units over the floor, ten units toward the monitor.
-    //this setup will produce a view with x to the right, y up and z toward the monitor.
-    this.camera.setCenter(vec3.fromValues(0, 10, 10));
-    this.camera.lookAt(vec3.fromValues(0, 0, -5));
-
-    //create an avatar. it will be an avatar node plus an animated sprite primitive.
-    this.avatarNode = new MuEngine.Avatar({
-        row: 0,
-        col: 0,
-        grid: grid,
-        speed:1.0
-    });
-    var avatarSprite = new MuEngine.Sprite("assets/muvia.png");
-    //invoking "addAnimation" on a normal sprite transform it into an animated sprite
-    avatarSprite.width = 2.0;
-    avatarSprite.height = 2.48;
-    avatarSprite.tilew = 128;
-    avatarSprite.tileh = 128;
-    avatarSprite.addAnimation("walk-front", 0, [0, 1, 2, 3, 4, 5, 6, 7], 1000);
-    avatarSprite.addAnimation("walk-right", 1, [0, 1, 2, 3, 4, 5, 6, 7], 1000);
-    avatarSprite.addAnimation("walk-left", 2, [0, 1, 2, 3, 4, 5, 6, 7], 1000);
-    avatarSprite.addAnimation("walk-back", 3, [0, 1, 2, 3, 4, 5, 6, 7], 1000);
-    avatarSprite.addAnimation("wave-front", 12, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 1000);
-    avatarSprite.anchor = MuEngine.Sprite.prototype.ANCHOR_BOTTOM;
-
-    this.avatarNode.primitive = avatarSprite;
-    this.avatarNode.mapWalkAnimation("walk-front","south");
-    this.avatarNode.mapWalkAnimation("walk-back","north");
-    this.avatarNode.mapWalkAnimation("walk-right","west");
-    this.avatarNode.mapWalkAnimation("walk-left","east");
-
-    this.avatarNode.addIdleAnimation("wave-front");
-
-    this.avatarNode.primitive.play("wave-front", true);
-    //attachment of the avatarNode to the grid occurs within avatarNode constructor
-
-    this.onMenuEntryTriggered = function(entryid){
-      console.log("triggered ", entryid);
-
-      if(entryid === "caminar_norte"){
-        this.avatarNode.move("north");
-      }
-      else if(entryid === "caminar_sur"){
-        this.avatarNode.move("south");
-      }
-      else if(entryid === "caminar_oriente"){
-        this.avatarNode.move("west");
-      }
-      else if(entryid === "caminar_occidente"){
-        this.avatarNode.move("east");
-      }
-    };
-
-    //temporal, just for debug!
-    window.avatarNode = this.avatarNode;
-    window.gridNode = gridNode;
-
-    /**
-     * render method to update the engine
-     */
-    this.render = function(){
-        var dt = MuEngine.tick();
-        MuEngine.clear();
-
-        //update of camera position. it is a feature that must be offered by the engine.
-        MuEngine.p0[0] = this.avatarNode.wp[0];
-        MuEngine.p0[1] = this.camera.center[1];
-        MuEngine.p0[2] = this.avatarNode.wp[2]+10;
-        this.camera.setCenter(MuEngine.p0);
-        this.camera.update();
-
-        MuEngine.updateNode(self.root, dt);
-        MuEngine.renderNode(self.root);
-    };
+    this.manager.build();
 
 
+    this.manager.start();
 
-    window.requestAnimFrame = (function(){
-        return  window.requestAnimationFrame       ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame    ||
-            function( callback ){
-                window.setTimeout(callback, 1000 / 60);
-            };
-    })();
 
-    (function animloop(){
-        requestAnimFrame(animloop);
-        self.render();
-    })();
-
+  $scope.$on('$destroy', function () {
+      self.manager.stop();
+  });
 
 }]);
