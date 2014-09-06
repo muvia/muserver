@@ -45,7 +45,6 @@ var server = new hapi.Server(muconfig.hostname, muconfig.port);
 var muscheme = function(server, options){
 	return {
 		authenticate: function(request, reply /*function (err, result)*/){
-            console.log("muchscheme:authenticating..", request.headers['authorization']);
 			if(MuAuth.authorize(request.headers['authorization'])){
                 console.log("you are in!");
                 reply(null, {credentials:true});

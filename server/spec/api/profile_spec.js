@@ -2,30 +2,39 @@
  * testing world api
  */
 'use strict';
+var config = require('../../config');
 var frisby = require('frisby');
+var loginHelper = require('./helpers/login.js');
 
-frisby.create('Basic frisby-jasmine test')
-    .get('http://localhost:8080/api/world')
-    .expectStatus(200)
-    .expectHeaderContains('content-type', 'application/json')
-    /* .expectJSON('0', {
-     place: function(val) { expect(val).toMatchOrBeNull("Oklahoma City, OK"); }, // Custom matcher callback
-     user: {
-     verified: false,
-     location: "Oklahoma City, OK",
-     url: "http://brightb.it"
-     }
-     })*/
-    .inspectJSON()
-     .expectJSONTypes(
+describe("accesibility profile", function(){
+
+  loginHelper
+    .login()
+    .after(function(err, res, body) {
+      frisby.create('should return a valid profile')
+        .get(config.fullhostname + '/api/profile')
+        .addHeader("authorization", JSON.parse(body).tkn)
+        .inspectRequest()
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        .inspectJSON()
+        .expectJSON(
         {
-         id: String,
-         name: String,
-         description: String,
-         max_avatars: Number,
-         num_avatars : Number,
-         acceptnew_avatars : Boolean
-//in_reply_to_screen_name: function(val) { expect(val).toBeTypeOrNull(String); }, // Custom matcher callback
-
-        })
+          sound:{
+            background: true,
+            effects: true,
+            narration: true
+          },
+          controller:{
+            requireconfirmation:true,
+            clickenabled: true
+          },
+          engine:{
+            clicktowalk: true,
+            mouse: true,
+            assetdetail: 'high'
+          }
+        }).toss();
+    })
     .toss();
+});

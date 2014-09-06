@@ -6,18 +6,41 @@
  * profile may be retrived and posted for update, but it must be validated against an schema. 
  */
 "use strict";
+var Hapi = require('hapi');
+var MuAuth = require('../services/muauth');
+var mudb = require('../services/mudb');
 
 
 /**
  * GET /profile
- * @returns {{}}
+ * @returns {
+    sound:{
+            background: true,
+            effects: true,
+            narration: true
+          },
+          controller:{
+            requireconfirmation:true,
+            clickenabled: true
+          },
+          engine:{
+            clicktowalk: true,
+            mouse: true,
+            assetdetail: 'high'}
+    }
  */
 exports.getProfile = function(request, reply){
 
-    var res = {
-    };
+  var usrid = MuAuth.getUserId(request);
 
-    reply(res);
+  mudb.getProfile(usrid, function(profile){
+    if(profile){
+      reply(profile);
+    }else{
+      reply({error:"some error"});
+    }
+  });
+
 };
 
 /**

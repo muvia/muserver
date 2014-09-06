@@ -40,11 +40,11 @@ var retrieveConnection = function(fn){
 exports.getUser = function(username, cb){
     var fn = function(){
         mongodb.collection("users", function(err, collection){
-            if(err != null){
+            if(err){
                 throw "mudb.js: error opening users collection:" + err;
             }else{
                 collection.findOne({userid: username}, function(err, userobj){
-                    if(err != null){
+                    if(err){
                         console.log("mudb.js: error getting user ", username, err);
                         cb(null);
                     }else{
@@ -55,5 +55,50 @@ exports.getUser = function(username, cb){
         });
     };
     retrieveConnection(fn);
+};
+
+
+/**
+ * retrieves the profile structure from DB, given the user name
+ * @param username
+ * @param cb callback with signature cb(err, profileStructure)
+ */
+exports.getProfile = function(username, cb){
+  var fn = function(){
+    mongodb.collection("profiles", function(err, collection){
+      if(err){
+        throw "mudb.js: error opening profiles collection:" + err;
+      }else{
+        collection.findOne({userid: username}, function(err, profileobj){
+          if(err){
+            console.log("mudb.js: error getting profile for user ", username, err);
+            cb(null);
+          }else{
+            if(!profileobj) {
+              //console.log("mudb.js: no error, it is just that there is no records in the db!", profileobj);
+              profileobj = {
+                sound: {
+                  background: true,
+                  effects: true,
+                  narration: true
+                },
+                controller: {
+                  requireconfirmation: true,
+                  clickenabled: true
+                },
+                engine: {
+                  clicktowalk: true,
+                  mouse: true,
+                  assetdetail: 'high'
+                }
+              };
+            }
+            cb(profileobj);
+          }
+        });
+      }
+    });
+  };
+  retrieveConnection(fn);
 };
 

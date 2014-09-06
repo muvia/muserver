@@ -20,7 +20,7 @@ console.log("retrieving auth for user: ", username, password);
 mudb.getUser(username, function(user){
     console.log("retrieved user: ", user);
 
-    if(user === null){
+    if(!user){
         throw new Error('user did not exist');
     }
 

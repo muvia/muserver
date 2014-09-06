@@ -510,7 +510,7 @@ var muPortalApp = angular.module('muPortal', ['ngRoute', 'ui.bootstrap', 'locali
             when('/logout', {templateUrl:'partials/logout.html', controller:'logoutController'}).
             when('/register', {templateUrl:'partials/register.html'}).
             when('/welcome', {templateUrl:'partials/welcome.html'}).
-            when('/profile', {templateUrl:'partials/profile.html'}).
+            when('/profile', {templateUrl:'partials/profile.html', controller:'profileController'}).
             when('/contact', {templateUrl:'partials/contact.html'}).
             when('/virtualworld', {templateUrl:'partials/virtualworld.html', controller: 'virtualworldController'}).
             otherwise({redirectTo:'/'});
@@ -525,9 +525,6 @@ muPortalApp.run(function($rootScope, $http) {
  * this service encapsulates the /login and /logout api endpoint.
  * it is in charge of setting and removing the authtoken and propagate
  */
-
-
-
 
 muPortalApp.service("authsrv", [ "$rootScope", "$http", function($rootScope, $http){
   'use strict';
@@ -660,6 +657,34 @@ muPortalApp.service("contactsrv", ["$http", function($http){
 }]);
 //------
 /**
+ * this service encapsulate the /profile api endpoint 
+ * and keeps the user profile in memory
+ */
+muPortalApp.service("profilesrv", ["$http", function($http){
+  'use strict';
+
+  var _profile = null;
+
+	this.getProfile = function(cb){
+		if(_profile){
+      cb(_profile);
+    }else{
+      $http.get('api/profile')
+        .success(function(data) {
+          console.log("profilesrv.js:getProfile:", data);
+          _profile = data;
+          cb(_profile);
+        });
+    }
+	};
+	
+	this.saveProfile = function(){
+		
+	};
+	
+}]);
+//------
+/**
  * Created by cesar on 6/18/14.
 based on this article:
  http://www.frederiknakstad.com/2013/01/21/authentication-in-single-page-applications-with-angular-js/
@@ -680,6 +705,77 @@ muPortalApp.directive('accessLevel', ['$rootScope', 'authsrv', function($rootSco
             }
         };
     }]);//------
+
+/**
+ * controllers/authctrl.js
+ * controller for the index
+ */
+
+muPortalApp.controller('authController', ["$scope", "$window", "authsrv", "profilesrv", function($scope, $window, authsrv, profilesrv) {
+  'use strict';
+    this.usr = null;
+    this.psw = null;
+
+    this.error = null;
+
+    this.success = false;
+
+    this.doLogin = function(){
+        var self = this;
+        authsrv.login(this.usr, this.psw, function(error){
+            self.error = error;
+            if(!self.error){
+                //succefull login!
+                self.success = true;
+                //good point to pre-load the profile?? yeahp, at least for testing..
+                profilesrv.getProfile(function(profile){
+                   console.log("authController.login:loading profile: got: ", profile);
+                });
+            }
+        });
+    };
+
+}]);//------
+
+/**
+ * src/controllers/contactctrl.js
+ * controller for contact form
+ */
+
+muPortalApp.controller('contactController', ['contactsrv', function(contactsrv) {
+  'use strict';
+    this.name = null;
+    this.email = null;
+    this.message = null;
+
+    this.error = null;
+
+    this.doContact = function(){
+        var self = this;
+        //console.log("contactController.doContact ", this.name, this.email, this.message);
+        contactsrv.sendMessage(this.name, this.email, this.message, function(error){
+            self.error = error;
+            if(self.error === null){
+                console.log("contact message sent! how to notify the user?");
+            }
+            else{
+                console.log("contact message failed! self.error had been set.");
+            }
+        });
+    };
+
+}]);//------
+
+/**
+ * controllers/logoutctrl.js
+ * controller for the logout operation. it execute the logout code at construction time.
+ */
+
+muPortalApp.controller('logoutController', ["$scope", "$window", "authsrv", function($scope, $window, authsrv) {
+  'use strict';
+    authsrv.logout();
+
+}]);//------
 
 /**
  * controllers/mainctrl.js
@@ -731,70 +827,22 @@ muPortalApp.controller('mainController', ["$rootScope", "$scope", "$window",
     } ]);//------
 
 /**
- * controllers/authctrl.js
- * controller for the index
- */
-
-muPortalApp.controller('authController', ["$scope", "$window", "authsrv", function($scope, $window, authsrv) {
-  'use strict';
-    this.usr = null;
-    this.psw = null;
-
-    this.error = null;
-
-    this.success = false;
-
-    this.doLogin = function(){
-        var self = this;
-        authsrv.login(this.usr, this.psw, function(error){
-            //console.log("error: ", error);
-            self.error = error;
-            if(self.error === null){
-                //succefull login!
-                self.success = true;
-            }
-        });
-    };
-
-}]);//------
-
-/**
  * controllers/logoutctrl.js
  * controller for the logout operation. it execute the logout code at construction time.
  */
 
-muPortalApp.controller('logoutController', ["$scope", "$window", "authsrv", function($scope, $window, authsrv) {
+muPortalApp.controller('profileController', ["$scope", "profilesrv", function($scope, profilesrv) {
   'use strict';
-    authsrv.logout();
 
-}]);//------
+  $scope.profile = {
+    sounds: null,
+    engine: null,
+    controller: null
+  };
 
-/**
- * src/controllers/contactctrl.js
- * controller for contact form
- */
-
-muPortalApp.controller('contactController', ['contactsrv', function(contactsrv) {
-  'use strict';
-    this.name = null;
-    this.email = null;
-    this.message = null;
-
-    this.error = null;
-
-    this.doContact = function(){
-        var self = this;
-        //console.log("contactController.doContact ", this.name, this.email, this.message);
-        contactsrv.sendMessage(this.name, this.email, this.message, function(error){
-            self.error = error;
-            if(self.error === null){
-                console.log("contact message sent! how to notify the user?");
-            }
-            else{
-                console.log("contact message failed! self.error had been set.");
-            }
-        });
-    };
+  profilesrv.getProfile(function(profile){
+    $scope.profile = profile;
+  });
 
 }]);//------
 

@@ -30,7 +30,7 @@ exports.contact = function(request, reply){
         subject: "contact from " + name, // Subject line
         text: message, // plaintext body
         html: "<b>"+message+"</b>" // html body
-    }
+    };
 
     // send mail with defined transport object
     smtpTransport.sendMail(mailOptions, function(error, response){

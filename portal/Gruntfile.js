@@ -13,14 +13,9 @@ module.exports = function (grunt) {
           'lib/localize.js',
           'src/world01/world01manager.js',
           'src/muportalapp.js',
-          'src/services/authsrv.js',
-          'src/services/contactsrv.js',
-          'src/directives/authdir.js',
-          'src/controllers/mainctrl.js',
-          'src/controllers/authctrl.js',
-          'src/controllers/logoutctrl.js',
-          'src/controllers/contactctrl.js',
-          'src/controllers/virtualworldctrl.js'
+          'src/services/*.js',
+          'src/directives/*.js',
+          'src/controllers/*.js'
         ],
         // the location of the resulting JS file
         dest: 'js/<%= pkg.name %>.js'

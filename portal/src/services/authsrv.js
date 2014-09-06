@@ -3,9 +3,6 @@
  * it is in charge of setting and removing the authtoken and propagate
  */
 
-
-
-
 muPortalApp.service("authsrv", [ "$rootScope", "$http", function($rootScope, $http){
   'use strict';
 
