@@ -310,6 +310,8 @@ MuEngine.Node = function(primitive){
 	this.wm = mat4.create();
 	//world position
 	this.wp = vec3.create();
+  //eye position
+  this.ep = vec3.create();
 };
 
 MuEngine.Node.prototype.addChild = function(node){
@@ -333,6 +335,7 @@ MuEngine.Node.prototype.removeChild = function(node){
 MuEngine.Node.prototype.updateWorldMat = function(worldmat){
 	this.transform.multiply(worldmat, this.wm);
 	vec3.transformMat4(this.wp, MuEngine.pZero, this.wm);
+  g_camera.project(this.wp, this.ep);
 };
 
 
@@ -414,24 +417,33 @@ MuEngine.Node.prototype.multP = function(p, out){
 
 		//this is for a projection matrix, but we are going to try first
 		//with a ortographic view
-		this.fovy = Math.PI / 180.0;
+		/*this.fovy = Math.PI / 180.0;
 		this.aspect = g_canvas.width / g_canvas.height;
 		this.near = 0.0;
 		this.far = 10000.0;
-
+    */
 		//orthographic
-		this.near = 0;
-		this.far = 10;
-		this.left = -5;
-		this.right = 5;
-		this.top = 5;
-		this.bottom = -5;
-
+		this.setOrtho(0, 10, -5, 5, -5, 5);
 		//store the view and proj matrix product to avoid constant multiplication of them.
 		this.view_proj_mat = mat4.create();
-		this.dirty = true;
 	};
 
+  /**
+  *
+  */
+  MuEngine.Camera.prototype.setOrtho = function(near, far, left, right, bottom, top){
+    this.near = near;
+		this.far = far;
+		this.left = left;
+		this.right = right;
+		this.top = top;
+		this.bottom = bottom;
+    this.dirty = true;
+  };
+
+  /**
+  *
+  */
   MuEngine.Camera.prototype.update = function(){
 
     if(!this.dirty) return;
@@ -554,21 +566,22 @@ MuEngine.Node.prototype.multP = function(p, out){
 
 	*/
 	MuEngine.Camera.prototype.renderSprite = function(node, sprite){
-        var img = sprite.imghandler.img;
-        if(!sprite._3d){
-		this.project(node.wp, MuEngine.p0);
-		//w, h are in world coords.. transform to pixels:
-		var wpx = (sprite.width * g_canvas.width) / (this.right - this.left);
-		var wpy = (sprite.height * g_canvas.height) / (this.top - this.bottom);
-		//how about the anchor?
-		var offy = ((1 & sprite.anchor) > 0) ? 0 : (((2 & sprite.anchor) > 0)? -wpy :-(wpy>>1));
-		var offx = ((4 & sprite.anchor) > 0) ? 0 : (((8 & sprite.anchor) > 0)? -wpx :-(wpx>>1));
-		if(sprite.tilew != null && sprite.tileh != null)
-			g_ctx.drawImage(img, sprite.tilex*sprite.tilew, sprite.tiley*sprite.tileh, sprite.tilew, sprite.tileh, MuEngine.p0[0]+offx, MuEngine.p0[1]+offy, wpx, wpy);
-		else
-			g_ctx.drawImage(img, MuEngine.p0[0]+offx, MuEngine.p0[1]+offy, wpx, wpy);
-	  }else{
-            //this is a 3d sprite!
+   var img = sprite.imghandler.img;
+   if(!sprite._3d){
+     //use node.ep instead of this: this.project(node.wp, MuEngine.p0);
+      //w, h are in world coords.. transform to pixels:
+      var wpx = (sprite.width * g_canvas.width) / (this.right - this.left);
+      var wpy = (sprite.height * g_canvas.height) / (this.top - this.bottom);
+      //how about the anchor?
+      var offy = ((1 & sprite.anchor) > 0) ? 0 : (((2 & sprite.anchor) > 0)? -wpy :-(wpy>>1));
+      var offx = ((4 & sprite.anchor) > 0) ? 0 : (((8 & sprite.anchor) > 0)? -wpx :-(wpx>>1));
+      if(sprite.tilew != null && sprite.tileh != null)
+        g_ctx.drawImage(img, sprite.tilex*sprite.tilew, sprite.tiley*sprite.tileh, sprite.tilew, sprite.tileh, node.ep[0]+offx, node.ep[1]+offy, wpx, wpy);
+		  else
+			  g_ctx.drawImage(img, node.ep[0]+offx, node.ep[1]+offy, wpx, wpy);
+	  }
+    else{
+        //this is a 3d sprite!
 
         var w2 =sprite.width*0.5;
         var h2 = sprite.height*0.5;
@@ -705,6 +718,14 @@ MuEngine.Node.prototype.multP = function(p, out){
     };
 //------- CELL CLASS EXTENDS NODE ------------
 
+
+/**
+	 * helper sort function for the internal render in the cell
+	 */
+	var _compareNodesByEyePos = function(nodeA, nodeB){
+    return nodeA.ep[2] < nodeB.ep[2]? 1 : nodeA.ep[2] > nodeB.ep[2]? -1 : 0;
+	};
+
 /*
  * this is a private class, not expected to be instantiated for the user
  */
@@ -718,7 +739,21 @@ MuEngine.Cell = function(i, j, cellsize){
     MuEngine.Cell.cellsize = cellsize;
 	this.transform.setPos(i*MuEngine.Cell.cellsize, 0, j*MuEngine.Cell.cellsize);
 	this.transform.update();
-  this.walkable = true;
+  /**
+   * binary field. if zero, means the cell is walkable (no blocking flags)
+   * we expect this field to be used for types of terrain.. water, mud..
+   * @type {number}
+   */
+  this.walkable = 0;
+  /**
+   * binary field. first four bits means a wall in a dir.
+   * north: 0x1
+   * south: 0x2
+   * east: 0x4
+   * west:0x8
+   * @type {number}
+   */
+  this.walls = 0;
 };
 
 //chaining prototypes
@@ -731,8 +766,58 @@ MuEngine.Cell.prototype = new MuEngine.Node();
 MuEngine.Cell.prototype.cellsize = 0;
 
 
+MuEngine.Cell.prototype.setWalkable = function(flag){
+  this.walkable = flag?0:1;
+}
+
+/**
+ * may I enter to this cell (no matters the original direction?)
+ * @returns {boolean}
+ */
 MuEngine.Cell.prototype.isWalkable = function(){
-    return this.walkable; // || is full.. || has other dynamic obstacles
+    if(this.walkable === 0){
+      //no blocking flags!
+      return true;
+    }
+    else{
+     return false;
+    }
+}
+
+/**
+ * returns true if an avatar in the current cell can move out of the cell in the current direction,
+ * this method only test for the existence of inner walls in the cell. it does not test for walls in the
+ * next cell, nor if there is a next cell at all.
+ * use it as a quick filter to reject invalid movements in a cheap way before testing for neighbors existence.
+ * @param dir {string} direction "north", "south"..
+ */
+MuEngine.Cell.prototype.hasWall = function(dir){
+  if(dir === "north"){
+    return (this.walls & 0x1) > 0;
+  }else if(dir === "south"){
+    return (this.walls & 0x2) > 0;
+  }else if(dir === "east"){
+    return (this.walls & 0x4) > 0;
+  }else if(dir === "west"){
+    return (this.walls & 0x8) > 0;
+  }
+}
+
+/**
+ * set a wall in the given dir.
+ * @todo: test all this stuff!
+ * @param dir
+ */
+MuEngine.Cell.prototype.setWall = function(dir){
+  if(dir === "north"){
+    this.walls = this.walls | 0x1;
+  }else if(dir === "south"){
+    this.walls = this.walls | 0x2;
+  }else if(dir === "east"){
+    this.walls = this.walls | 0x4;
+  }else if(dir === "west"){
+    this.walls = this.walls | 0x8;
+  }
 }
 
 /**
@@ -750,6 +835,27 @@ MuEngine.Cell.prototype.getRandomPos = function(absolute, padding){
     p[2] = (absolute?this.wp[2]:0) + border + Math.random()*valid;
     return p;
 }
+
+
+/**
+ * @override Node.render.
+ * original method assume the node has a primitive before iterating over children (we not).
+ * second, it invokes in each children the render method, that updates worldmat and render in each step.
+ * here, we separate those steps in two different loops: first update the children matrixes,
+ * then, compute eyepos, sort by eyepos and finally render.
+ * @todo: if we know that a grid is going to stay static, we dont need to update world mats in each step!
+ * @todo: also, if we know some sprites are static, we dont need to update them too.
+ */
+MuEngine.Cell.prototype.render = function(mat){
+	this.updateWorldMat(mat);
+	for(var i=0; i<this.children.length; ++i){
+		this.children[i].updateWorldMat(this.wm);
+  };
+  this.children.sort(_compareNodesByEyePos);
+ for(var i=0; i<this.children.length; ++i){
+		this.children[i].render(this.wm);
+	};
+};
 	//------- GRID CLASS ------------------
 
 	/**
@@ -921,6 +1027,12 @@ MuEngine.Avatar.prototype.move = function(_dir){
 
   //return if already moving
   if(this.moving) return;
+
+  //return if there is a wall that prevent movement in the desired dir
+  if(this.cell.hasWall(_dir)){
+    return;
+  }
+
     var col = this.cell.col + ((_dir === "south")?1:((_dir === "north")?-1:0));
     var row = this.cell.row + ((_dir === "west")?1:((_dir === "east")?-1:0));
     this.nextCell = this.grid.getCell(row, col);

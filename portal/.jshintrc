@@ -1,0 +1,31 @@
+{
+  "immed": true,
+  "newcap": true,
+  "noarg": true,
+  "noempty": true,
+  "indent": 2,
+  "nonew": true,
+  "trailing": true,
+  "maxlen": 200,
+  "boss": true,
+  "eqnull": true,
+  "expr": true,
+  "globalstrict": true,
+  "laxbreak": true,
+  "loopfunc": true,
+  "sub": true,
+  "undef": true,
+  "browser": true,
+  "globals": {
+    "console": true,
+    "angular": true,
+    "muPortalApp": true,
+    "requestAnimFrame": true,
+    "MuEngine":true,
+    "MuController":true,
+    "vec3":true,
+    "mat4":true,
+    "Howl":true,
+    "World01Manager":true
+}
+}

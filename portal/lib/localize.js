@@ -5,7 +5,7 @@
  * http://codingsmackdown.tv
  *
  */
-
+'use strict';
 angular.module('localization', [])
     // localization service responsible for retrieving resource files from the server and
     // managing the translation dictionary
@@ -157,7 +157,7 @@ angular.module('localization', [])
                         }
                         // insert the text into the element
                         elm.text(tag);
-                    };
+                    }
                 }
             },
 

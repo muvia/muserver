@@ -6,7 +6,7 @@
 
 muPortalApp.controller('mainController', ["$rootScope", "$scope", "$window",
    function($rootScope, $scope, $window) {
-
+     'use strict';
         /**
          * status inform the current screen and if the user is logged in.
          * @type {string}
@@ -28,7 +28,7 @@ muPortalApp.controller('mainController', ["$rootScope", "$scope", "$window",
          */
         $scope.getLocalizedPartial= function(partialname){
             return "partials/"+$scope.locale.substr(0, 2) + "/" + partialname;
-        }
+        };
 
        /**
        *  keep track of changes in route to update the status bar
