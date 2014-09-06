@@ -228,7 +228,11 @@ var MuController = (function(){
         }
 
         //@todo: check that we have keyboard focus
-        this.menudiv.getElementsByTagName("button")[0].focus();
+        /*var button = this.menudiv.getElementsByTagName("button")[0];
+        if(document.activeElement !== button){
+        	console.log("focusing button");
+        	button.focus();
+        }*/
 
         if(MuController.hasClass(srcElement, 'menutitle')){
             //the button titles block the click on the divs.. so move to the parent
