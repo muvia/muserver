@@ -169,16 +169,41 @@
   {
     "key":"_background_",
     "value":"Background",
-    "description":"background"
+    "description":"sounds: background"
   },
   {
     "key":"_effects_",
     "value":"Efectos",
-    "description":"effects"
+    "description":"sounds: effects"
   },
   {
     "key":"_narration_",
     "value":"Narración",
-    "description":"narration"
+    "description":"sounds: narration"
+  },
+  {
+    "key":"_assetdetail_",
+    "value":"Nivel de detalle",
+    "description":"graphic engine: asset detail"
+  },
+  {
+    "key":"_clicktowalk_",
+    "value":"Click para caminar",
+    "description":"graphic engine: click to walk"
+  },
+  {
+    "key":"_mouse_",
+    "value":"permitir mouse",
+    "description":"graphic engine: allow mouse"
+  },
+  {
+    "key":"_clickenabled_",
+    "value":"permitir click",
+    "description":"controller: allow clicking"
+  },
+  {
+    "key":"_requireconfirmation_",
+    "value":"requerir confirmación",
+    "description":"controller: requires confirmation"
   }
 ]

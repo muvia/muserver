@@ -2,13 +2,34 @@
 
 <p data-i18n="_profile_msg_"></p>
 
+<form id='profileform'>
 
 <h3 data-i18n="_sounds_"></h3>
 
-    <div data-i18n="_background_">background</div>
-    <div data-i18n="_effects_">effects</div>
-    <div data-i18n="_narration_">narration</div>
+    <div class="form-group col-md-6">
+        <label class="normal" for="sound_background" data-i18n="_background_"></label>
+        <input id="sound_background" class="form-control input-sm" type="text" value="65b2ca96">
+    </div>
+
+    <div class="row">
+    <fieldset class="form-inline">
+        <label class="normal" for="sound_effects" data-i18n="_effects_"></label>
+        <input id="sound_effects" class="form-control input-sm" type="text" value="65b2ca96">
+    </fieldset>
+    </div>
+
+
+    <div data-i18n="_narration_"></div>
 
 <h3 data-i18n="_graphic_engine_"></h3>
 
+    <div data-i18n="_assetdetail_"></div>
+    <div data-i18n="_clicktowalk_"></div>
+    <div data-i18n="_mouse_"></div>
+
 <h3 data-i18n="_controls_"></h3>
+
+    <div data-i18n="_clickenabled_"></div>
+    <div data-i18n="_requireconfirmation_"></div>
+
+</form>

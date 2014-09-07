@@ -168,17 +168,42 @@
   {
     "key":"_background_",
     "value":"Background",
-    "description":"background"
+    "description":"sounds: background"
   },
   {
     "key":"_effects_",
     "value":"Effects",
-    "description":"effects"
+    "description":"sounds: effects"
   },
   {
     "key":"_narration_",
     "value":"Narration",
-    "description":"narration"
+    "description":"sounds: narration"
+  },
+  {
+    "key":"_assetdetail_",
+    "value":"Level of detail",
+    "description":"graphic engine: asset detail"
+  },
+  {
+    "key":"_clicktowalk_",
+    "value":"point to walk",
+    "description":"graphic engine: click to walk"
+  },
+  {
+    "key":"_mouse_",
+    "value":"allow mouse",
+    "description":"graphic engine: allow mouse"
+  },
+  {
+    "key":"_clickenabled_",
+    "value":"Allow clicking",
+    "description":"controller: allow clicking"
+  },
+  {
+    "key":"_requireconfirmation_",
+    "value":"Requires confirmation",
+    "description":"controller: requires confirmation"
   }
 
 ]
