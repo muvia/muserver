@@ -205,9 +205,19 @@
     "description":"graphic engine: click to walk"
   },
   {
+    "key":"_clicktowalk_desc_",
+    "value":"walk to a position when clicking with the mouse",
+    "description":"graphic engine: click to walk desc"
+  },
+  {
     "key":"_mouse_",
     "value":"allow mouse",
     "description":"graphic engine: allow mouse"
+  },
+  {
+    "key":"_mouse_desc_",
+    "value":"Allow the use of mouse in the graphic engine",
+    "description":"graphic engine: allow mouse desc"
   },
   {
     "key":"_clickenabled_",
@@ -215,9 +225,19 @@
     "description":"controller: allow clicking"
   },
   {
+    "key":"_clickenabled_desc_",
+    "value":"Allow clicking with the mouse in the controller menu entries",
+    "description":"controller: allow clicking desc"
+  },
+  {
     "key":"_requireconfirmation_",
     "value":"Requires confirmation",
     "description":"controller: requires confirmation"
+  },
+  {
+    "key":"_requireconfirmation_desc_",
+    "value":"Requires two actions to execute a option: first select, second triggers the action",
+    "description":"controller: requires confirmation desc"
   }
 
 

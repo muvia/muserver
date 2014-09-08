@@ -207,9 +207,20 @@
     "description":"graphic engine: click to walk"
   },
   {
+    "key":"_clicktowalk_desc_",
+    "value":"caminar hasta una posición al hacer click con el mouse",
+    "description":"graphic engine: click to walk desc"
+  },
+  {
     "key":"_mouse_",
     "value":"permitir mouse",
     "description":"graphic engine: allow mouse"
+  },
+  {
+    "key":"_mouse_desc_",
+    "value":"Allow the use of mouse in the graphic engine",
+    "value":"Permitir el uso del mouse en el motor gráfico",
+    "description":"graphic engine: allow mouse desc"
   },
   {
     "key":"_clickenabled_",
@@ -217,8 +228,18 @@
     "description":"controller: allow clicking"
   },
   {
+    "key":"_clickenabled_desc_",
+    "value":"Permitir hacer click con el mouse en las entradas de menu del controlador",
+    "description":"controller: allow clicking desc"
+  },
+  {
     "key":"_requireconfirmation_",
     "value":"requerir confirmación",
     "description":"controller: requires confirmation"
+  },
+  {
+    "key":"_requireconfirmation_desc_",
+    "value":"Requerir dos acciones para ejecutar una opción: la primera selecciona la opción, la segunda la ejecuta",
+    "description":"controller: requires confirmation desc"
   }
 ]

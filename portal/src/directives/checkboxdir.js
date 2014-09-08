@@ -11,6 +11,9 @@ muPortalApp.directive("muCheckbox", function () {
   return {
     restrict: 'E',
     replace: true,
+    scope:{
+      id: "="
+    },
     link: function(scope, element, attrs) {
       scope.id = attrs['id'];
     },
