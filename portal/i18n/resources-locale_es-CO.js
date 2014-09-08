@@ -171,15 +171,30 @@
     "value":"Background",
     "description":"sounds: background"
   },
+    {
+    "key":"_background_desc_",
+    "value":"Reproducir la música de fondo",
+    "description":"Sounds: background desc"
+  },
   {
     "key":"_effects_",
     "value":"Efectos",
     "description":"sounds: effects"
   },
   {
+    "key":"_effects_desc_",
+    "value":"Reproducir efectos de sonido",
+    "description":"sounds: effects desc"
+  },
+  {
     "key":"_narration_",
     "value":"Narración",
     "description":"sounds: narration"
+  },
+    {
+    "key":"_narration_desc_",
+    "value":"Reproducir narraciones grabadas en vez de usar el lector de pantalla",
+    "description":"sounds: narration desc"
   },
   {
     "key":"_assetdetail_",

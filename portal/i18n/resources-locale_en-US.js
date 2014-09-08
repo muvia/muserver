@@ -119,7 +119,6 @@
     "value":"Write to muvia.info@gmail.com or use the following form to send your message:",
     "description":"contact title"
   },
-
   {
     "key":"_error_name_required_",
     "value":"It is important to write your name!",
@@ -171,14 +170,29 @@
     "description":"sounds: background"
   },
   {
+    "key":"_background_desc_",
+    "value":"Play the background music",
+    "description":"Sounds: background desc"
+  },
+  {
     "key":"_effects_",
     "value":"Effects",
     "description":"sounds: effects"
   },
   {
+    "key":"_effects_desc_",
+    "value":"Play sound effects",
+    "description":"sounds: effects desc"
+  },
+  {
     "key":"_narration_",
     "value":"Narration",
     "description":"sounds: narration"
+  },
+  {
+    "key":"_narration_desc_",
+    "value":"Play recorded narrations instead of using screen reader",
+    "description":"sounds: narration desc"
   },
   {
     "key":"_assetdetail_",
@@ -205,5 +219,6 @@
     "value":"Requires confirmation",
     "description":"controller: requires confirmation"
   }
+
 
 ]
