@@ -7,21 +7,68 @@
 
 <h3 data-i18n="_sounds_"></h3>
 
-    <mu-checkbox id="background"></mu-checkbox>
-    <mu-checkbox id="effects"></mu-checkbox>
-    <mu-checkbox id="narration"></mu-checkbox>
+    <div class="form-group">
+        <label id="sounds.background_label"  class="col-sm-2 control-label" for="sounds.background" data-i18n="_sounds.background_"></label>
+        <div class="col-sm-10">
+            <input id="sounds.background" type="checkbox" ng-model="profile.sounds.background" aria-labelledby="sounds.background_label" aria-describedby="sounds.background_desc">
+            <span id="sounds.background_desc" data-i18n="_sounds.background_desc_" ></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label id="sounds.effects_label"  class="col-sm-2 control-label" for="sounds.effects" data-i18n="_sounds.effects_"></label>
+        <div class="col-sm-10">
+            <input id="sounds.effects" type="checkbox" ng-model="profile.sounds.effects" aria-labelledby="sounds.effects_label" aria-describedby="sounds.effects_desc">
+            <span id="sounds.effects_desc" data-i18n="_sounds.effects_desc_" ></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label id="sounds.narration_label"  class="col-sm-2 control-label" for="sounds.narration" data-i18n="_sounds.narration_"></label>
+        <div class="col-sm-10">
+            <input id="sounds.narration" type="checkbox" ng-model="profile.sounds.narration" aria-labelledby="sounds.narration_label" aria-describedby="sounds.narration_desc">
+            <span id="sounds.narration_desc" data-i18n="_sounds.narration_desc_" ></span>
+        </div>
+    </div>
 
 
 <h3 data-i18n="_graphic_engine_"></h3>
 
     <div data-i18n="_assetdetail_"></div>
 
-    <mu-checkbox id="clicktowalk"></mu-checkbox>
-    <mu-checkbox id="mouse"></mu-checkbox>
+    <div class="form-group">
+        <label id="engine.clicktowalk_label"  class="col-sm-2 control-label" for="engine.clicktowalk" data-i18n="_engine.clicktowalk_"></label>
+        <div class="col-sm-10">
+            <input id="engine.clicktowalk" type="checkbox" ng-model="profile.engine.clicktowalk" aria-labelledby="engine.clicktowalk_label" aria-describedby="engine.clicktowalk_desc">
+            <span id="engine.clicktowalk_desc" data-i18n="_engine.clicktowalk_desc_" ></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label id="engine.mouse_label"  class="col-sm-2 control-label" for="engine.mouse" data-i18n="_engine.mouse_"></label>
+        <div class="col-sm-10">
+            <input id="engine.mouse" type="checkbox" ng-model="profile.engine.mouse" aria-labelledby="engine.mouse_label" aria-describedby="engine.mouse_desc">
+            <span id="engine.mouse_desc" data-i18n="_engine.mouse_desc_" ></span>
+        </div>
+    </div>
 
 <h3 data-i18n="_controls_"></h3>
 
-    <mu-checkbox id="clickenabled"></mu-checkbox>
-    <mu-checkbox id="requireconfirmation"></mu-checkbox>
+    <div class="form-group">
+        <label id="controls.clickenabled_label"  class="col-sm-2 control-label" for="controls.clickenabled" data-i18n="_controls.clickenabled_"></label>
+        <div class="col-sm-10">
+            <input id="controls.clickenabled" type="checkbox" ng-model="profile.controls.clickenabled" aria-labelledby="controls.clickenabled_label" aria-describedby="controls.clickenabled_desc">
+            <span id="controls.clickenabled_desc" data-i18n="_controls.clickenabled_desc_" ></span>
+        </div>
+    </div>
 
+    <div class="form-group">
+        <label id="controls.requireconfirmation_label"  class="col-sm-2 control-label" for="controls.requireconfirmation" data-i18n="_controls.requireconfirmation_"></label>
+        <div class="col-sm-10">
+            <input id="controls.requireconfirmation" type="checkbox" ng-model="profile.controls.requireconfirmation" aria-labelledby="controls.requireconfirmation_label" aria-describedby="controls.requireconfirmation_desc">
+            <span id="controls.requireconfirmation_desc" data-i18n="_controls.requireconfirmation_desc_" ></span>
+        </div>
+    </div>
+
+    <button data-i18n="_save_profile_" ng-click="save()"></button>
 </form>

@@ -167,79 +167,84 @@
     "description":"Controls"
   },
   {
-    "key":"_background_",
+    "key":"_sounds.background_",
     "value":"Background",
     "description":"sounds: background"
   },
     {
-    "key":"_background_desc_",
+    "key":"_sounds.background_desc_",
     "value":"Reproducir la música de fondo",
     "description":"Sounds: background desc"
   },
   {
-    "key":"_effects_",
+    "key":"_sounds.effects_",
     "value":"Efectos",
     "description":"sounds: effects"
   },
   {
-    "key":"_effects_desc_",
+    "key":"_sounds.effects_desc_",
     "value":"Reproducir efectos de sonido",
     "description":"sounds: effects desc"
   },
   {
-    "key":"_narration_",
+    "key":"_sounds.narration_",
     "value":"Narración",
     "description":"sounds: narration"
   },
     {
-    "key":"_narration_desc_",
+    "key":"_sounds.narration_desc_",
     "value":"Reproducir narraciones grabadas en vez de usar el lector de pantalla",
     "description":"sounds: narration desc"
   },
   {
-    "key":"_assetdetail_",
+    "key":"_engine.assetdetail_",
     "value":"Nivel de detalle",
     "description":"graphic engine: asset detail"
   },
   {
-    "key":"_clicktowalk_",
+    "key":"_engine.clicktowalk_",
     "value":"Click para caminar",
     "description":"graphic engine: click to walk"
   },
   {
-    "key":"_clicktowalk_desc_",
+    "key":"_engine.clicktowalk_desc_",
     "value":"caminar hasta una posición al hacer click con el mouse",
     "description":"graphic engine: click to walk desc"
   },
   {
-    "key":"_mouse_",
+    "key":"_engine.mouse_",
     "value":"permitir mouse",
     "description":"graphic engine: allow mouse"
   },
   {
-    "key":"_mouse_desc_",
+    "key":"_engine.mouse_desc_",
     "value":"Allow the use of mouse in the graphic engine",
     "value":"Permitir el uso del mouse en el motor gráfico",
     "description":"graphic engine: allow mouse desc"
   },
   {
-    "key":"_clickenabled_",
+    "key":"_controls.clickenabled_",
     "value":"permitir click",
     "description":"controller: allow clicking"
   },
   {
-    "key":"_clickenabled_desc_",
+    "key":"_controls.clickenabled_desc_",
     "value":"Permitir hacer click con el mouse en las entradas de menu del controlador",
     "description":"controller: allow clicking desc"
   },
   {
-    "key":"_requireconfirmation_",
+    "key":"_controls.requireconfirmation_",
     "value":"requerir confirmación",
     "description":"controller: requires confirmation"
   },
   {
-    "key":"_requireconfirmation_desc_",
+    "key":"_controls.requireconfirmation_desc_",
     "value":"Requerir dos acciones para ejecutar una opción: la primera selecciona la opción, la segunda la ejecuta",
     "description":"controller: requires confirmation desc"
+  },
+  {
+    "key":"_save_profile_",
+    "value":"Guardar perfil",
+    "description":"profile: save"
   }
 ]

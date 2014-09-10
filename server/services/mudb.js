@@ -77,12 +77,12 @@ exports.getProfile = function(username, cb){
             if(!profileobj) {
               //console.log("mudb.js: no error, it is just that there is no records in the db!", profileobj);
               profileobj = {
-                sound: {
+                sounds: {
                   background: true,
                   effects: true,
                   narration: true
                 },
-                controller: {
+                controls: {
                   requireconfirmation: true,
                   clickenabled: true
                 },
@@ -102,3 +102,27 @@ exports.getProfile = function(username, cb){
   retrieveConnection(fn);
 };
 
+/**
+ * saves the profile structure to DB, given the user name
+ * @param username
+ * @param cb callback with signature cb(err, profileStructure)
+ */
+exports.saveProfile = function(username, profile, cb){
+  var fn = function(){
+    mongodb.collection("profiles", function(err, collection){
+      if(err){
+        throw "mudb.js: error opening profiles collection:" + err;
+      }else{
+        collection.save({userid: username}, profile, function(err, profile){
+          if(err){
+            console.log("mudb.js: error saving profile for user ", username, err);
+            cb(null);
+          }else{
+            cb(profile);
+          }
+        });
+      }
+    });
+  };
+  retrieveConnection(fn);
+};

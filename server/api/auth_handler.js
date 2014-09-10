@@ -20,7 +20,7 @@ exports.login = function(request, reply){
 	
 	MuAuth.login(usr, psw, function(token){
 
-    console.log("Muauth.login ", usr, psw, token);
+    //console.log("Muauth.login ", usr, psw, token);
 
     if(token){
         reply({tkn:token});

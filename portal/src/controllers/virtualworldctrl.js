@@ -5,31 +5,27 @@
  */
 
 muPortalApp.controller('virtualworldController', ["$scope", function($scope) {
-    'use strict';
+  'use strict';
 
 
-    var self = this;
+  var self = this;
 
-    //game engine initialization
-    this.canvas = document.getElementById("c");
+  //game engine initialization
+  this.canvas = document.getElementById("c");
 
-
-    this.manager  = new World01Manager(this.canvas);
+  this.manager  = new World01Manager(this.canvas);
 
   //accessible controller initialization
   this.menu1 = new MuController.Menu("menu1", function(entryid){
     self.manager.onMenuEntryTriggered(entryid);
   });
 
+  this.manager.build();
 
-    this.manager.build();
-
-
-    this.manager.start();
-
+  this.manager.start();
 
   $scope.$on('$destroy', function () {
-      self.manager.stop();
+    self.manager.stop();
   });
 
 }]);

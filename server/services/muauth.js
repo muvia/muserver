@@ -55,7 +55,7 @@ exports.login = function(usr, psw, cb){
               creation: Date.now()
             };
             var token = btoa(JSON.stringify(data));
-            console.log('muauth.js:login:loggin in ', JSON.stringify(data));
+            console.log('muauth.js:login:logged in ', JSON.stringify(data));
             g_tokenStore[token] = data;
             cb(token);
           }
@@ -77,13 +77,13 @@ exports.logout = function(authtoken){
       authtoken = authtoken.substring("Basic :".length);
     }
     if(g_tokenStore[authtoken]){
-      console.log("loggin out ", authtoken);
+      console.log("services/muauth.js:loggin out ", authtoken);
       delete g_tokenStore[authtoken];
     }else{
-      console.log("nothing to do. the token did not exist.", authtoken, g_tokenStore);
+      console.log("services/muauth.js:nothing to do. the token did not exist.", authtoken, g_tokenStore);
     }
   }else{
-    console.log("nothing to do. received undefined token");
+    console.log("services/muauth.js:nothing to do. received undefined token");
   }
 };
 
@@ -99,7 +99,7 @@ exports.getUserId = function(request){
     if(session)
       return session.usrid;
   }
-  return null;
+  throw new Error("invalid_user_id");
 };
 
 /**

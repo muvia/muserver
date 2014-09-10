@@ -19,11 +19,11 @@ var mudb = require('../services/mudb');
             effects: true,
             narration: true
           },
-          controller:{
+    controls:{
             requireconfirmation:true,
             clickenabled: true
           },
-          engine:{
+    engine:{
             clicktowalk: true,
             mouse: true,
             assetdetail: 'high'}
@@ -49,8 +49,15 @@ exports.getProfile = function(request, reply){
  * @param {Object} reply
  */
 exports.saveProfile = function(request, reply){
-    var res = {
-    };
 
-    reply(res);
+  var usrid = MuAuth.getUserId(request);
+  var profile = request.payload;
+  console.log("user_handler.js:saveProfile for ", usrid, profile);
+  mudb.saveProfile(usrid, profile, function(profile){
+    if(profile){
+      reply(profile);
+    }else{
+      reply({error:"some error!"});
+    }
+  });
 };

@@ -678,9 +678,22 @@ muPortalApp.service("profilesrv", ["$http", function($http){
     }
 	};
 	
-	this.saveProfile = function(){
-		
-	};
+	this.saveProfile = function(profile){
+		console.log("profilesrv.js saving profile", profile);
+
+    $http({
+      url: 'api/profile',
+      method: "POST",
+      data: profile
+    }).success(function (data, status, headers, config) {
+        _profile = profile;
+    }).error(function (data, status, headers, config) {
+      console.log("profilesrv.js error saving profile", data, status);
+    });
+
+
+
+  };
 	
 }]);
 //------
@@ -716,22 +729,22 @@ i18n: _{{id}}_desc_
 muPortalApp.directive("muCheckbox", function () {
   'use strict';
   return {
-    restrict: 'E',
-    replace: true,
-    scope:{
-      id: "="
-    },
+    restrict: 'A',
+    transclude: true,
+    scope:true,
     link: function(scope, element, attrs) {
-      scope.id = attrs['id'];
-    },
-    template: '<div class="form-group">'+
-    '<label id="{{id}}_label"  class="col-sm-2 control-label" for="{{id}}" data-i18n="_{{id}}_"></label>'+
-        '<div class="col-sm-10">'+
-            '<input id="{{id}}" type="checkbox" value="" aria-labelledby="{{id}}_label" aria-describedby="{{id}}_desc" >'+
-            '<span id="{{id}}_desc" data-i18n="_{{id}}_desc_" ></span>'+
-        '</div>'+
-    '</div>'
 
+      scope.id = attrs['id'];
+
+      var tokens = attrs['bindvar'].split('.');
+      //"profile.group.item"
+      //console.log(tokens);
+
+      scope.bindvar = (scope.profile[tokens[1]])[tokens[2]];
+
+
+    },
+    templateUrl: "partials/mucheckbox.dir.html"
   };
 });
 //------
@@ -867,12 +880,41 @@ muPortalApp.controller('profileController', ["$scope", "profilesrv", function($s
   $scope.profile = {
     sounds: null,
     engine: null,
-    controller: null
+    controls: null
   };
 
   profilesrv.getProfile(function(profile){
     $scope.profile = profile;
   });
+
+
+  $scope.save = function(){
+    console.log("saving profile:", $scope.profile);
+
+    /**
+     * temporal fix: right now the directive returns the "bindvar" string as the value of the fields that
+     * had not changed. we are going to manually check here that everything is a boolean.
+
+    function _checkField(group, item){
+      if(($scope.profile[group])[item] !== true){ ($scope.profile[group])[item] = false;}
+    }
+    _checkField("sounds", "background");
+    _checkField("sounds", "effects");
+    _checkField("sounds", "narration");
+    _checkField("engine", "clicktowalk");
+    _checkField("engine", "mouse");
+    _checkField("controls", "clickenabled");
+    _checkField("controls", "requireconfirmation");
+
+    console.log("cleaned profile:", $scope.profile);
+     */
+    profilesrv.saveProfile($scope.profile);
+
+  };
+
+  $scope.onChange = function(){
+    console.log("something changed");
+  };
 
 }]);//------
 
@@ -882,31 +924,27 @@ muPortalApp.controller('profileController', ["$scope", "profilesrv", function($s
  */
 
 muPortalApp.controller('virtualworldController', ["$scope", function($scope) {
-    'use strict';
+  'use strict';
 
 
-    var self = this;
+  var self = this;
 
-    //game engine initialization
-    this.canvas = document.getElementById("c");
+  //game engine initialization
+  this.canvas = document.getElementById("c");
 
-
-    this.manager  = new World01Manager(this.canvas);
+  this.manager  = new World01Manager(this.canvas);
 
   //accessible controller initialization
   this.menu1 = new MuController.Menu("menu1", function(entryid){
     self.manager.onMenuEntryTriggered(entryid);
   });
 
+  this.manager.build();
 
-    this.manager.build();
-
-
-    this.manager.start();
-
+  this.manager.start();
 
   $scope.$on('$destroy', function () {
-      self.manager.stop();
+    self.manager.stop();
   });
 
 }]);

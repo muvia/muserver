@@ -20,8 +20,21 @@ muPortalApp.service("profilesrv", ["$http", function($http){
     }
 	};
 	
-	this.saveProfile = function(){
-		
-	};
+	this.saveProfile = function(profile){
+		console.log("profilesrv.js saving profile", profile);
+
+    $http({
+      url: 'api/profile',
+      method: "POST",
+      data: profile
+    }).success(function (data, status, headers, config) {
+        _profile = profile;
+    }).error(function (data, status, headers, config) {
+      console.log("profilesrv.js error saving profile", data, status);
+    });
+
+
+
+  };
 	
 }]);

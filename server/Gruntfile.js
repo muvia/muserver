@@ -18,7 +18,9 @@ module.exports = function(grunt) {
           consolidate: true
         }
       },
-      all: ['spec/']
+      all: ['spec/'],
+      api: ['spec/api'],
+      unit: ['spec/unit']
     },
 
     jshint: {
@@ -42,7 +44,8 @@ module.exports = function(grunt) {
 
 
   grunt.registerTask('make', ['jshint', 'jasmine_node']);
-  grunt.registerTask('test', ['jasmine_node']);
+  grunt.registerTask('test:api', ['jasmine_node:api']);
+  grunt.registerTask('test:unit', ['jasmine_node:unit']);
 
   grunt.registerTask('default', 'make');
 };

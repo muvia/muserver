@@ -37,4 +37,52 @@ describe("accesibility profile", function(){
         }).toss();
     })
     .toss();
+
+  loginHelper
+    .login()
+    .after(function(err, res, body) {
+      frisby.create('should save changes ')
+        .post(config.fullhostname + '/api/profile', {
+          sound:{
+            background: false,
+            effects: true,
+            narration: true
+          },
+          controller:{
+            requireconfirmation:false,
+            clickenabled: true
+          },
+          engine:{
+            clicktowalk: false,
+            mouse: true,
+            assetdetail: 'low'
+          }
+        })
+        .addHeader("authorization", JSON.parse(body).tkn)
+        //.inspectRequest()
+        .expectStatus(200)
+        .expectHeaderContains('content-type', 'application/json')
+        //.inspectJSON()
+        .expectJSON(
+        {
+          sound:{
+            background: false,
+            effects: true,
+            narration: true
+          },
+          controller:{
+            requireconfirmation:false,
+            clickenabled: true
+          },
+          engine:{
+            clicktowalk: false,
+            mouse: true,
+            assetdetail: 'low'
+          }
+        }).toss();
+    })
+    .toss();
+
+
+
 });
