@@ -1,5 +1,5 @@
 /**
- * muvia db service. offers a facade to communicate with the backend DB. 
+ * muvia db service. offers a facade to communicate with the backend DB.
  */
 "use strict";
 
@@ -11,10 +11,10 @@ var mongodb = null;
 mongodbclient.connect(config.dburl, function(err, db) {
   console.log("connecting to db..");
   if(!err) {
-	console.log('mudb.js: connected to DB!'); 
+	console.log('mudb.js: connected to DB!');
 	mongodb = db;
   }else{
-  	console.log("mudb.js: error connecting to db:", err); 
+  	console.log("mudb.js: error connecting to db:", err);
   }
 });
 
@@ -106,21 +106,20 @@ exports.getProfile = function(username, cb){
 /**
  * saves the profile structure to DB, given the user name
  * @param username
- * @param cb callback with signature cb(err, profileStructure)
+ * @param cb callback with signature cb(err). null means ok.
  */
 exports.saveProfile = function(username, profile, cb){
   var fn = function(){
     mongodb.collection("profiles", function(err, collection){
       if(err){
         throw "mudb.js: error opening profiles collection:" + err;
+        cb(err);
       }else{
-        collection.save({userid: username}, profile, function(err, profile){
-          if(err){
-            console.log("mudb.js: error saving profile for user ", username, err);
-            cb(null);
-          }else{
-            cb(profile);
-          }
+        //be sure username is added as 'userid' in the profile object..
+        profile.userid = username;
+        collection.save(profile, {fsync: true, 'w':1}, function(err, doc){
+          if(!cb) throw "mudb.js:save profile: must pass cb!";
+          cb(err, doc);
         });
       }
     });
