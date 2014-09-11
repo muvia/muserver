@@ -27,3 +27,4 @@ engine/node_modules/*
 npm-debug.log
 server/portal/*
 portal/vendor/*
+.grunt

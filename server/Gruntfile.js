@@ -18,10 +18,11 @@ module.exports = function(grunt) {
           consolidate: true
         }
       },
-      all: ['spec/'],
       api: ['spec/api'],
       unit: ['spec/unit']
     },
+
+
 
     jshint: {
       options:{

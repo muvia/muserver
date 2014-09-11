@@ -74,6 +74,7 @@ exports.getProfile = function(username, cb){
             console.log("mudb.js: error getting profile for user ", username, err);
             cb(null);
           }else{
+            console.log("mudb.js: found: ", profileobj);
             if(!profileobj) {
               //console.log("mudb.js: no error, it is just that there is no records in the db!", profileobj);
               profileobj = {
