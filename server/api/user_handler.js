@@ -37,6 +37,7 @@ exports.getProfile = function(request, reply){
     if(profile){
       reply(profile);
     }else{
+      error.output.statusCode = 500;
       reply({error:"some error"});
     }
   });
@@ -53,11 +54,14 @@ exports.saveProfile = function(request, reply){
   var usrid = MuAuth.getUserId(request);
   var profile = request.payload;
   console.log("user_handler.js:saveProfile for ", usrid, profile);
-  mudb.saveProfile(usrid, profile, function(profile){
-    if(profile){
+  mudb.saveProfile(usrid, profile, function(err, w){
+    if(!err){
       reply(profile);
     }else{
-      reply({error:"some error!"});
+      console.log("saveProfile: error:", err);
+      var error = Hapi.error.badRequest(err);
+      error.output.statusCode = 500;
+      reply(error);
     }
   });
 };

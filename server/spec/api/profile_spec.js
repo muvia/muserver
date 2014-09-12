@@ -56,7 +56,8 @@ describe("accesibility profile", function(){
             clicktowalk: false,
             mouse: true,
             assetdetail: 'low'
-          }
+          },
+          userid: config.test.user
         })
         .addHeader("authorization", JSON.parse(body).tkn)
         //.inspectRequest()

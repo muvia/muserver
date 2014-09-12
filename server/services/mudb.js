@@ -74,7 +74,7 @@ exports.getProfile = function(username, cb){
             console.log("mudb.js: error getting profile for user ", username, err);
             cb(null);
           }else{
-            console.log("mudb.js: found: ", profileobj);
+            //console.log("mudb.js: found: ", profileobj);
             if(!profileobj) {
               //console.log("mudb.js: no error, it is just that there is no records in the db!", profileobj);
               profileobj = {
@@ -112,14 +112,22 @@ exports.saveProfile = function(username, profile, cb){
   var fn = function(){
     mongodb.collection("profiles", function(err, collection){
       if(err){
-        throw "mudb.js: error opening profiles collection:" + err;
         cb(err);
       }else{
-        //be sure username is added as 'userid' in the profile object..
-        profile.userid = username;
-        collection.save(profile, {fsync: true, 'w':1}, function(err, doc){
-          if(!cb) throw "mudb.js:save profile: must pass cb!";
-          cb(err, doc);
+
+        //find the record.. we do this because we dont have the field _id
+        collection.findOne({userid: username}, function(err, item){
+          if(!err)
+            cb(err);
+
+          profile.userid = username;
+          profile._id = item._id;
+
+          collection.save(profile, {fsync: true, 'w':1}, function(err, w){
+            if(!cb) throw "mudb.js:save profile: must pass cb!";
+            cb(err, w);
+          });
+
         });
       }
     });

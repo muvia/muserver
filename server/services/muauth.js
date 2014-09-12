@@ -21,7 +21,7 @@ var g_tokenStore = {};
  * token expiration time in milliseconds. remember to move it to config.js!
  * @type {login}
  */
-var G_EXPIRATION_TIME = 60*1000; //60 seconds
+var G_EXPIRATION_TIME = 60*60*1000; //1 hour
 
 /**
  * login method. if usr, psw are ok, invoke the callback with an authentication token.
@@ -97,7 +97,7 @@ exports.getUserId = function(request){
   if(token){
     var session = g_tokenStore[token];
     if(session)
-      return session.usrid;
+      return session.usr;
   }
   throw new Error("invalid_user_id");
 };
