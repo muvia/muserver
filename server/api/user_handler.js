@@ -2,8 +2,8 @@
  * Muserver API
  * Profile
  * each user has an accesibility profile associated to it.
- * the profile may exist or not, and if exist, it may be completed or not. 
- * profile may be retrived and posted for update, but it must be validated against an schema. 
+ * the profile may exist or not, and if exist, it may be completed or not.
+ * profile may be retrived and posted for update, but it must be validated against an schema.
  */
 "use strict";
 var Hapi = require('hapi');
@@ -37,8 +37,9 @@ exports.getProfile = function(request, reply){
     if(profile){
       reply(profile);
     }else{
+      var error = Hapi.error.badRequest(err);
       error.output.statusCode = 500;
-      reply({error:"some error"});
+      reply(error);
     }
   });
 

@@ -146,18 +146,40 @@ var World01Manager = (function(engine){
     //attachment of the avatarNode to the grid occurs within avatarNode constructor
 
     //initialize sounds
-    sounds.background = new Howl({
-      urls: ['assets/sounds/170515__devlab__forest-ambient-01-loop.wav'],
-      autoplay: true,
-      loop: true,
-      volume: 0.5
-    });
-
+    this.initSounds();
 
     //temporal, just for debug!
     window.avatarNode = avatarNode;
     window.gridNode = gridNode;
 
+  };
+
+  /**
+  *
+  */
+  manager.prototype.initSounds = function(){
+
+    if(this.profile.sounds.background){
+      sounds.background = new Howl({
+        urls: ['assets/sounds/170515__devlab__forest-ambient-01-loop.wav'],
+        autoplay: true,
+        loop: true,
+        volume: 0.5
+      });
+    }
+
+  };
+
+  manager.prototype.playSound = function(name){
+    if(sounds[name]){
+      sounds[name].play();
+    }
+  };
+
+  manager.prototype.stopSound = function(name){
+    if(sounds[name]){
+      sounds[name].stop();
+    }
   };
 
   /**
@@ -185,7 +207,7 @@ var World01Manager = (function(engine){
     if(running){
       running = false;
 
-      sounds.background.stop();
+      this.stopSound("background");
 
     }
   };
