@@ -47,6 +47,10 @@ var World01Manager = (function(engine){
   };
 
 
+
+
+
+  //-------------------- CLASS MANAGER -------------------
   /**
    *
    * @constructor
@@ -54,6 +58,7 @@ var World01Manager = (function(engine){
   var manager = function(canvas, accesibilityProfile){
     this.canvas = canvas;
     this.profile = accesibilityProfile;
+    this.narrator = new Narrator();
   };
 
   /**
@@ -187,6 +192,9 @@ var World01Manager = (function(engine){
    */
   manager.prototype.render = function(){
     var dt = MuEngine.tick();
+
+    this.narrator.update(dt);
+
     MuEngine.clear();
 
     //update of camera position. it is a feature that must be offered by the engine.
@@ -293,6 +301,7 @@ var World01Manager = (function(engine){
     grid.getCell(i, j).addChild(spriteNode);
     return spriteNode;
   };
+
 
 
 

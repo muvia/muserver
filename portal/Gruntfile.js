@@ -36,7 +36,8 @@ module.exports = function (grunt) {
         options: {
           specs: 'specs/**/*spec.js',
           helpers: 'specs/helpers/*.js',
-          timeout: 10000
+          timeout: 10000,
+          keepRunner: true
         }
       }
     },
