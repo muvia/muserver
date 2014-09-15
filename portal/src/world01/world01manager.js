@@ -90,9 +90,9 @@ var World01Manager = (function(engine){
     //center the grid
     gridNode.transform.setPos(GRID_SIZE*CELL_SIZE*-0.5, 0.0, GRID_SIZE*CELL_SIZE*-0.5);
 
-    putSprite(0, 0, "assets/arbol.png");
-    putSprite(0, 1, "assets/casa.png");
-    putSprite(0, 2, "assets/flor.png");
+    //putSprite(0, 0, "assets/arbol.png");
+    //putSprite(0, 1, "assets/casa.png");
+    //putSprite(0, 2, "assets/flor.png");
 
     //create root node
     root = new MuEngine.Node();
@@ -101,11 +101,11 @@ var World01Manager = (function(engine){
 
     fruits = [];
 
-    fruits.push(putFruit(1, 0, 0));
-    fruits.push(putFruit(2, 0, 1));
-    fruits.push(putFruit(3, 0, 2));
-    fruits.push(putFruit(4, 0, 3));
-    fruits.push(putFruit(5, 0, 4));
+    fruits.push(this.putFruit(1, 0, 0));
+    fruits.push(this.putFruit(2, 0, 1));
+    fruits.push(this.putFruit(3, 0, 2));
+    fruits.push(this.putFruit(4, 0, 3));
+    fruits.push(this.putFruit(5, 0, 4));
 
     //create the camera
     camera = new MuEngine.Camera(this.canvas);
@@ -125,7 +125,7 @@ var World01Manager = (function(engine){
       grid: grid,
       speed:1.0
     });
-    var avatarSprite = new MuEngine.Sprite("assets/muvia.png");
+    var avatarSprite = new MuEngine.Sprite("assets/"+this.profile.engine.assetdetail+"/muvia.png");
     //invoking "addAnimation" on a normal sprite transform it into an animated sprite
     avatarSprite.width = 2.0;
     avatarSprite.height = 2.48;
@@ -287,8 +287,8 @@ var World01Manager = (function(engine){
    * @param tiley
    * @returns {MuEngine.Node}
    */
-  var putFruit = function(i, j, tiley){
-    var sprite = new MuEngine.Sprite("assets/fruits.png");
+  manager.prototype.putFruit = function(i, j, tiley){
+    var sprite = new MuEngine.Sprite("assets/"+this.profile.engine.assetdetail+"/fruits.png");
     sprite.width = 1.5;
     sprite.height = 1.5;
     sprite.anchor = sprite.ANCHOR_BOTTOM;

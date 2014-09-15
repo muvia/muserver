@@ -202,6 +202,27 @@
     "description":"graphic engine: asset detail"
   },
   {
+    "key":"_engine.assetdetail_desc_",
+    "value":"Personaliza el detalle en las gráficas para aumentar la accesibilidad",
+    "description":"graphic engine: asset detail desc"
+  },
+  {
+    "key":"_engine.assetdetail_high_",
+    "value":"Detalle alto",
+    "description":"graphic engine: asset detail high"
+  },
+  {
+    "key":"_engine.assetdetail_med_",
+    "value":"Colores planos",
+    "description":"graphic engine: asset detail medium"
+  },
+
+  {
+    "key":"_engine.assetdetail_low_",
+    "value":"Blanco y negro, alto contraste",
+    "description":"graphic engine: asset detail low"
+  },
+  {
     "key":"_engine.clicktowalk_",
     "value":"Click para caminar",
     "description":"graphic engine: click to walk"

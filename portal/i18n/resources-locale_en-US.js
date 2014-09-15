@@ -200,6 +200,27 @@
     "description":"graphic engine: asset detail"
   },
   {
+    "key":"_engine.assetdetail_desc_",
+    "value":"customize graphic representation to increase accesibility",
+    "description":"graphic engine: asset detail desc"
+  },
+  {
+    "key":"_engine.assetdetail_high_",
+    "value":"High detail",
+    "description":"graphic engine: asset detail high"
+  },
+  {
+    "key":"_engine.assetdetail_med_",
+    "value":"Plain colors",
+    "description":"graphic engine: asset detail medium"
+  },
+
+  {
+    "key":"_engine.assetdetail_low_",
+    "value":"Black and white high contrast",
+    "description":"graphic engine: asset detail low"
+  },
+  {
     "key":"_engine.clicktowalk_",
     "value":"point to walk",
     "description":"graphic engine: click to walk"
