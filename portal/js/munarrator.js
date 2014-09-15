@@ -21,6 +21,8 @@ var MuNarrator = (function(){
   *
   */
   MuNarrator.update = function(){
+    if(_currstage && _currstage.action)
+        _currstage.action.update();
   };
 
   /**
@@ -67,6 +69,30 @@ var MuNarrator = (function(){
     }
     _currstage = nextstage;
     _currstage('enter');
+  };
+
+
+  /**
+  * execute the action identified by action_name in the context of the current stage.
+  * if force is false, the action is executed only if there are not other action being executed in the current stage.
+  * if force is true, the action will force the termination of the existing action.
+  */
+  MuNarrator.execute = function(action_name, force){
+    if(_currstage){
+      if(!_currstage.action || force){
+        _currstage.action = _actions[action_name];
+        _currstage.action.reset();
+      }
+    }
+  };
+
+  /**
+  * delete all registered stages and microactions
+  */
+  MuNarrator.clear = function(){
+     _actions = {};
+     _stages = {};
+     _currstage = null;
   };
 
 

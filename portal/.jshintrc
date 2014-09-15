@@ -23,6 +23,7 @@
     "requestAnimFrame": true,
     "MuEngine":true,
     "MuController":true,
+    "MuNarrator":true,
     "vec3":true,
     "mat4":true,
     "Howl":true,

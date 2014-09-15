@@ -58,13 +58,12 @@ var World01Manager = (function(engine){
   var manager = function(canvas, accesibilityProfile){
     this.canvas = canvas;
     this.profile = accesibilityProfile;
-    this.narrator = new Narrator();
   };
 
   /**
    * load all the stuff
    */
-  manager.prototype.build = function(){
+  manager.prototype.buildAssets = function(){
     MuEngine.setActiveCanvas(this.canvas);
 
     var p0  = vec3.fromValues(0, 0,  0);
@@ -159,6 +158,7 @@ var World01Manager = (function(engine){
 
   };
 
+
   /**
   *
   */
@@ -192,9 +192,7 @@ var World01Manager = (function(engine){
    */
   manager.prototype.render = function(){
     var dt = MuEngine.tick();
-
-    this.narrator.update(dt);
-
+    MuNarrator.update();
     MuEngine.clear();
 
     //update of camera position. it is a feature that must be offered by the engine.
@@ -226,6 +224,7 @@ var World01Manager = (function(engine){
   manager.prototype.start = function(){
     running = true;
     var self = this;
+    MuNarrator.setActiveStage("welcome");
     function animloop(){
         if(running) {
           requestAnimFrame(animloop);
@@ -300,6 +299,25 @@ var World01Manager = (function(engine){
     spriteNode.transform.setPos(0.5, 0, 0.9);
     grid.getCell(i, j).addChild(spriteNode);
     return spriteNode;
+  };
+
+
+  /**
+  * initializes all the stages and actions required for this world
+  */
+  manager.prototype.buildStages = function(){
+    var self = this;
+    MuNarrator.clear();
+    MuNarrator.addStage("welcome", function(msg_type, params){ self.welcomeStage(msg_type, params);});
+  };
+
+  /**
+  * function that implements the welcome stage
+  */
+  manager.prototype.welcomeStage = function(msg_type, params){
+    if(msg_type === "enter"){
+      console.log("entering welcome stage!");
+    }
   };
 
 

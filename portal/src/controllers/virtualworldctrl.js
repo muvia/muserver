@@ -21,8 +21,8 @@ muPortalApp.controller('virtualworldController', ["$scope", "profilesrv", functi
       self.manager.onMenuEntryTriggered(entryid);
     });
 
-    this.manager.build();
-
+    this.manager.buildAssets();
+    this.manager.buildStages();
     this.manager.start();
 
     $scope.$on('$destroy', function () {

@@ -31,6 +31,7 @@ module.exports = function (grunt) {
           'js/gl-matrix.js',
           'js/muengine.js',
           'js/mucontroller.js',
+          'js/munarrator.js',
           'src/world01/*.js'
         ],
         options: {
