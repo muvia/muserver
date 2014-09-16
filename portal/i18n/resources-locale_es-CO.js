@@ -267,5 +267,10 @@
     "key":"_save_profile_",
     "value":"Guardar perfil",
     "description":"profile: save"
+  },
+  {
+    "key":"_say_loading_",
+    "value":"Cargando..",
+    "description":"say loading"
   }
 ]

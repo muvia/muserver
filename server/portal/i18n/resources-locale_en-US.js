@@ -264,7 +264,10 @@
     "key":"_save_profile_",
     "value":"Save profile",
     "description":"profile: save"
+  },
+  {
+    "key":"_say_loading_",
+    "value":"Loading..",
+    "description":"say loading"
   }
-
-
 ]

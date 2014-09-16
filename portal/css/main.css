@@ -7,3 +7,15 @@
     width: 1px;
     height: 1px;
 }
+
+
+#narration{
+  margin: 4px;
+  border: 3px;
+  border-color: black;
+  border-style: solid;
+  padding: 5px;
+  height: 100px;
+  font-size: 20px;
+  font-weight: bold;
+}

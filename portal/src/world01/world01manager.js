@@ -136,6 +136,7 @@ var World01Manager = (function(engine){
     avatarSprite.addAnimation("walk-left", 2, [0, 1, 2, 3, 4, 5, 6, 7], 1000);
     avatarSprite.addAnimation("walk-back", 3, [0, 1, 2, 3, 4, 5, 6, 7], 1000);
     avatarSprite.addAnimation("wave-front", 12, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 1000);
+    avatarSprite.addAnimation("idle1", 8, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 2000);
     avatarSprite.anchor = MuEngine.Sprite.prototype.ANCHOR_BOTTOM;
 
     avatarNode.primitive = avatarSprite;
@@ -144,9 +145,10 @@ var World01Manager = (function(engine){
     avatarNode.mapWalkAnimation("walk-right","west");
     avatarNode.mapWalkAnimation("walk-left","east");
 
-    avatarNode.addIdleAnimation("wave-front");
+    //avatarNode.addIdleAnimation("wave-front");
+    avatarNode.addIdleAnimation("idle1");
 
-    avatarNode.primitive.play("wave-front", true);
+    avatarNode.primitive.play("idle1", true);
     //attachment of the avatarNode to the grid occurs within avatarNode constructor
 
     //initialize sounds
@@ -175,12 +177,18 @@ var World01Manager = (function(engine){
 
   };
 
+  /**
+  *
+  */
   manager.prototype.playSound = function(name){
     if(sounds[name]){
       sounds[name].play();
     }
   };
 
+  /**
+  *
+  */
   manager.prototype.stopSound = function(name){
     if(sounds[name]){
       sounds[name].stop();
@@ -244,7 +252,9 @@ var World01Manager = (function(engine){
   };
 
 
-
+/**
+*
+*/
   manager.prototype.onMenuEntryTriggered = function(entryid){
     console.log("triggered ", entryid);
 
