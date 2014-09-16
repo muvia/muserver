@@ -262,7 +262,7 @@ var World01Manager = (function(engine){
   };
 
 
-
+var _narrationdiv = null;
 
 
   //-------------------- CLASS MANAGER -------------------
@@ -373,6 +373,7 @@ var World01Manager = (function(engine){
     window.avatarNode = avatarNode;
     window.gridNode = gridNode;
 
+    _narrationdiv = document.getElementById("narration");
   };
 
 
@@ -532,6 +533,7 @@ var World01Manager = (function(engine){
   */
   manager.prototype.say = function(symbol){
     console.log(symbol);
+    _narrationdiv.innerHTML = symbol;
   };
 
 
@@ -543,8 +545,9 @@ var World01Manager = (function(engine){
     MuNarrator.addAction("welcome", MuNarrator.Microaction.newSequential("welcome",
       [
         MuNarrator.Microaction.newFixedTime("wait 2 sg", 2000),
+        //MuNarrator.Microaction.newSingleStep("wave hand", function(){self.say("_say_welcome_");}),
         MuNarrator.Microaction.newSingleStep("say welcome", function(){self.say("_say_welcome_");}),
-        MuNarrator.Microaction.newFixedTime("wait 2 sg", 2000),
+        MuNarrator.Microaction.newFixedTime("wait 3 sg", 3000),
         MuNarrator.Microaction.newSingleStep("say welcome", function(){self.say("_say_explore_menu_");})
       ]
       ));
