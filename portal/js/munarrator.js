@@ -80,8 +80,10 @@ var MuNarrator = (function(){
   MuNarrator.execute = function(action_name, force){
     if(_currstage){
       if(!_currstage.action || force){
-        _currstage.action = _actions[action_name];
-        _currstage.action.reset();
+        if(_actions[action_name]){
+          _currstage.action = _actions[action_name];
+          _currstage.action.reset();
+        }
       }
     }
   };
@@ -131,7 +133,10 @@ var MuNarrator = (function(){
   MuNarrator.Microaction.newSingleStep = function(name, updatecb){
     return new MuNarrator.Microaction(name,
                                       null,
-                                      updatecb,
+                                      function(){
+                                        updatecb();
+                                        return true;
+                                      },
                                       null);
   };
 
@@ -146,7 +151,7 @@ var MuNarrator = (function(){
     return new MuNarrator.Microaction(name,
       function(){
         _t = Date.now();
-        startcb();
+        if(startcb) startcb();
       },
       function(){
         return (Date.now() - _t) >= duration;

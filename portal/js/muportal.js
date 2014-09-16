@@ -518,11 +518,34 @@ var World01Manager = (function(engine){
 
 
   /**
+  *
+  */
+  manager.prototype.say = function(symbol){
+    console.log(symbol);
+  };
+
+
+  /**
+  *
+  */
+  manager.prototype.buildActions = function(){
+    var self = this;
+    MuNarrator.addAction("welcome", MuNarrator.Microaction.newSequential("welcome",
+      [
+        MuNarrator.Microaction.newFixedTime("wait 2 sg", 2000),
+        MuNarrator.Microaction.newSingleStep("say welcome", function(){self.say("_say_welcome_");}),
+        MuNarrator.Microaction.newFixedTime("wait 2 sg", 2000),
+        MuNarrator.Microaction.newSingleStep("say welcome", function(){self.say("_say_explore_menu_");})
+      ]
+      ));
+  };
+
+
+  /**
   * initializes all the stages and actions required for this world
   */
   manager.prototype.buildStages = function(){
     var self = this;
-    MuNarrator.clear();
     MuNarrator.addStage("welcome", function(msg_type, params){ self.welcomeStage(msg_type, params);});
   };
 
@@ -531,7 +554,7 @@ var World01Manager = (function(engine){
   */
   manager.prototype.welcomeStage = function(msg_type, params){
     if(msg_type === "enter"){
-      console.log("entering welcome stage!");
+      MuNarrator.execute("welcome");
     }
   };
 
@@ -990,6 +1013,8 @@ muPortalApp.controller('virtualworldController', ["$scope", "profilesrv", functi
     });
 
     this.manager.buildAssets();
+    MuNarrator.clear();
+    this.manager.buildActions();
     this.manager.buildStages();
     this.manager.start();
 
