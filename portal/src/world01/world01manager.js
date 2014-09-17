@@ -50,14 +50,16 @@ var World01Manager = (function(engine){
 var _narrationdiv = null;
 
 
+
   //-------------------- CLASS MANAGER -------------------
   /**
    *
    * @constructor
    */
-  var manager = function(canvas, accesibilityProfile){
+  var manager = function(canvas, accesibilityProfile, localizeSrv){
     this.canvas = canvas;
     this.profile = accesibilityProfile;
+    this.localizeSrv= localizeSrv;
   };
 
   /**
@@ -317,8 +319,11 @@ var _narrationdiv = null;
   *
   */
   manager.prototype.say = function(symbol){
-    console.log(symbol);
-    _narrationdiv.innerHTML = symbol;
+
+    var localsymbol = this.localizeSrv.getLocalizedString(symbol);
+    console.log(symbol, localsymbol);
+
+    _narrationdiv.innerHTML = localsymbol;
   };
 
 

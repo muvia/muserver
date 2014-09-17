@@ -265,14 +265,16 @@ var World01Manager = (function(engine){
 var _narrationdiv = null;
 
 
+
   //-------------------- CLASS MANAGER -------------------
   /**
    *
    * @constructor
    */
-  var manager = function(canvas, accesibilityProfile){
+  var manager = function(canvas, accesibilityProfile, localizeSrv){
     this.canvas = canvas;
     this.profile = accesibilityProfile;
+    this.localizeSrv= localizeSrv;
   };
 
   /**
@@ -532,8 +534,11 @@ var _narrationdiv = null;
   *
   */
   manager.prototype.say = function(symbol){
-    console.log(symbol);
-    _narrationdiv.innerHTML = symbol;
+
+    var localsymbol = this.localizeSrv.getLocalizedString(symbol);
+    console.log(symbol, localsymbol);
+
+    _narrationdiv.innerHTML = localsymbol;
   };
 
 
@@ -1008,7 +1013,7 @@ muPortalApp.controller('profileController', ["$scope", "profilesrv", function($s
  * controller for contact form
  */
 
-muPortalApp.controller('virtualworldController', ["$scope", "profilesrv", function($scope, profilesrv) {
+muPortalApp.controller('virtualworldController', ["$scope", "profilesrv", "localize", function($scope, profilesrv, localize) {
   'use strict';
 
 
@@ -1018,7 +1023,7 @@ muPortalApp.controller('virtualworldController', ["$scope", "profilesrv", functi
   //game engine initialization
   this.init = function(profile){
     this.canvas = document.getElementById("c");
-    this.manager  = new World01Manager(this.canvas, profile);
+    this.manager  = new World01Manager(this.canvas, profile, localize);
 
     //accessible controller initialization
     this.menu1 = new MuController.Menu("menu1", function(entryid){

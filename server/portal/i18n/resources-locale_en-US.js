@@ -269,5 +269,15 @@
     "key":"_say_loading_",
     "value":"Loading..",
     "description":"say loading"
+  },
+  {
+    "key":"_say_welcome_",
+    "value":"Welcome to Muvia!",
+    "description":"say welcome"
+  },
+  {
+    "key":"_say_explore_menu_",
+    "value":"Use the menu to explore and execute actions in the world",
+    "description":"say explore"
   }
 ]

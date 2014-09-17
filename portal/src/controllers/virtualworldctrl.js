@@ -4,7 +4,7 @@
  * controller for contact form
  */
 
-muPortalApp.controller('virtualworldController', ["$scope", "profilesrv", function($scope, profilesrv) {
+muPortalApp.controller('virtualworldController', ["$scope", "profilesrv", "localize", function($scope, profilesrv, localize) {
   'use strict';
 
 
@@ -14,7 +14,7 @@ muPortalApp.controller('virtualworldController', ["$scope", "profilesrv", functi
   //game engine initialization
   this.init = function(profile){
     this.canvas = document.getElementById("c");
-    this.manager  = new World01Manager(this.canvas, profile);
+    this.manager  = new World01Manager(this.canvas, profile, localize);
 
     //accessible controller initialization
     this.menu1 = new MuController.Menu("menu1", function(entryid){
