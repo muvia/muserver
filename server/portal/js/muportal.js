@@ -543,45 +543,52 @@ var _narrationdiv = null;
 
 
   /**
-  *
-  */
-  manager.prototype.buildActions = function(){
-    var self = this;
-    MuNarrator.addAction("welcome", MuNarrator.Microaction.newSequential("welcome",
-      [
-        MuNarrator.Microaction.newFixedTime("wait 2 sg", 2000),
-        //MuNarrator.Microaction.newSingleStep("wave hand", function(){self.say("_say_welcome_");}),
-        MuNarrator.Microaction.newSingleStep("say welcome", function(){self.say("_say_welcome_");}),
-        MuNarrator.Microaction.newFixedTime("wait 3 sg", 3000),
-        MuNarrator.Microaction.newSingleStep("say welcome", function(){self.say("_say_explore_menu_");})
-      ]
-      ));
-  };
-
-
-  /**
   * initializes all the stages and actions required for this world
   */
   manager.prototype.buildStages = function(){
-    var self = this;
-    MuNarrator.addStage("welcome", function(msg_type, params){ self.welcomeStage(msg_type, params);});
+    MuNarrator.addStage("welcome", new  World01Manager.StageWelcome(this));
   };
-
-  /**
-  * function that implements the welcome stage
-  */
-  manager.prototype.welcomeStage = function(msg_type, params){
-    if(msg_type === "enter"){
-      MuNarrator.execute("welcome");
-    }
-  };
-
 
 
 
   return manager;
 
 })(MuEngine);
+//------
+'use strict';
+(function(World01Manager, MuEngine){
+
+  var stage=  function(worldmanager){
+    this._worldman = worldmanager;
+    this.buildActions();
+  }
+
+
+  /**
+  *
+  */
+  stage.prototype.enter = function(){
+    MuNarrator.execute("welcome");
+  };
+
+
+  /**
+  *
+  */
+  stage.prototype.buildActions = function(){
+    var self = this;
+    var world = this._worldman;
+    MuNarrator.addAction("welcome", MuNarrator.Microaction.newSequential("welcome",
+      [
+        MuNarrator.Microaction.newFixedTime("say welcome", 3000, null, function(){world.say("_say_welcome_");}),
+        MuNarrator.Microaction.newFixedTime("say the goal is", 2000, null, function(){world.say("_say_goal_is_");}),
+      ]
+      ));
+  };
+
+  World01Manager.StageWelcome = stage;
+
+})(World01Manager, MuEngine);
 //------
 
 /**
@@ -1032,7 +1039,6 @@ muPortalApp.controller('virtualworldController', ["$scope", "profilesrv", "local
 
     this.manager.buildAssets();
     MuNarrator.clear();
-    this.manager.buildActions();
     this.manager.buildStages();
     this.manager.start();
 

@@ -272,5 +272,20 @@
     "key":"_say_loading_",
     "value":"Cargando..",
     "description":"say loading"
+  },
+  {
+    "key":"_say_welcome_",
+    "value":"Bienvenido a Muvia!",
+    "description":"say welcome"
+  },
+  {
+    "key":"_say_goal_is_",
+    "value":"La meta es encontrar cinco frutas escondidas en el mundo. estás listo?",
+    "description":"say goal is"
+  },
+  {
+    "key":"_say_explore_menu_",
+    "value":"Utiliza el menú para explorar y ejecutar acciones en el mundo.",
+    "description":"say explore"
   }
 ]

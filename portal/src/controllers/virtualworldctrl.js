@@ -23,7 +23,6 @@ muPortalApp.controller('virtualworldController', ["$scope", "profilesrv", "local
 
     this.manager.buildAssets();
     MuNarrator.clear();
-    this.manager.buildActions();
     this.manager.buildStages();
     this.manager.start();
 

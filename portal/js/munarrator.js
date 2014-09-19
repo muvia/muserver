@@ -22,7 +22,9 @@ var MuNarrator = (function(){
   */
   MuNarrator.update = function(){
     if(_currstage && _currstage.action)
-        _currstage.action.update();
+        if(_currstage.action.update()){
+          _currstage.action = null;
+        }
   };
 
   /**
@@ -64,11 +66,13 @@ var MuNarrator = (function(){
     if(!nextstage){
       throw 'unexisting_stage';
     }
-    if(_currstage){
-      _currstage('exit');
+    if(_currstage && _currstage['exit']){
+      _currstage['exit']();
     }
     _currstage = nextstage;
-    _currstage('enter');
+    if(_currstage && _currstage['enter']){
+      _currstage['enter']();
+    }
   };
 
 
@@ -95,6 +99,17 @@ var MuNarrator = (function(){
      _actions = {};
      _stages = {};
      _currstage = null;
+  };
+
+  /**
+  * send a message to the current stage.
+  * a stage is known to accept a message if has a method named "on_XXX" where XXX is the value of the param "msg".
+  * @params msg {String} name of the message.
+  */
+  MuNarrator.send = function(msg, args){
+    if(_currstage && _currstage["on_"+msg]){
+      _currstage["on_"+msg](args);
+    }
   };
 
 
@@ -225,12 +240,15 @@ var MuNarrator = (function(){
     if(this.status === "idle"){
       if(this.startcb) this.startcb();
       this.status = "running";
+      return false;
     }else if(this.status === "running"){
       if(this.updatecb()){
         this.status = "finished";
         if(this.donecb) this.donecb();
+        return true;
       }
     }
+    return false;
   };
 
   MuNarrator.Microaction.prototype.reset = function(){

@@ -276,6 +276,11 @@
     "description":"say welcome"
   },
   {
+    "key":"_say_goal_is_",
+    "value":"The goal is to find five fruits hidden in the world. are you ready?",
+    "description":"say goal is"
+  },
+  {
     "key":"_say_explore_menu_",
     "value":"Use the menu to explore and execute actions in the world",
     "description":"say explore"
