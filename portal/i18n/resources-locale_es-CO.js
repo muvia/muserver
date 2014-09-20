@@ -293,6 +293,8 @@
   { "key":"east", "value":"este" },
   { "key":"west", "value":"oeste" },
   { "key":"_youre_moving_towards_", "value":"Te estas moviendo hacia el %1"},
+  { "key":"_world_edge_", "value":"No puedes caminar en esa dirección. Alcanzaste el borde %1 del mundo"},
+
 
   { "key":"selected_menudescribir", "value":"Describir: si activas este menu, podrás describir el mundo y los objetos que te rodean" },
   { "key":"executed_menudescribir", "value":"Describir: aquí tienes acciones para describir mundo, zona objetos y personas que te rodean" },

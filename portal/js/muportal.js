@@ -625,12 +625,14 @@ var _narrationdiv = null;
       console.log("stage._move_avatar: avatar is yet walking. ignoring walk command.");
       return;
     }
-
-    if(this._avatarNode.move(dir)){
+    var errcode = this._avatarNode.move(dir);
+    if(errcode === MuEngine.err.OK){
       this._worldman.say("_youre_moving_towards_", dir);
+    }else if(errcode === MuEngine.err.WORLD_EDGE){
+      this._worldman.say("_world_edge_", dir);
+    }else if(errcode === MuEngine.err.CELL_UNWALKABLE){
+      this._worldman.say("_cell_unwalkable_", dir);
     }else{
-      //the failure may be caused because there is an obstacle or because we are at the end of the world.
-      //each case requires a different message
       console.log("moving is invalid.. say something");
     }
 

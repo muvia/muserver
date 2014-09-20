@@ -1,6 +1,6 @@
 /**
  MuEngine: accesible multiplayer game engine
- Copyright (C) 2014 mundopato inc 
+ Copyright (C) 2014 mundopato inc
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU Affero General Public License as published
@@ -19,11 +19,11 @@
  */
 MuEngine  = (function(){
     'use strict';
-	
+
 	var MuEngine = {};
 
 	//--- INTERNAL ATTRIBUTES ----
-	
+
 	//active grid
 	var g_grid = null;
 
@@ -34,7 +34,7 @@ MuEngine  = (function(){
 	var g_canvas = null;
 
 	//active context
-	var g_ctx = null; 
+	var g_ctx = null;
 
 	//target fps
 	var g_fps = 2;
@@ -47,43 +47,53 @@ MuEngine  = (function(){
 	/**
 	 * last result of invoking MuEngine.transformPoint.
 	 * it is also used to store the first coord when
-	 * invoking MuEngine.transformLine. 
-	 */ 
+	 * invoking MuEngine.transformLine.
+	 */
 	var pt = vec3.create();
 	/**
 	 * when invoking MuEngine.transformLine, pt will store
-	 * the first coord of the line, and pt2 the last one. 
+	 * the first coord of the line, and pt2 the last one.
 	 */
 	var pt2 = vec3.create();
 
  //a reusable, read-only (I hope) zero vector.
 	MuEngine.pZero = vec3.fromValues(0, 0, 0);
-	
+
   //a reusable, read-only (I hope) unit vector.
 	MuEngine.pOne = vec3.fromValues(1, 1, 1);
 
-    /*
-     * static helper points to avoid temporal vector creations
-     */
-    MuEngine.p0 = vec3.create();
-    MuEngine.p1 = vec3.create();
-    MuEngine.p2 = vec3.create();
-    MuEngine.p3 = vec3.create();
+  /*
+   * static helper points to avoid temporal vector creations
+   */
+  MuEngine.p0 = vec3.create();
+  MuEngine.p1 = vec3.create();
+  MuEngine.p2 = vec3.create();
+  MuEngine.p3 = vec3.create();
+
+  /**
+  * a few error code constants to better describe error conditions when invoking methods
+  */
+  MuEngine.err ={
+    OK:0,
+    INVALID_STATUS:1,
+    WORLD_EDGE:2,
+    CELL_UNWALKABLE: 3
+  };
 
 	/**
 	* cache of MuEngine.imageHandler.
 	*/
-	var g_imageHandlers =[]; 
+	var g_imageHandlers =[];
 
  /**
   * default image to be used while the imageHandlers are fully loaded.
 	* it is initializaded in lazy-load by MuEngine.getImage method.
  */
 	var g_defimg = null;
-	
+
 	//--- CONSTRUCTORS AND METHODS ---
 
- 
+
 						
 	//------- TRANSFORM CLASS --------
 	
@@ -1019,7 +1029,7 @@ MuEngine.Avatar.prototype = new MuEngine.Node();
  * we asume a default view with x axis points to the left and +z points to the screen.
  * then, north is -Z, south is Z, east is +X, east is -X
  * @param dir {string} one of "north", "south", "west", "east".
- * @return {boolean} true if can move, false if not
+ * @return {MuEngine.err} OK if can move, MuEngine.err_code if not.
  */
 MuEngine.Avatar.prototype.move = function(_dir){
     if(!(_dir === "north" || _dir === "south" || _dir === "east" || _dir == "west")){
@@ -1027,11 +1037,11 @@ MuEngine.Avatar.prototype.move = function(_dir){
     }
 
   //return if already moving
-  if(this.moving) return false;
+  if(this.moving) return MuEngine.err.INVALID_STATUS;
 
   //return if there is a wall that prevent movement in the desired dir
   if(this.cell.hasWall(_dir)){
-    return false;
+    return MuEngine.err.CELL_UNWALKABLE;
   }
 
     var col = this.cell.col + ((_dir === "south")?1:((_dir === "north")?-1:0));
@@ -1039,11 +1049,11 @@ MuEngine.Avatar.prototype.move = function(_dir){
     this.nextCell = this.grid.getCell(row, col);
     if(!this.nextCell){
         //out of boundaries!
-        return false;
+        return MuEngine.err.WORLD_EDGE;
     }
     if(!this.nextCell.isWalkable()){
         this.nextCell = null;
-        return false;
+        return MuEngine.err.CELL_UNWALKABLE;
     }
     this.moving = _dir;
     var self = this;
@@ -1088,7 +1098,7 @@ MuEngine.Avatar.prototype.move = function(_dir){
     if(this.walkanims[_dir]){
       this.primitive.play(this.walkanims[_dir], true);
     }
-  return true;
+ return MuEngine.err.OK;
 }
 
 /**

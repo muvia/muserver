@@ -290,6 +290,9 @@
   { "key":"east", "value":"east" },
   { "key":"west", "value":"west" },
   { "key":"_youre_moving_towards_", "value":"you are moving towards the %1"},
+  { "key":"_world_edge_", "value":"can't walk on that dir. you reached the %1 edge of the world"},
+  { "key":"_cell_unwalkable_", "value":"can't walk on that dir. there is an obstacle in the %1 cell"},
+
 
   { "key":"selected_menudescribir", "value":"Describe: If you activate this menu, you will be able to describe the world and objects" },
   { "key":"executed_menudescribir", "value":"Describe Menu: Here there are actions to describe the world, zone, objects and persons around you" },
