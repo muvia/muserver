@@ -49,11 +49,6 @@ var MuNarrator = (function(){
     _stages[name] = stage;
   };
 
-  MuNarrator.sendMsg = function(msg){
-    if(_currstage){
-      _currstage(msg);
-    }
-  };
 
   /**
   * set the active stage.

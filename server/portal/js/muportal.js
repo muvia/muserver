@@ -252,7 +252,6 @@ var World01Manager = (function(engine){
 
   var camera = null;
 
-  var avatarNode = null;
 
   //move this to engine?
   var running = false;
@@ -275,6 +274,8 @@ var _narrationdiv = null;
     this.canvas = canvas;
     this.profile = accesibilityProfile;
     this.localizeSrv= localizeSrv;
+    this.avatarNode = null;
+
   };
 
   /**
@@ -336,7 +337,7 @@ var _narrationdiv = null;
     camera.lookAt(vec3.fromValues(0, 0, -5));
 
     //create an avatar. it will be an avatar node plus an animated sprite primitive.
-    avatarNode = new MuEngine.Avatar({
+    this.avatarNode = new MuEngine.Avatar({
       row: 5,
       col: 5,
       grid: grid,
@@ -356,23 +357,23 @@ var _narrationdiv = null;
     avatarSprite.addAnimation("idle1", 8, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 2000);
     avatarSprite.anchor = MuEngine.Sprite.prototype.ANCHOR_BOTTOM;
 
-    avatarNode.primitive = avatarSprite;
-    avatarNode.mapWalkAnimation("walk-front","south");
-    avatarNode.mapWalkAnimation("walk-back","north");
-    avatarNode.mapWalkAnimation("walk-right","west");
-    avatarNode.mapWalkAnimation("walk-left","east");
+    this.avatarNode.primitive = avatarSprite;
+    this.avatarNode.mapWalkAnimation("walk-front","south");
+    this.avatarNode.mapWalkAnimation("walk-back","north");
+    this.avatarNode.mapWalkAnimation("walk-right","west");
+    this.avatarNode.mapWalkAnimation("walk-left","east");
 
     //avatarNode.addIdleAnimation("wave-front");
-    avatarNode.addIdleAnimation("idle1");
+    this.avatarNode.addIdleAnimation("idle1");
 
-    avatarNode.primitive.play("idle1", true);
+    this.avatarNode.primitive.play("idle1", true);
     //attachment of the avatarNode to the grid occurs within avatarNode constructor
 
     //initialize sounds
     this.initSounds();
 
     //temporal, just for debug!
-    window.avatarNode = avatarNode;
+    window.avatarNode = this.avatarNode;
     window.gridNode = gridNode;
 
     _narrationdiv = document.getElementById("narration");
@@ -422,9 +423,9 @@ var _narrationdiv = null;
     MuEngine.clear();
 
     //update of camera position. it is a feature that must be offered by the engine.
-    MuEngine.p0[0] = avatarNode.wp[0];
+    MuEngine.p0[0] = this.avatarNode.wp[0];
     MuEngine.p0[1] = camera.center[1];
-    MuEngine.p0[2] = Math.min(avatarNode.wp[2]+CAMERA_DISTANCE, CAMERA_DISTANCE);
+    MuEngine.p0[2] = Math.min(this.avatarNode.wp[2]+CAMERA_DISTANCE, CAMERA_DISTANCE);
     camera.setCenter(MuEngine.p0);
     camera.update();
 
@@ -469,28 +470,6 @@ var _narrationdiv = null;
 
   };
 
-
-/**
-*
-*/
-  manager.prototype.onMenuEntryTriggered = function(entryid){
-    console.log("triggered ", entryid);
-
-    if(entryid === "caminar_norte"){
-      avatarNode.move("north");
-    }
-    else if(entryid === "caminar_sur"){
-      avatarNode.move("south");
-    }
-    else if(entryid === "caminar_oriente"){
-      avatarNode.move("west");
-    }
-    else if(entryid === "caminar_occidente"){
-      avatarNode.move("east");
-    }
-  };
-
-
   /**
    * helper method
    * @param i
@@ -531,14 +510,32 @@ var _narrationdiv = null;
 
 
   /**
-  *
+  * supports interpolation of parameters into the localized strings!
+   * use the '%' character to indicate the position of a parameter.
+   * @param {String} symbol for i18n. you can pass additional params for interpolation!
+   * @return {String} translated string (for testing)
   */
   manager.prototype.say = function(symbol){
 
     var localsymbol = this.localizeSrv.getLocalizedString(symbol);
-    console.log(symbol, localsymbol);
 
-    _narrationdiv.innerHTML = localsymbol;
+    console.log("manager.say ",symbol, localsymbol);
+
+    if(arguments.length > 1){
+      //time to interpolate!
+      for(var i=1; i<arguments.length; ++i){
+        var arg = arguments[i];
+        if(typeof arg === "string"){
+          arg = this.localizeSrv.getLocalizedString(arg);
+        }
+        localsymbol = localsymbol.replace("%"+i, arg);
+      }
+    }
+
+
+    if(_narrationdiv)
+      _narrationdiv.innerHTML = localsymbol;
+    return localsymbol;
   };
 
 
@@ -560,31 +557,104 @@ var _narrationdiv = null;
 
   var stage=  function(worldmanager){
     this._worldman = worldmanager;
-    this.buildActions();
-  }
+    this._avatarNode = this._worldman.avatarNode;
+    this._buildActions();
+  };
 
 
   /**
-  *
+  * required method for muNarrator stage convention
   */
   stage.prototype.enter = function(){
+
     MuNarrator.execute("welcome");
   };
 
 
   /**
+   * required method for muController, muNarrator conventions
+   */
+  stage.prototype.on_selected_menu = function(args){
+    console.log("on_selected_menu", args);
+    this._worldman.say("selected_"+args.entryid);
+  };
+
+  /**
+   * required method for muController, muNarrator conventions
+   */
+  stage.prototype.on_executed_menu = function(args){
+    console.log("on_executed_menu", args);
+    this._worldman.say("executed_"+args.entryid);
+  };
+
+  /**
+   * required method for muController, muNarrator conventions
+   */
+  stage.prototype.on_selected_entry = function(args){
+    console.log("on_selected_entry", args);
+    this._worldman.say("selected_"+args.entryid);
+  };
+
+  /**
+   * required method for muController, muNarrator conventions
+   */
+  stage.prototype.on_executed_entry = function(args){
+    console.log("on_executed_entry", args);
+    if(args.entryid === "caminar_norte"){
+      this._move_avatar("north");
+    }
+    else if(args.entryid === "caminar_sur"){
+      this._move_avatar("south");
+    }
+    else if(args.entryid === "caminar_oriente"){
+      this._move_avatar("west");
+    }
+    else if(args.entryid === "caminar_occidente"){
+      this._move_avatar("east");
+    }
+  };
+
+  /**
+   * handles the move avatar events
+   * @param args
+   * @private
+   */
+  stage.prototype._move_avatar = function(dir){
+
+    if(this._avatarNode.moving){
+      console.log("stage._move_avatar: avatar is yet walking. ignoring walk command.");
+      return;
+    }
+
+    if(this._avatarNode.move(dir)){
+      this._worldman.say("_youre_moving_towards_", dir);
+    }else{
+      //the failure may be caused because there is an obstacle or because we are at the end of the world.
+      //each case requires a different message
+      console.log("moving is invalid.. say something");
+    }
+
+  };
+
+
+  /**
   *
   */
-  stage.prototype.buildActions = function(){
+  stage.prototype._buildActions = function(){
     var self = this;
     var world = this._worldman;
     MuNarrator.addAction("welcome", MuNarrator.Microaction.newSequential("welcome",
       [
         MuNarrator.Microaction.newFixedTime("say welcome", 3000, null, function(){world.say("_say_welcome_");}),
-        MuNarrator.Microaction.newFixedTime("say the goal is", 2000, null, function(){world.say("_say_goal_is_");}),
+        MuNarrator.Microaction.newFixedTime("say the goal is", 2000, null, function(){world.say("_say_goal_is_");})
       ]
       ));
   };
+
+
+
+
+
 
   World01Manager.StageWelcome = stage;
 
@@ -1027,14 +1097,23 @@ muPortalApp.controller('virtualworldController', ["$scope", "profilesrv", "local
   var self = this;
 
 
-  //game engine initialization
+  /**
+   *
+   * @param profile
+   */
   this.init = function(profile){
     this.canvas = document.getElementById("c");
     this.manager  = new World01Manager(this.canvas, profile, localize);
 
     //accessible controller initialization
-    this.menu1 = new MuController.Menu("menu1", function(entryid){
-      self.manager.onMenuEntryTriggered(entryid);
+    this.menu1 = new MuController.Menu("menu1", function(type, entryid){
+      /*
+      * clever trick! instead of "if .. else" for each MuController.event type,
+      * we pass the type as a MuNarrator command so the active stage will receive
+      * four different calls: on_selected_menu, on_executed_menu, on_selected_entry, on_executed_entry
+      */
+      MuNarrator.send(type, {entryid: entryid});
+      //return self.manager.onMenuEntryTriggered(entryid);
     });
 
     this.manager.buildAssets();
@@ -1047,6 +1126,9 @@ muPortalApp.controller('virtualworldController', ["$scope", "profilesrv", "local
     });
   };
 
+  /**
+   *
+   */
   profilesrv.getProfile(function(profile){
     self.init(profile);
   });

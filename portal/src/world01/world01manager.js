@@ -37,7 +37,6 @@ var World01Manager = (function(engine){
 
   var camera = null;
 
-  var avatarNode = null;
 
   //move this to engine?
   var running = false;
@@ -60,6 +59,8 @@ var _narrationdiv = null;
     this.canvas = canvas;
     this.profile = accesibilityProfile;
     this.localizeSrv= localizeSrv;
+    this.avatarNode = null;
+
   };
 
   /**
@@ -121,7 +122,7 @@ var _narrationdiv = null;
     camera.lookAt(vec3.fromValues(0, 0, -5));
 
     //create an avatar. it will be an avatar node plus an animated sprite primitive.
-    avatarNode = new MuEngine.Avatar({
+    this.avatarNode = new MuEngine.Avatar({
       row: 5,
       col: 5,
       grid: grid,
@@ -141,23 +142,23 @@ var _narrationdiv = null;
     avatarSprite.addAnimation("idle1", 8, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 2000);
     avatarSprite.anchor = MuEngine.Sprite.prototype.ANCHOR_BOTTOM;
 
-    avatarNode.primitive = avatarSprite;
-    avatarNode.mapWalkAnimation("walk-front","south");
-    avatarNode.mapWalkAnimation("walk-back","north");
-    avatarNode.mapWalkAnimation("walk-right","west");
-    avatarNode.mapWalkAnimation("walk-left","east");
+    this.avatarNode.primitive = avatarSprite;
+    this.avatarNode.mapWalkAnimation("walk-front","south");
+    this.avatarNode.mapWalkAnimation("walk-back","north");
+    this.avatarNode.mapWalkAnimation("walk-right","west");
+    this.avatarNode.mapWalkAnimation("walk-left","east");
 
     //avatarNode.addIdleAnimation("wave-front");
-    avatarNode.addIdleAnimation("idle1");
+    this.avatarNode.addIdleAnimation("idle1");
 
-    avatarNode.primitive.play("idle1", true);
+    this.avatarNode.primitive.play("idle1", true);
     //attachment of the avatarNode to the grid occurs within avatarNode constructor
 
     //initialize sounds
     this.initSounds();
 
     //temporal, just for debug!
-    window.avatarNode = avatarNode;
+    window.avatarNode = this.avatarNode;
     window.gridNode = gridNode;
 
     _narrationdiv = document.getElementById("narration");
@@ -207,9 +208,9 @@ var _narrationdiv = null;
     MuEngine.clear();
 
     //update of camera position. it is a feature that must be offered by the engine.
-    MuEngine.p0[0] = avatarNode.wp[0];
+    MuEngine.p0[0] = this.avatarNode.wp[0];
     MuEngine.p0[1] = camera.center[1];
-    MuEngine.p0[2] = Math.min(avatarNode.wp[2]+CAMERA_DISTANCE, CAMERA_DISTANCE);
+    MuEngine.p0[2] = Math.min(this.avatarNode.wp[2]+CAMERA_DISTANCE, CAMERA_DISTANCE);
     camera.setCenter(MuEngine.p0);
     camera.update();
 
@@ -254,28 +255,6 @@ var _narrationdiv = null;
 
   };
 
-
-/**
-*
-*/
-  manager.prototype.onMenuEntryTriggered = function(entryid){
-    console.log("triggered ", entryid);
-
-    if(entryid === "caminar_norte"){
-      avatarNode.move("north");
-    }
-    else if(entryid === "caminar_sur"){
-      avatarNode.move("south");
-    }
-    else if(entryid === "caminar_oriente"){
-      avatarNode.move("west");
-    }
-    else if(entryid === "caminar_occidente"){
-      avatarNode.move("east");
-    }
-  };
-
-
   /**
    * helper method
    * @param i
@@ -316,14 +295,32 @@ var _narrationdiv = null;
 
 
   /**
-  *
+  * supports interpolation of parameters into the localized strings!
+   * use the '%' character to indicate the position of a parameter.
+   * @param {String} symbol for i18n. you can pass additional params for interpolation!
+   * @return {String} translated string (for testing)
   */
   manager.prototype.say = function(symbol){
 
     var localsymbol = this.localizeSrv.getLocalizedString(symbol);
-    console.log(symbol, localsymbol);
 
-    _narrationdiv.innerHTML = localsymbol;
+    console.log("manager.say ",symbol, localsymbol);
+
+    if(arguments.length > 1){
+      //time to interpolate!
+      for(var i=1; i<arguments.length; ++i){
+        var arg = arguments[i];
+        if(typeof arg === "string"){
+          arg = this.localizeSrv.getLocalizedString(arg);
+        }
+        localsymbol = localsymbol.replace("%"+i, arg);
+      }
+    }
+
+
+    if(_narrationdiv)
+      _narrationdiv.innerHTML = localsymbol;
+    return localsymbol;
   };
 
 

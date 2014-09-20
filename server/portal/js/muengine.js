@@ -1012,13 +1012,14 @@ MuEngine.Avatar.prototype = new MuEngine.Node();
 /**
  * create an animator that will move the current node from the current cell
  * to the cell pointed by dir.
- * if the target dir does not exist (out of grid boundary) or is now walkable
+ * if the target dir does not exist (out of grid boundary) or is not walkable
  * (either for static or dynamic obstacles) the method will return false.
  * in the other hand, if the movement is allowed, it will return true.
  * about the directions:
  * we asume a default view with x axis points to the left and +z points to the screen.
  * then, north is -Z, south is Z, east is +X, east is -X
- * @param: dir {string} one of "north", "south", "west", "east".
+ * @param dir {string} one of "north", "south", "west", "east".
+ * @return {boolean} true if can move, false if not
  */
 MuEngine.Avatar.prototype.move = function(_dir){
     if(!(_dir === "north" || _dir === "south" || _dir === "east" || _dir == "west")){
@@ -1026,11 +1027,11 @@ MuEngine.Avatar.prototype.move = function(_dir){
     }
 
   //return if already moving
-  if(this.moving) return;
+  if(this.moving) return false;
 
   //return if there is a wall that prevent movement in the desired dir
   if(this.cell.hasWall(_dir)){
-    return;
+    return false;
   }
 
     var col = this.cell.col + ((_dir === "south")?1:((_dir === "north")?-1:0));
@@ -1087,7 +1088,7 @@ MuEngine.Avatar.prototype.move = function(_dir){
     if(this.walkanims[_dir]){
       this.primitive.play(this.walkanims[_dir], true);
     }
-
+  return true;
 }
 
 /**

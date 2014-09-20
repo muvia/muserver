@@ -103,12 +103,21 @@ var MuController = (function(){
 (function(MuController){
   'use strict';
 
+  //-------------- public constants -----------
+
+  MuController.events = {
+    EXECUTED_MENU: "executed_menu",
+    SELECTED_MENU: "selected_menu",
+    SELECTED_ENTRY: "selected_entry",
+    EXECUTED_ENTRY: "executed_entry"
+  };
+
   //------------ main Menu class --------------
     /**
      * constructor
      * @param divid the div element that contains the menubar
      */
-    MuController.Menu = function(divid, entryCallback, menuCallback){
+    MuController.Menu = function(divid, menuCallback){
         this.menudiv = document.getElementById(divid);
 
         this.rootMenuBar = null;
@@ -125,11 +134,14 @@ var MuController = (function(){
             confirmBeforeTrigger: false,
             currmenubar: this.rootMenuBar,
             currentry: null,
-            notify: function(msg){
-                MuController._setContent(self.alert, msg);
-            },
-            triggerEntryCallback: entryCallback || function(entryid){},
-            triggerMenuCallback: menuCallback || function(menuid){}
+            triggerMenuEvent: function(type, entryid){
+              if(self.alert){
+                MuController._setContent(self.alert, type + " " + entryid);
+              }
+              if(menuCallback){
+                menuCallback(type, entryid);
+              }
+            }
         };
 
 
@@ -228,7 +240,11 @@ var MuController = (function(){
         }
 
         //@todo: check that we have keyboard focus
-        this.menudiv.getElementsByTagName("button")[0].focus();
+        /*var button = this.menudiv.getElementsByTagName("button")[0];
+        if(document.activeElement !== button){
+        	console.log("focusing button");
+        	button.focus();
+        }*/
 
         if(MuController.hasClass(srcElement, 'menutitle')){
             //the button titles block the click on the divs.. so move to the parent
@@ -417,7 +433,7 @@ var MuController = (function(){
     	context.currmenubar = this;
 		MuController.addClass(this.el, 'selected');
         MuController._showDiv(this.el, true);
-        context.notify("selected menu "+ this.title);
+        context.triggerMenuEvent( MuController.events.EXECUTED_MENU, this.id);
     };
 
 
@@ -481,7 +497,7 @@ var MuController = (function(){
     this.title = entryElement.innerHTML? entryElement.innerHTML : (entryElement.innerText ? entryElement.innerText : "error");
     this.target = target;
     var classname = 'entry';
-    if(target !== undefined && target instanceof MuController.MenuBar){
+    if(target && (target instanceof MuController.MenuBar)){
       classname = 'menuentry';
       }
 
@@ -498,7 +514,7 @@ var MuController = (function(){
     MuController.MenuEntry.prototype.execute = function(context){
         if(context.currentry != this){
             //a selection. unselect previous?
-            if(context.currentry != null){
+            if(context.currentry){
                 context.currentry.unselect(context);
             }
             this.select(context);
@@ -521,7 +537,15 @@ var MuController = (function(){
     MuController.MenuEntry.prototype.select = function(context){
         context.currentry = this;
         MuController.addClass(this.el, 'selected');
-        context.notify("selected option "+ this.title);
+        if(this.target) {
+          //it is a submenu
+          context.triggerMenuEvent( MuController.events.SELECTED_MENU, this.target.id);
+
+        }else{
+          //it is an entry
+          context.triggerMenuEvent( MuController.events.SELECTED_ENTRY, this.id);
+        }
+
     };
 
     /**
@@ -539,8 +563,7 @@ var MuController = (function(){
           this.parent.activesubmenu = this.target;
           this.target.trigger(context);
         }else{
-          context.notify("executing option "+ this.title);
-          context.triggerEntryCallback(this.id);
+          context.triggerMenuEvent( MuController.events.EXECUTED_ENTRY, this.id);
         }
     };
 

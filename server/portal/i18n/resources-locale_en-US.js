@@ -284,5 +284,19 @@
     "key":"_say_explore_menu_",
     "value":"Use the menu to explore and execute actions in the world",
     "description":"say explore"
-  }
+  },
+  { "key":"north", "value":"north" },
+  { "key":"south", "value":"south" },
+  { "key":"east", "value":"east" },
+  { "key":"west", "value":"west" },
+  { "key":"_youre_moving_towards_", "value":"you are moving towards the %1"},
+
+  { "key":"selected_menudescribir", "value":"Describe: If you activate this menu, you will be able to describe the world and objects" },
+  { "key":"executed_menudescribir", "value":"Describe Menu: Here there are actions to describe the world, zone, objects and persons around you" },
+
+  { "key":"selected_describir_mundo", "value":"Describe world: This action will describe the current world" },
+  { "key":"selected_describir_objetos", "value":"Describe objects: This action will list the objects around you" },
+  { "key":"selected_describir_zona", "value":"Describe zone: this action will describe the zone where you are located" },
+  { "key":"selected_describir_personas", "value":"Describe persons: this action will list other users in the world" }
+
 ]
