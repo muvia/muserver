@@ -1116,7 +1116,10 @@ muPortalApp.controller('virtualworldController', ["$scope", "profilesrv", "local
       */
       MuNarrator.send(type, {entryid: entryid});
       //return self.manager.onMenuEntryTriggered(entryid);
-    });
+    },
+		function(symbol){
+			return localize.getLocalizedString(symbol);
+		});
 
     this.manager.buildAssets();
     MuNarrator.clear();

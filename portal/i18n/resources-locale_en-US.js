@@ -294,6 +294,7 @@
   { "key":"_cell_unwalkable_", "value":"can't walk on that dir. there is an obstacle in the %1 cell"},
 
 
+	{ "key":"menudescribir", "value":"Describe" },
   { "key":"selected_menudescribir", "value":"Describe: If you activate this menu, you will be able to describe the world and objects" },
   { "key":"executed_menudescribir", "value":"Describe Menu: Here there are actions to describe the world, zone, objects and persons around you" },
 

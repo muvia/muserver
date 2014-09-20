@@ -294,8 +294,10 @@
   { "key":"west", "value":"oeste" },
   { "key":"_youre_moving_towards_", "value":"Te estas moviendo hacia el %1"},
   { "key":"_world_edge_", "value":"No puedes caminar en esa dirección. Alcanzaste el borde %1 del mundo"},
+  { "key":"_cell_unwalkable_", "value":"No puedes caminar en esa dirección. Hay un obstáculo en la casilla %1"},
 
 
+  { "key":"menudescribir", "value":"Describir" },
   { "key":"selected_menudescribir", "value":"Describir: si activas este menu, podrás describir el mundo y los objetos que te rodean" },
   { "key":"executed_menudescribir", "value":"Describir: aquí tienes acciones para describir mundo, zona objetos y personas que te rodean" },
   { "key":"selected_describir_mundo", "value":"Describir mundo: esta acción describirá el mundo actual" },

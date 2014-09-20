@@ -116,47 +116,56 @@ var MuController = (function(){
     /**
      * constructor
      * @param divid the div element that contains the menubar
+     * @param {function} menuCallback to notify menu events. receives a menuentry object.
+     * @param  {function} i18nCallback to translate the title of menus entries. must receive and return a string.
      */
-    MuController.Menu = function(divid, menuCallback){
-        this.menudiv = document.getElementById(divid);
+    MuController.Menu = function(divid, menuCallback, i18nCallback){
 
-        this.rootMenuBar = null;
+      if( i18nCallback){
+        MuController._i18n = i18nCallback;
+      }else{
+        MuController._i18n = function(symbol){return symbol;};
+      }
 
-        this.menuBarContainer = null;
+      this.menudiv = document.getElementById(divid);
 
-        this.alert = this.menudiv.querySelector("div#alert");
+      this.rootMenuBar = null;
 
-        var self = this;
+      this.menuBarContainer = null;
 
-        //status variables
-        this.context = {
-            triggerOnSelect: false,
-            confirmBeforeTrigger: false,
-            currmenubar: this.rootMenuBar,
-            currentry: null,
-            triggerMenuEvent: function(type, entryid){
-              if(self.alert){
-                MuController._setContent(self.alert, type + " " + entryid);
-              }
-              if(menuCallback){
-                menuCallback(type, entryid);
-              }
-            }
-        };
+      this.alert = this.menudiv.querySelector("div#alert");
+
+      var self = this;
+
+      //status variables
+      this.context = {
+        triggerOnSelect: false,
+        confirmBeforeTrigger: false,
+        currmenubar: this.rootMenuBar,
+        currentry: null,
+        triggerMenuEvent: function(type, entryid){
+          if(self.alert){
+            MuController._setContent(self.alert, type + " " + entryid);
+          }
+          if(menuCallback){
+            menuCallback(type, entryid);
+          }
+        }
+      };
 
 
-        var _keydownCallback = function(ev){
-                self.onKeyDown(ev);
-        };
+      var _keydownCallback = function(ev){
+        self.onKeyDown(ev);
+      };
 
-        this.build();
+      this.build();
 
-        this.menudiv.addEventListener("click", function(ev){
-            self.onClick(ev.srcElement? ev.srcElement: ev.target);
-            return false;
-        });
+      this.menudiv.addEventListener("click", function(ev){
+        self.onClick(ev.srcElement? ev.srcElement: ev.target);
+        return false;
+      });
 
-        this.menudiv.addEventListener('keydown', _keydownCallback, true);
+      this.menudiv.addEventListener('keydown', _keydownCallback, true);
 
     };
 
@@ -270,43 +279,44 @@ var MuController = (function(){
 (function(MuController){
   'use strict';
 
-    //----- menu bar class ------------
-    MuController.MenuBar = function(menuElement, parentMenuBar, mainMenu){
-        this.parent = parentMenuBar;
-        this.title = null;
-        this.submenus= [];
-        this.activesubmenu = null;
-        this.entries = [];
-        var tagname = menuElement.tagName.toLowerCase();
-        this.id = menuElement.id;
-        this.title = (menuElement.title ? menuElement.title : menuElement.getAttribute("title"));
+  //----- menu bar class ------------
+  MuController.MenuBar = function(menuElement, parentMenuBar, mainMenu){
+		this.parent = parentMenuBar;
+    this.title = null;
+    this.submenus= [];
+    this.activesubmenu = null;
+    this.entries = [];
+    var tagname = menuElement.tagName.toLowerCase();
+    this.id = menuElement.id;
+    this.title = MuController._i18n((menuElement.title ? menuElement.title : menuElement.getAttribute("title")));
 
-        //this is the main div for this menuBar. all hidden except the first level
-        this.el = MuController._createDiv(this.id, parentMenuBar === null, 'menubar');
 
-        //create a title div for the menubar
-        var titlediv = MuController._createDiv((this.id + '_title'), true, 'menutitle', this.title);
-        this.el.appendChild(titlediv);
+    //this is the main div for this menuBar. all hidden except the first level
+    this.el = MuController._createDiv(this.id, parentMenuBar === null, 'menubar');
 
-        //but we also must add an entry to the parent menuBar
-        if(this.parent != null){
-            this.parent.entries.push(new MuController.MenuEntry(this.el, this.parent, this));
+    //create a title div for the menubar
+    var titlediv = MuController._createDiv((this.id + '_title'), true, 'menutitle', this.title);
+    this.el.appendChild(titlediv);
+
+    //but we also must add an entry to the parent menuBar
+    if(this.parent != null){
+      this.parent.entries.push(new MuController.MenuEntry(this.el, this.parent, this));
+    }
+
+    mainMenu.menuBarContainer.appendChild(this.el);
+
+    if(tagname === 'menu'){
+      //iterate over children, look for entries and sub-menus
+      for(var i=0; i< menuElement.children.length; ++i){
+        var child = menuElement.children[i];
+        if(child.tagName.toLowerCase() === 'menu'){
+          this.submenus.push(new MuController.MenuBar(child, this, mainMenu));
+        }else if(child.tagName.toLowerCase() === 'entry'){
+          this.entries.push(new MuController.MenuEntry(child, this));
         }
-
-        mainMenu.menuBarContainer.appendChild(this.el);
-
-        if(tagname === 'menu'){
-            //iterate over children, look for entries and sub-menus
-            for(var i=0; i< menuElement.children.length; ++i){
-                var child = menuElement.children[i];
-                if(child.tagName.toLowerCase() === 'menu'){
-                    this.submenus.push(new MuController.MenuBar(child, this, mainMenu));
-                }else if(child.tagName.toLowerCase() === 'entry'){
-                    this.entries.push(new MuController.MenuEntry(child, this));
-                }
-            }
-        }
-    };
+      }
+    }
+  };
 
   /**
   * just return the first entry
@@ -494,7 +504,7 @@ var MuController = (function(){
   MuController.MenuEntry = function(entryElement, menuBarParent, target){
     this.parent = menuBarParent;
     this.id = entryElement.id;
-    this.title = entryElement.innerHTML? entryElement.innerHTML : (entryElement.innerText ? entryElement.innerText : "error");
+    this.title = MuController._i18n(entryElement.innerHTML? entryElement.innerHTML : (entryElement.innerText ? entryElement.innerText : "error"));
     this.target = target;
     var classname = 'entry';
     if(target && (target instanceof MuController.MenuBar)){
