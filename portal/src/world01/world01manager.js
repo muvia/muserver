@@ -329,6 +329,40 @@ var _narrationdiv = null;
     MuNarrator.addStage("welcome", new  World01Manager.StageWelcome(this));
   };
 
+	/**
+	* return the id of the zone where the avatar is currently localed.
+	* it has the form: "center", "north", "west", "northwest", ..
+	*/
+	manager.prototype.getCurrZone = function(){
+		var x, y;
+		x = Math.floor(window.avatarNode.cell.row / 3);
+		y = Math.floor(window.avatarNode.cell.col / 3);
+
+		if(x == 1 && y == 1){
+			return "center";
+		}else if(x == 1){
+			if(y === 0){
+				return "north";
+			}else{
+				return "south";
+			}
+		}else if(y == 1){
+			if(x === 0){
+				return "west";
+			}else{
+				return "east";
+			}
+		}else{
+			var id = null;
+			if(y > 1){
+				id = "south";
+			}else{
+				 id = "north";
+			}
+			id += (x > 1)?"east":"west";
+			return id;
+		}
+	};
 
 
   return manager;

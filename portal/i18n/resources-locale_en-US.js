@@ -307,11 +307,14 @@
     { "key":"executed_menudescribir", "value":"Describe Menu: Here there are actions to describe the world, zone, objects and persons around you" },
   { "key":"_mundo_", "value":"World" },
     { "key":"selected_describir_mundo", "value":"Describe world: This action will describe the current world" },
+			{"key":"_world_description_", "value":"World is a square made of nine zones. Each zone is a smaller square with nine cells. "},
   { "key":"_objetos_", "value":"Objects" },
 	  { "key":"selected_describir_objetos", "value":"Describe objects: This action will list the objects around you" },
   { "key":"_zona_", "value":"Zone" },
 		{ "key":"selected_describir_zona", "value":"Describe zone: this action will describe the zone where you are located" },
-  { "key":"_personas_", "value":"People" },
+			{ "key":"_zone_description_", "value":"You are in the zone %1"},
+
+	{ "key":"_personas_", "value":"People" },
 		{ "key":"selected_describir_personas", "value":"Describe persons: this action will list other users in the world" },
 
 	{ "key":"menuobjeto", "value":"Object" },

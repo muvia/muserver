@@ -544,6 +544,40 @@ var _narrationdiv = null;
     MuNarrator.addStage("welcome", new  World01Manager.StageWelcome(this));
   };
 
+	/**
+	* return the id of the zone where the avatar is currently localed.
+	* it has the form: "center", "north", "west", "northwest", ..
+	*/
+	manager.prototype.getCurrZone = function(){
+		var x, y;
+		x = Math.floor(window.avatarNode.cell.row / 3);
+		y = Math.floor(window.avatarNode.cell.col / 3);
+
+		if(x == 1 && y == 1){
+			return "center";
+		}else if(x == 1){
+			if(y === 0){
+				return "north";
+			}else{
+				return "south";
+			}
+		}else if(y == 1){
+			if(x === 0){
+				return "west";
+			}else{
+				return "east";
+			}
+		}else{
+			var id = null;
+			if(y > 1){
+				id = "south";
+			}else{
+				 id = "north";
+			}
+			id += (x > 1)?"east":"west";
+			return id;
+		}
+	};
 
 
   return manager;
@@ -573,7 +607,7 @@ var _narrationdiv = null;
    * required method for muController, muNarrator conventions
    */
   stage.prototype.on_selected_menu = function(args){
-    console.log("on_selected_menu", args);
+    //console.log("on_selected_menu", args);
     this._worldman.say("selected_"+args.entryid);
   };
 
@@ -581,7 +615,7 @@ var _narrationdiv = null;
    * required method for muController, muNarrator conventions
    */
   stage.prototype.on_executed_menu = function(args){
-    console.log("on_executed_menu", args);
+    //console.log("on_executed_menu", args);
     this._worldman.say("executed_"+args.entryid);
   };
 
@@ -589,7 +623,7 @@ var _narrationdiv = null;
    * required method for muController, muNarrator conventions
    */
   stage.prototype.on_selected_entry = function(args){
-    console.log("on_selected_entry", args);
+    //console.log("on_selected_entry", args);
     this._worldman.say("selected_"+args.entryid);
   };
 
@@ -610,6 +644,12 @@ var _narrationdiv = null;
     else if(args.entryid === "caminar_occidente"){
       this._move_avatar("east");
     }
+		else if(args.entryid === "describir_mundo"){
+			this._worldman.say("_world_description_");
+		}
+		else if(args.entryid === "describir_zona"){
+			this._worldman.say("_zone_description_", this._worldman.getCurrZone());
+		}
   };
 
   /**

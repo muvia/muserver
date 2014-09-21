@@ -311,12 +311,15 @@
   { "key":"executed_menudescribir", "value":"Describir: aquí tienes acciones para describir mundo, zona objetos y personas que te rodean" },
   { "key":"_mundo_", "value":"Mundo" },
   	{ "key":"selected_describir_mundo", "value":"Describir mundo: esta acción describirá el mundo actual" },
-  { "key":"_objetos_", "value":"Objetos" },
+ 			{"key":"_world_description_", "value":"El mundo es un cuadrado compuesto de nueve zonas. Cada zona es un cuadrado más pequeño compuesto de nueve casillas"},
+ { "key":"_objetos_", "value":"Objetos" },
 		{ "key":"selected_describir_objetos", "value":"Describir objetos: esta acción describirá qué objetos hay a tu alrededor" },
  	{ "key":"_zona_", "value":"Zona" },
 	  { "key":"selected_describir_zona", "value":"Describir Zona: esta acción te dirá en qué zona estás y que cosas hay cerca" },
   { "key":"_personas_", "value":"Personas" },
 		{ "key":"selected_describir_personas", "value":"Describir personas: Esta acción te dirà que otros usuarios hay en el mundo" },
+				{ "key":"_zone_description_", "value":"Estas en la zona %1"},
+
 
 	{ "key":"menuobjeto", "value":"Objeto" },
 	  { "key":"selected_menuobjeto", "value":"Objeto: activando este menú podrás interactuar con el objeto más cercano a tu personaje" },

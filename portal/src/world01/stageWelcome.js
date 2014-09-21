@@ -21,7 +21,7 @@
    * required method for muController, muNarrator conventions
    */
   stage.prototype.on_selected_menu = function(args){
-    console.log("on_selected_menu", args);
+    //console.log("on_selected_menu", args);
     this._worldman.say("selected_"+args.entryid);
   };
 
@@ -29,7 +29,7 @@
    * required method for muController, muNarrator conventions
    */
   stage.prototype.on_executed_menu = function(args){
-    console.log("on_executed_menu", args);
+    //console.log("on_executed_menu", args);
     this._worldman.say("executed_"+args.entryid);
   };
 
@@ -37,7 +37,7 @@
    * required method for muController, muNarrator conventions
    */
   stage.prototype.on_selected_entry = function(args){
-    console.log("on_selected_entry", args);
+    //console.log("on_selected_entry", args);
     this._worldman.say("selected_"+args.entryid);
   };
 
@@ -58,6 +58,12 @@
     else if(args.entryid === "caminar_occidente"){
       this._move_avatar("east");
     }
+		else if(args.entryid === "describir_mundo"){
+			this._worldman.say("_world_description_");
+		}
+		else if(args.entryid === "describir_zona"){
+			this._worldman.say("_zone_description_", this._worldman.getCurrZone());
+		}
   };
 
   /**
