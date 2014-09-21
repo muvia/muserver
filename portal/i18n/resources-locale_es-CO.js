@@ -299,6 +299,12 @@
 	{ "key":"menucaminar", "value":"Caminar" },
     { "key":"selected_menucaminar", "value":"Caminar: Ingresa a este menú para poder mover tu personaje por el mundo" },
     { "key":"executed_menucaminar", "value":"Menú Caminar: aquí podrás mover tu personaje hacia el norte, sur, oriente u occidente" },
+	  { "key":"selected_caminar_norte", "value":"Caminar al norte" },
+		{ "key":"selected_caminar_sur", "value":"Caminar al sur" },
+		{ "key":"selected_caminar_oriente", "value":"Caminar al oriente" },
+		{ "key":"selected_caminar_occidente", "value":"Caminar al occidente" },
+
+
 
   { "key":"menudescribir", "value":"Describir" },
   { "key":"selected_menudescribir", "value":"Describir: si activas este menu, podrás describir el mundo y los objetos que te rodean" },
@@ -310,6 +316,17 @@
  	{ "key":"_zona_", "value":"Zona" },
 	  { "key":"selected_describir_zona", "value":"Describir Zona: esta acción te dirá en qué zona estás y que cosas hay cerca" },
   { "key":"_personas_", "value":"Personas" },
-		{ "key":"selected_describir_personas", "value":"Describir personas: Esta acción te dirà que otros usuarios hay en el mundo" }
+		{ "key":"selected_describir_personas", "value":"Describir personas: Esta acción te dirà que otros usuarios hay en el mundo" },
+
+	{ "key":"menuobjeto", "value":"Objeto" },
+	  { "key":"selected_menuobjeto", "value":"Objeto: activando este menú podrás interactuar con el objeto más cercano a tu personaje" },
+  	{ "key":"executed_menuobjeto", "value":"Objeto: aquí puedes describir, tomar o activar el objeto más cercano a tu personaje" },
+		{ "key":"describe_describe_object", "value":"Describir" },
+			{ "key":"_describe_object_", "value":"Describir el objeto más cercano" },
+		{ "key":"describe_take_object", "value":"Tomar" },
+			{ "key":"_take_object_", "value":"Tomar el objeto más cercano" },
+		{ "key":"describe_activate_object", "value":"Activar" },
+			{ "key":"_activate_object_", "value":"Activar el objeto más cercano" }
+
 
 ]

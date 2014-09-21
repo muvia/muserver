@@ -296,6 +296,10 @@
 	{ "key":"menucaminar", "value":"Walk" },
     { "key":"selected_menucaminar", "value":"Walk: Enter this menu to be able to move your character through the world" },
     { "key":"executed_menucaminar", "value":"Walk Menu: Here you can move your character to north, south, west and east" },
+  	{ "key":"selected_caminar_norte", "value":"walk northward" },
+		{ "key":"selected_caminar_sur", "value":"walk southward" },
+		{ "key":"selected_caminar_oriente", "value":"walk eastward" },
+		{ "key":"selected_caminar_occidente", "value":"walk westward" },
 
 
 	{ "key":"menudescribir", "value":"Describe" },
@@ -308,7 +312,17 @@
   { "key":"_zona_", "value":"Zone" },
 		{ "key":"selected_describir_zona", "value":"Describe zone: this action will describe the zone where you are located" },
   { "key":"_personas_", "value":"People" },
-		{ "key":"selected_describir_personas", "value":"Describe persons: this action will list other users in the world" }
+		{ "key":"selected_describir_personas", "value":"Describe persons: this action will list other users in the world" },
+
+	{ "key":"menuobjeto", "value":"Object" },
+	  { "key":"selected_menuobjeto", "value":"Object: activating this menu you would be able to interact with the nearest object" },
+  	{ "key":"executed_menuobjeto", "value":"Object: here you can describe, take or activate the nearest object" },
+		{ "key":"_describe_object_", "value":"Describe" },
+			{ "key":"selected_describe_object", "value":"Describe the nearest object" },
+		{ "key":"_take_object_", "value":"Take" },
+			{ "key":"selected_take_object", "value":"Take the nearest object" },
+		{ "key":"_activate_object_", "value":"Activate" },
+			{ "key":"selected_activate_object", "value":"Activate the nearest object" }
 
 
 
