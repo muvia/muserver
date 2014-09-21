@@ -295,10 +295,10 @@
 
 
 	{ "key":"menudescribir", "value":"Describe" },
-  { "key":"selected_menudescribir", "value":"Describe: If you activate this menu, you will be able to describe the world and objects" },
-  { "key":"executed_menudescribir", "value":"Describe Menu: Here there are actions to describe the world, zone, objects and persons around you" },
-
-  { "key":"selected_describir_mundo", "value":"Describe world: This action will describe the current world" },
+    { "key":"selected_menudescribir", "value":"Describe: If you activate this menu, you will be able to describe the world and objects" },
+    { "key":"executed_menudescribir", "value":"Describe Menu: Here there are actions to describe the world, zone, objects and persons around you" },
+  { "key":"_mundo_", "value":"World" },
+    { "key":"selected_describir_mundo", "value":"Describe world: This action will describe the current world" },
   { "key":"selected_describir_objetos", "value":"Describe objects: This action will list the objects around you" },
   { "key":"selected_describir_zona", "value":"Describe zone: this action will describe the zone where you are located" },
   { "key":"selected_describir_personas", "value":"Describe persons: this action will list other users in the world" }

@@ -300,6 +300,7 @@
   { "key":"menudescribir", "value":"Describir" },
   { "key":"selected_menudescribir", "value":"Describir: si activas este menu, podrás describir el mundo y los objetos que te rodean" },
   { "key":"executed_menudescribir", "value":"Describir: aquí tienes acciones para describir mundo, zona objetos y personas que te rodean" },
+  { "key":"_mundo_", "value":"Mundo" },
   { "key":"selected_describir_mundo", "value":"Describir mundo: esta acción describirá el mundo actual" },
   { "key":"selected_describir_objetos", "value":"Describir objetos: esta acción describirá qué objetos hay a tu alrededor" },
   { "key":"selected_describir_zona", "value":"Describir Zona: esta acción te dirá en qué zona estás y que cosas hay cerca" }
