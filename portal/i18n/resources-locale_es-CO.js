@@ -290,12 +290,15 @@
   },
   { "key":"north", "value":"norte" },
   { "key":"south", "value":"sur" },
-  { "key":"east", "value":"este" },
-  { "key":"west", "value":"oeste" },
+  { "key":"east", "value":"oriente" },
+  { "key":"west", "value":"occidente" },
   { "key":"_youre_moving_towards_", "value":"Te estas moviendo hacia el %1"},
   { "key":"_world_edge_", "value":"No puedes caminar en esa dirección. Alcanzaste el borde %1 del mundo"},
   { "key":"_cell_unwalkable_", "value":"No puedes caminar en esa dirección. Hay un obstáculo en la casilla %1"},
 
+	{ "key":"menucaminar", "value":"Caminar" },
+    { "key":"selected_menucaminar", "value":"Caminar: Ingresa a este menú para poder mover tu personaje por el mundo" },
+    { "key":"executed_menucaminar", "value":"Menú Caminar: aquí podrás mover tu personaje hacia el norte, sur, oriente u occidente" },
 
   { "key":"menudescribir", "value":"Describir" },
   { "key":"selected_menudescribir", "value":"Describir: si activas este menu, podrás describir el mundo y los objetos que te rodean" },
@@ -305,7 +308,7 @@
   { "key":"_objetos_", "value":"Objetos" },
 		{ "key":"selected_describir_objetos", "value":"Describir objetos: esta acción describirá qué objetos hay a tu alrededor" },
  	{ "key":"_zona_", "value":"Zona" },
-	  { "key":"selected_describir_zona", "value":"Describir Zona: esta acción te dirá en qué zona estás y que cosas hay cerca" }
+	  { "key":"selected_describir_zona", "value":"Describir Zona: esta acción te dirá en qué zona estás y que cosas hay cerca" },
   { "key":"_personas_", "value":"Personas" },
 		{ "key":"selected_describir_personas", "value":"Describir personas: Esta acción te dirà que otros usuarios hay en el mundo" }
 

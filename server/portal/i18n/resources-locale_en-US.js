@@ -293,6 +293,10 @@
   { "key":"_world_edge_", "value":"can't walk on that dir. you reached the %1 edge of the world"},
   { "key":"_cell_unwalkable_", "value":"can't walk on that dir. there is an obstacle in the %1 cell"},
 
+	{ "key":"menucaminar", "value":"Walk" },
+    { "key":"selected_menucaminar", "value":"Walk: Enter this menu to be able to move your character through the world" },
+    { "key":"executed_menucaminar", "value":"Walk Menu: Here you can move your character to north, south, west and east" },
+
 
 	{ "key":"menudescribir", "value":"Describe" },
     { "key":"selected_menudescribir", "value":"Describe: If you activate this menu, you will be able to describe the world and objects" },
@@ -305,5 +309,7 @@
 		{ "key":"selected_describir_zona", "value":"Describe zone: this action will describe the zone where you are located" },
   { "key":"_personas_", "value":"People" },
 		{ "key":"selected_describir_personas", "value":"Describe persons: this action will list other users in the world" }
+
+
 
 ]

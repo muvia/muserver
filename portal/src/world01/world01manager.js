@@ -304,8 +304,6 @@ var _narrationdiv = null;
 
     var localsymbol = this.localizeSrv.getLocalizedString(symbol);
 
-    console.log("manager.say ",symbol, localsymbol);
-
     if(arguments.length > 1){
       //time to interpolate!
       for(var i=1; i<arguments.length; ++i){
