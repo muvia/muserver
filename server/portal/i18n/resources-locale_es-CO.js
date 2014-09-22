@@ -328,7 +328,10 @@
 	  { "key":"selected_menuobjeto", "value":"Objeto: activando este menú podrás interactuar con el objeto más cercano a tu personaje" },
   	{ "key":"executed_menuobjeto", "value":"Objeto: aquí puedes describir, tomar o activar el objeto más cercano a tu personaje" },
 		{ "key":"describe_describe_object", "value":"Describir" },
-			{ "key":"_describe_object_", "value":"Describir el objeto más cercano" },
+			{ "key":"selected_describe_object", "value":"Describir el objeto más cercano" },
+				{ "key":"_distance_to_object_", "value":"La fruta %1 está a %2 casillas de distancia, hacia el %3" },
+
+
 		{ "key":"describe_take_object", "value":"Tomar" },
 			{ "key":"_take_object_", "value":"Tomar el objeto más cercano" },
 		{ "key":"describe_activate_object", "value":"Activar" },

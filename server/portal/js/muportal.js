@@ -642,6 +642,38 @@ var _narrationdiv = null;
 		}
 	};
 
+	/**
+	* given a vector, return its direction (north, south..)
+	*/
+	manager.prototype.getVectorDirection = function(dx, dy){
+	if(dx === 0 && dy === 0){
+			return "center";
+		}else if(dy < 0){
+			if(dx === 0){
+				return "north";
+			}else if(dx < 0){
+				return "northwest";
+			}else{
+				return "northeast";
+			}
+		}else if(dy === 0){
+			if(dx < 0){
+				return "west";
+			}else{
+				return "east";
+			}
+		}else{
+			if(dx === 0){
+				return "south";
+			}else if(dx < 0){
+				return "southwest";
+			}else{
+				return "southeast";
+			}
+		}
+
+	};
+
 
   return manager;
 
@@ -829,8 +861,32 @@ var _narrationdiv = null;
 			this._worldman.say("_zone_description_", this._worldman.getCurrZone());
 		}else if(args.entryid === "describir_objetos"){
 			this._describe_objects();
+		}else if(args.entryid === "describe_object"){
+			this._describe_object();
 		}
   };
+
+
+	/**
+	*
+	*@private
+	*/
+	stage.prototype._describe_object = function(){
+		var zone = this._worldman.getZoneByName(this._worldman.getCurrZone());
+		if(zone.hasObjects()){
+			var cell = zone.getCellByName(zone.fruit.cellname);
+
+			var dx = cell.row - this._worldman.avatarNode.cell.row;
+			var dy = cell.col - this._worldman.avatarNode.cell.col;
+
+			var dist = Math.abs(dx) + Math.abs(dy);
+
+			this._worldman.say("_distance_to_object_", zone.fruit.name, dist, this._worldman.getVectorDirection(dx, dy));
+		}else{
+			this._worldman.say("_no_objects_in_zone_");
+		}
+	};
+
 
 	/**
 	*

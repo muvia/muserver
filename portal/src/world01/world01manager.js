@@ -427,6 +427,38 @@ var _narrationdiv = null;
 		}
 	};
 
+	/**
+	* given a vector, return its direction (north, south..)
+	*/
+	manager.prototype.getVectorDirection = function(dx, dy){
+	if(dx === 0 && dy === 0){
+			return "center";
+		}else if(dy < 0){
+			if(dx === 0){
+				return "north";
+			}else if(dx < 0){
+				return "northwest";
+			}else{
+				return "northeast";
+			}
+		}else if(dy === 0){
+			if(dx < 0){
+				return "west";
+			}else{
+				return "east";
+			}
+		}else{
+			if(dx === 0){
+				return "south";
+			}else if(dx < 0){
+				return "southwest";
+			}else{
+				return "southeast";
+			}
+		}
+
+	};
+
 
   return manager;
 

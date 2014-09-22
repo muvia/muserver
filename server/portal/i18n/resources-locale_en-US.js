@@ -325,6 +325,8 @@
   	{ "key":"executed_menuobjeto", "value":"Object: here you can describe, take or activate the nearest object" },
 		{ "key":"_describe_object_", "value":"Describe" },
 			{ "key":"selected_describe_object", "value":"Describe the nearest object" },
+				{ "key":"_distance_to_object_", "value":"The %1 is at %2 cells towards the %3" },
+
 		{ "key":"_take_object_", "value":"Take" },
 			{ "key":"selected_take_object", "value":"Take the nearest object" },
 		{ "key":"_activate_object_", "value":"Activate" },
