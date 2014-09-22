@@ -242,7 +242,6 @@ var World01Manager = (function(engine){
   var CELL_SIZE = 1.5;
 
   //----- PRIVATE MODULE VARS ------------
-  var grid = null;
 
   //root node
   var root = null;
@@ -306,8 +305,8 @@ var _narrationdiv = null;
     axis.addChild( new MuEngine.Node(linez));
 
     //create the grid
-    grid = new MuEngine.Grid(GRID_SIZE, GRID_SIZE, CELL_SIZE, "#888888");
-    var gridNode = new MuEngine.Node(grid);
+    this.grid = new MuEngine.Grid(GRID_SIZE, GRID_SIZE, CELL_SIZE, "#888888");
+    var gridNode = new MuEngine.Node(this.grid);
     //center the grid
     gridNode.transform.setPos(GRID_SIZE*CELL_SIZE*-0.5, 0.0, GRID_SIZE*CELL_SIZE*-0.5);
 
@@ -336,7 +335,7 @@ var _narrationdiv = null;
     this.avatarNode = new MuEngine.Avatar({
       row: 5,
       col: 5,
-      grid: grid,
+      grid: this.grid,
       speed:1.0
     });
     var avatarSprite = new MuEngine.Sprite("assets/"+this.profile.engine.assetdetail+"/muvia.png");
@@ -485,7 +484,7 @@ var _narrationdiv = null;
     sprite.height = 2.0;
     sprite.anchor = sprite.ANCHOR_BOTTOM;
     var spriteNode = new MuEngine.Node(sprite);
-    grid.getCell(i, j).addChild(spriteNode);
+    this.grid.getCell(i, j).addChild(spriteNode);
     return spriteNode;
   };
 
@@ -664,7 +663,7 @@ var _narrationdiv = null;
 			this.maxy = 2;
 
 		}else if(this.id === 2){
-			this.name = "northest";
+			this.name = "northeast";
 			this.minx = 6;
 			this.miny = 0;
 			this.maxx = 8;

@@ -24,7 +24,7 @@
 			this.maxy = 2;
 
 		}else if(this.id === 2){
-			this.name = "northest";
+			this.name = "northeast";
 			this.minx = 6;
 			this.miny = 0;
 			this.maxx = 8;
