@@ -63,12 +63,38 @@
 		}
 		else if(args.entryid === "describir_zona"){
 			this._worldman.say("_zone_description_", this._worldman.getCurrZone());
-		}else if(args.entryid === "describir_objetos"){
+		}
+		else if(args.entryid === "describir_objetos"){
 			this._describe_objects();
-		}else if(args.entryid === "describe_object"){
+		}
+		else if(args.entryid === "describe_object"){
 			this._describe_object();
 		}
+		else if(args.entryid === "take_object"){
+			this._take_object();
+		}
+
   };
+
+
+	/**
+	*
+	*@private
+	*/
+	stage.prototype._take_object = function(){
+		var zone = this._worldman.getZoneByName(this._worldman.getCurrZone());
+		if(zone.hasObjects()){
+			var cell = zone.getCellByName(zone.fruit.cellname);
+			cell.removeChild(zone.fruit.spriteNode);
+			this._worldman.say("_object_taked_", zone.fruit.name);
+			cell.fruit = undefined;
+			zone.fruit = undefined;
+			//pending: remove the fruit from the fruits array, or at least mark it as taken
+			zone.fruit.zonename = undefined;
+			zone.fruit.cellname = undefined;
+			zone.fruit.spriteNode = undefined;
+		}
+	};
 
 
 	/**

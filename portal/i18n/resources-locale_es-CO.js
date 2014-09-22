@@ -331,7 +331,7 @@
 			{ "key":"selected_describe_object", "value":"Describir el objeto más cercano" },
 				{ "key":"_distance_to_object_", "value":"La fruta %1 está a %2 casillas de distancia, hacia el %3" },
 				{ "key":"_same_cell_than_object_", "value":"Estas en la misma casilla de la fruta %1! puedes tomarla ahora!"},
-
+				{ "key":"_object_taked_", "value":"Genial! la %1 es tuya!"},
 
 		{ "key":"describe_take_object", "value":"Tomar" },
 			{ "key":"_take_object_", "value":"Tomar el objeto más cercano" },
