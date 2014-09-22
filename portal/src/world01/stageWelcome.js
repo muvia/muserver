@@ -84,8 +84,11 @@
 			var dy = cell.col - this._worldman.avatarNode.cell.col;
 
 			var dist = Math.abs(dx) + Math.abs(dy);
-
-			this._worldman.say("_distance_to_object_", zone.fruit.name, dist, this._worldman.getVectorDirection(dx, dy));
+			if(dist > 0){
+				this._worldman.say("_distance_to_object_", zone.fruit.name, dist, this._worldman.getVectorDirection(dx, dy));
+			}else{
+				this._worldman.say("_same_cell_than_object_", zone.fruit.name);
+			}
 		}else{
 			this._worldman.say("_no_objects_in_zone_");
 		}
