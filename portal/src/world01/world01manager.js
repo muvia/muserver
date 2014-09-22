@@ -49,6 +49,9 @@ var World01Manager = (function(engine){
 var _narrationdiv = null;
 
 
+	//array of custom zone objects
+	var _zones =  [];
+
 
   //-------------------- CLASS MANAGER -------------------
   /**
@@ -102,13 +105,6 @@ var _narrationdiv = null;
     root.addChild(axis);
     root.addChild(gridNode);
 
-    fruits = [];
-
-    fruits.push(this.putFruit(1, 0, 0));
-    fruits.push(this.putFruit(2, 0, 1));
-    fruits.push(this.putFruit(3, 0, 2));
-    fruits.push(this.putFruit(4, 0, 3));
-    fruits.push(this.putFruit(5, 0, 4));
 
     //create the camera
     camera = new MuEngine.Camera(this.canvas);
@@ -157,9 +153,15 @@ var _narrationdiv = null;
     //initialize sounds
     this.initSounds();
 
+
+		this.initZones();
+
+
     //temporal, just for debug!
     window.avatarNode = this.avatarNode;
     window.gridNode = gridNode;
+		window.zones = _zones;
+		window.worldman = this;
 
     _narrationdiv = document.getElementById("narration");
   };
@@ -274,12 +276,12 @@ var _narrationdiv = null;
 
   /**
    * helper method
-   * @param i
-   * @param j
+   * @param zonename
+   * @param cellname (relative to zone center)
    * @param tiley
    * @returns {MuEngine.Node}
    */
-  manager.prototype.putFruit = function(i, j, tiley){
+  manager.prototype.putFruit = function(zonename, cellname, tiley){
     var sprite = new MuEngine.Sprite("assets/"+this.profile.engine.assetdetail+"/fruits.png");
     sprite.width = 1.5;
     sprite.height = 1.5;
@@ -289,9 +291,61 @@ var _narrationdiv = null;
     sprite.tiley = tiley;
     var spriteNode = new MuEngine.Node(sprite);
     spriteNode.transform.setPos(0.5, 0, 0.9);
-    grid.getCell(i, j).addChild(spriteNode);
+		var zone = this.getZoneByName(zonename);
+		var cell = zone.getCellByName(cellname);
+    cell.addChild(spriteNode);
     return spriteNode;
   };
+
+
+	/**
+	* return the zone object based on its name
+	*/
+	manager.prototype.getZoneByName = function(name){
+		for(var i=0; i<9; ++i){
+			if(_zones[i].name === name) return _zones[i];
+		}
+	};
+
+
+
+	/**
+	* helper
+	*/
+	manager.prototype.initZones = function(){
+		var zi, fi, zone;
+		_zones = [];
+
+		for(zi=0; zi<9; ++zi){
+			_zones.push(new World01Manager.Zone(zi, this));
+		}
+
+		//select random zones for the five fruits. avoid the center, and with-fruit zones.
+		/*for(fi=0; fi<5; ++fi){
+			do{
+				zone = _zones[Math.floor(Math.random()*9)];
+			}while(zone.name === "center" || zone.fruitid != undefined);
+		}*/
+
+		fruits = [];
+
+		//naranja zona norte
+    fruits.push(this.putFruit("north", "center", 0));
+
+		//limon zona sur
+		fruits.push(this.putFruit("south", "center", 1));
+
+		//fresa zona sur este
+		fruits.push(this.putFruit("east", "center", 2));
+
+		//cereza zona oeste
+		fruits.push(this.putFruit("west", "center", 3));
+
+		//pera zona nor este
+		fruits.push(this.putFruit("northeast", "center", 4));
+
+	};
+
 
 
   /**

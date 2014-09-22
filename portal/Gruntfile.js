@@ -12,6 +12,7 @@ module.exports = function (grunt) {
         src: [
           'lib/localize.js',
           'src/world01/world01manager.js',
+          'src/world01/zone.js',
           'src/world01/stageWelcome.js',
           'src/muportalapp.js',
           'src/services/*.js',

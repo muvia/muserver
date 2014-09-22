@@ -2,9 +2,6 @@
 }
 
 .menubarcontainer{
-    border: 1px;
-    border-color: black;
-    border-style: solid;
     padding: 5px;
     display: block;
 }
@@ -22,8 +19,8 @@
 }
 
 .menubarcontainer .menubar.selected{
-    border: 3px;
-    border-color: yellow;
+    border: 4px;
+    border-color: black;
     border-style: solid;
 }
 
@@ -47,15 +44,15 @@
 }
 
 .menubarcontainer .menubar .menuentry.selected{
-    border: 3px;
-    border-color: yellow;
+    border: 4px;
+    border-color: black;
     border-style: solid;
     display: block;
 }
 
 .menubarcontainer .menubar .entry.selected{
-    border: 3px;
-    border-color: yellow;
+    border: 4px;
+    border-color: black;
     border-style: solid;
     display: block;
 }
