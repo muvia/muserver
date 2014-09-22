@@ -101,6 +101,13 @@
 	};
 
 
+	/**
+	* return true if there are objects of interest in this zone (fruits, by now)
+	*/
+	Zone.prototype.hasObjects = function(){
+		return this.fruit !== undefined;
+	};
+
 
   World01Manager.Zone = Zone;
 

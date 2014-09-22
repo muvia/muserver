@@ -493,7 +493,7 @@ var _narrationdiv = null;
    * @param zonename
    * @param cellname (relative to zone center)
    * @param tiley
-   * @returns {MuEngine.Node}
+   * @returns {Object} fruit structure
    */
   manager.prototype.putFruit = function(fruitname, zonename, cellname, tiley){
     var sprite = new MuEngine.Sprite("assets/"+this.profile.engine.assetdetail+"/fruits.png");
@@ -509,10 +509,16 @@ var _narrationdiv = null;
 		var cell = zone.getCellByName(cellname);
     cell.addChild(spriteNode);
 		//storing references for faster queries
-		zone.fruitname = fruitname;
-		cell.fruitname = fruitname;
-		sprite.fruitname = fruitname;
-    return spriteNode;
+		var fruit = {
+			name: fruitname,
+			zonename: zonename,
+			cellname: cellname,
+			spriteNode: spriteNode
+		};
+		zone.fruit = fruit;
+		cell.fruit = fruit;
+		//sprite.fruit = fruitname;
+    return fruit;
   };
 
 
@@ -743,6 +749,13 @@ var _narrationdiv = null;
 		}
 	};
 
+
+	/**
+	* return true if there are objects of interest in this zone (fruits, by now)
+	*/
+	Zone.prototype.hasObjects = function(){
+		return this.fruit !== undefined;
+	};
 
 
   World01Manager.Zone = Zone;

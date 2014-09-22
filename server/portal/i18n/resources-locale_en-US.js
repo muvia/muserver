@@ -325,8 +325,13 @@
 		{ "key":"_take_object_", "value":"Take" },
 			{ "key":"selected_take_object", "value":"Take the nearest object" },
 		{ "key":"_activate_object_", "value":"Activate" },
-			{ "key":"selected_activate_object", "value":"Activate the nearest object" }
+			{ "key":"selected_activate_object", "value":"Activate the nearest object" },
 
+	{ "key":"pear", "value":"pear" },
+	{ "key":"strawberry", "value":"strawberry" },
+	{ "key":"orange", "value":"orange" },
+	{ "key":"lemon", "value":"lemon" },
+	{ "key":"cherry", "value":"cherry" }
 
 
 ]
