@@ -310,7 +310,10 @@
 			{"key":"_world_description_", "value":"World is a square made of nine zones. Each zone is a smaller square with nine cells. "},
   { "key":"_objetos_", "value":"Objects" },
 	  { "key":"selected_describir_objetos", "value":"Describe objects: This action will list the objects around you" },
-  { "key":"_zona_", "value":"Zone" },
+  			{ "key":"_no_objects_in_zone_", "value":"There are no objects in this zone. check the neighborgs zones!" },
+				{ "key":"_objects_in_zone_", "value":"There is a object in this zone! it is a %1! found it and take it!" },
+
+	{ "key":"_zona_", "value":"Zone" },
 		{ "key":"selected_describir_zona", "value":"Describe zone: this action will describe the zone where you are located" },
 			{ "key":"_zone_description_", "value":"You are in the zone %1"},
 

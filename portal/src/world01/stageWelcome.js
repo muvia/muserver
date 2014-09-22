@@ -63,8 +63,23 @@
 		}
 		else if(args.entryid === "describir_zona"){
 			this._worldman.say("_zone_description_", this._worldman.getCurrZone());
+		}else if(args.entryid === "describir_objetos"){
+			this._describe_objects();
 		}
   };
+
+	/**
+	*
+	* @private
+	*/
+	stage.prototype._describe_objects = function(){
+		var zone = this._worldman.getZoneByName(this._worldman.getCurrZone());
+		if(zone.hasObjects()){
+			this._worldman.say("_objects_in_zone_", zone.fruit.name);
+		}else{
+			this._worldman.say("_no_objects_in_zone_");
+		}
+	};
 
   /**
    * handles the move avatar events

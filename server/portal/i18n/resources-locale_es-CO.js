@@ -314,7 +314,10 @@
  			{"key":"_world_description_", "value":"El mundo es un cuadrado compuesto de nueve zonas. Cada zona es un cuadrado más pequeño compuesto de nueve casillas"},
  { "key":"_objetos_", "value":"Objetos" },
 		{ "key":"selected_describir_objetos", "value":"Describir objetos: esta acción describirá qué objetos hay a tu alrededor" },
- 	{ "key":"_zona_", "value":"Zona" },
+  			{ "key":"_no_objects_in_zone_", "value":"No hay objetos en esta zona. Explora las zonas vecinas!" },
+				{ "key":"_objects_in_zone_", "value":"Hay un objeto en esta zona! Es una %1! encúentrala y tómala!" },
+
+	{ "key":"_zona_", "value":"Zona" },
 	  { "key":"selected_describir_zona", "value":"Describir Zona: esta acción te dirá en qué zona estás y que cosas hay cerca" },
   { "key":"_personas_", "value":"Personas" },
 		{ "key":"selected_describir_personas", "value":"Describir personas: Esta acción te dirà que otros usuarios hay en el mundo" },
