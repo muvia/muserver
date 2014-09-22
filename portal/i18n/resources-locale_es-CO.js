@@ -329,7 +329,14 @@
 		{ "key":"describe_take_object", "value":"Tomar" },
 			{ "key":"_take_object_", "value":"Tomar el objeto más cercano" },
 		{ "key":"describe_activate_object", "value":"Activar" },
-			{ "key":"_activate_object_", "value":"Activar el objeto más cercano" }
+			{ "key":"_activate_object_", "value":"Activar el objeto más cercano" },
+
+	{ "key":"pear", "value":"pera" },
+	{ "key":"strawberry", "value":"fresa" },
+	{ "key":"orange", "value":"naranja" },
+	{ "key":"lemon", "value":"limón" },
+	{ "key":"cherry", "value":"cereza" }
+
 
 
 ]

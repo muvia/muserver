@@ -495,7 +495,7 @@ var _narrationdiv = null;
    * @param tiley
    * @returns {MuEngine.Node}
    */
-  manager.prototype.putFruit = function(zonename, cellname, tiley){
+  manager.prototype.putFruit = function(fruitname, zonename, cellname, tiley){
     var sprite = new MuEngine.Sprite("assets/"+this.profile.engine.assetdetail+"/fruits.png");
     sprite.width = 1.5;
     sprite.height = 1.5;
@@ -508,6 +508,10 @@ var _narrationdiv = null;
 		var zone = this.getZoneByName(zonename);
 		var cell = zone.getCellByName(cellname);
     cell.addChild(spriteNode);
+		//storing references for faster queries
+		zone.fruitname = fruitname;
+		cell.fruitname = fruitname;
+		sprite.fruitname = fruitname;
     return spriteNode;
   };
 
@@ -544,19 +548,19 @@ var _narrationdiv = null;
 		fruits = [];
 
 		//naranja zona norte
-    fruits.push(this.putFruit("north", "center", 0));
+    fruits.push(this.putFruit("orange", "north", "center", 0));
 
 		//limon zona sur
-		fruits.push(this.putFruit("south", "center", 1));
+		fruits.push(this.putFruit("lemon", "south", "center", 1));
 
 		//fresa zona sur este
-		fruits.push(this.putFruit("east", "center", 2));
+		fruits.push(this.putFruit("strawberry","east", "center", 2));
 
 		//cereza zona oeste
-		fruits.push(this.putFruit("west", "center", 3));
+		fruits.push(this.putFruit("cherry","west", "center", 3));
 
 		//pera zona nor este
-		fruits.push(this.putFruit("northeast", "center", 4));
+		fruits.push(this.putFruit("pear", "northeast", "center", 4));
 
 	};
 
