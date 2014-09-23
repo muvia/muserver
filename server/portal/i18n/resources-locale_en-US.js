@@ -295,6 +295,8 @@
 	{ "key":"_entered_new_zone_", "value":"You had entered the zone %1"},
 	{ "key":"_same_zone_new_cell_", "value":"You are yet in zone %1, but you had moved to the cell %2 in this zone."},
 
+	{ "key":"executed_root", "value":"Main Menu" },
+
 
 	{ "key":"menucaminar", "value":"Walk" },
     { "key":"selected_menucaminar", "value":"Walk: Enter this menu to be able to move your character through the world" },

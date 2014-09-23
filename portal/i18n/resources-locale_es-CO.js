@@ -298,6 +298,8 @@
 	{ "key":"_entered_new_zone_", "value":"Has entrado a la zona %1"},
 	{ "key":"_same_zone_new_cell_", "value":"Sigues en la zona %1, pero te has movido a la casilla %2 de esta zona."},
 
+	{ "key":"executed_root", "value":"Menu principal" },
+
 	{ "key":"menucaminar", "value":"Caminar" },
     { "key":"selected_menucaminar", "value":"Caminar: Ingresa a este menú para poder mover tu personaje por el mundo" },
     { "key":"executed_menucaminar", "value":"Menú Caminar: aquí podrás mover tu personaje hacia el norte, sur, oriente u occidente" },
