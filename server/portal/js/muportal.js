@@ -941,7 +941,21 @@ var _narrationdiv = null;
       console.log("stage._move_avatar: avatar is yet walking. ignoring walk command.");
       return;
     }
-    var errcode = this._avatarNode.move(dir);
+    var oldzone = this._worldman.getCurrZone();
+		var self = this;
+    var errcode = this._avatarNode.move(dir, function(){
+      //what to do here?
+      /*
+      if changed_zone: say "you had entered the zone XXX "
+      else say: "you are now in the cell XXX of the zone XXX".
+      * */
+      var newzone = self._worldman.getCurrZone();
+      if(oldzone != newzone){
+  			console.log("new zone!");
+      }else{
+				console.log("same zone..");
+      }
+    });
     if(errcode === MuEngine.err.OK){
       this._worldman.say("_youre_moving_towards_", dir);
     }else if(errcode === MuEngine.err.WORLD_EDGE){

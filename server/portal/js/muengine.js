@@ -1029,10 +1029,11 @@ MuEngine.Avatar.prototype = new MuEngine.Node();
  * we asume a default view with x axis points to the left and +z points to the screen.
  * then, north is -Z, south is Z, east is +X, east is -X
  * @param dir {string} one of "north", "south", "west", "east".
+ * @param cbDone {function} success callback
  * @return {MuEngine.err} OK if can move, MuEngine.err_code if not.
  */
-MuEngine.Avatar.prototype.move = function(_dir){
-    if(!(_dir === "north" || _dir === "south" || _dir === "east" || _dir == "west")){
+MuEngine.Avatar.prototype.move = function(_dir, cbDone){
+    if(!(_dir === "north" || _dir === "south" || _dir === "east" || _dir === "west")){
         throw "invalid_direction";
     }
 
@@ -1090,6 +1091,7 @@ MuEngine.Avatar.prototype.move = function(_dir){
         if(idleanim){
           self.primitive.play(idleanim, true);
         }
+        if(cbDone) cbDone();
       }
     });
     this.addAnimator(animator);
