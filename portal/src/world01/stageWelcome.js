@@ -62,7 +62,7 @@
 			this._worldman.say("_world_description_");
 		}
 		else if(args.entryid === "describir_zona"){
-			this._worldman.say("_zone_description_", this._worldman.getCurrZone());
+			this._worldman.say("_zone_description_", this._worldman.getCurrZoneName());
 		}
 		else if(args.entryid === "describir_objetos"){
 			this._describe_objects();
@@ -82,17 +82,17 @@
 	*@private
 	*/
 	stage.prototype._take_object = function(){
-		var zone = this._worldman.getZoneByName(this._worldman.getCurrZone());
+		var zone = this._worldman.getZoneByName(this._worldman.getCurrZoneName());
 		if(zone.hasObjects()){
 			var cell = zone.getCellByName(zone.fruit.cellname);
 			cell.removeChild(zone.fruit.spriteNode);
 			this._worldman.say("_object_taked_", zone.fruit.name);
 			cell.fruit = undefined;
-			zone.fruit = undefined;
 			//pending: remove the fruit from the fruits array, or at least mark it as taken
 			zone.fruit.zonename = undefined;
 			zone.fruit.cellname = undefined;
 			zone.fruit.spriteNode = undefined;
+			zone.fruit = undefined;
 		}
 	};
 
@@ -102,7 +102,7 @@
 	*@private
 	*/
 	stage.prototype._describe_object = function(){
-		var zone = this._worldman.getZoneByName(this._worldman.getCurrZone());
+		var zone = this._worldman.getZoneByName(this._worldman.getCurrZoneName());
 		if(zone.hasObjects()){
 			var cell = zone.getCellByName(zone.fruit.cellname);
 
@@ -126,7 +126,7 @@
 	* @private
 	*/
 	stage.prototype._describe_objects = function(){
-		var zone = this._worldman.getZoneByName(this._worldman.getCurrZone());
+		var zone = this._worldman.getZoneByName(this._worldman.getCurrZoneName());
 		if(zone.hasObjects()){
 			this._worldman.say("_objects_in_zone_", zone.fruit.name);
 		}else{
@@ -145,7 +145,7 @@
       console.log("stage._move_avatar: avatar is yet walking. ignoring walk command.");
       return;
     }
-    var oldzone = this._worldman.getCurrZone();
+    var oldzone = this._worldman.getZoneByName(this._worldman.getCurrZoneName());
 		var self = this;
     var errcode = this._avatarNode.move(dir, function(){
       //what to do here?
@@ -153,11 +153,13 @@
       if changed_zone: say "you had entered the zone XXX "
       else say: "you are now in the cell XXX of the zone XXX".
       * */
-      var newzone = self._worldman.getCurrZone();
+      var newzone = self._worldman.getZoneByName(self._worldman.getCurrZoneName());
+
       if(oldzone != newzone){
-  			console.log("new zone!");
+  			self._worldman.say("_entered_new_zone_", newzone.name);
       }else{
-				console.log("same zone..");
+ 				var cellname = newzone.getCellName(self._worldman.avatarNode.cell);
+				self._worldman.say("_same_zone_new_cell_", newzone.name, cellname);
       }
     });
     if(errcode === MuEngine.err.OK){

@@ -295,6 +295,8 @@
   { "key":"_youre_moving_towards_", "value":"Te estas moviendo hacia el %1"},
   { "key":"_world_edge_", "value":"No puedes caminar en esa dirección. Alcanzaste el borde %1 del mundo"},
   { "key":"_cell_unwalkable_", "value":"No puedes caminar en esa dirección. Hay un obstáculo en la casilla %1"},
+	{ "key":"_entered_new_zone_", "value":"Has entrado a la zona %1"},
+	{ "key":"_same_zone_new_cell_", "value":"Sigues en la zona %1, pero te has movido a la casilla %2 de esta zona."},
 
 	{ "key":"menucaminar", "value":"Caminar" },
     { "key":"selected_menucaminar", "value":"Caminar: Ingresa a este menú para poder mover tu personaje por el mundo" },

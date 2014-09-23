@@ -396,7 +396,7 @@ var _narrationdiv = null;
 	* return the id of the zone where the avatar is currently localed.
 	* it has the form: "center", "north", "west", "northwest", ..
 	*/
-	manager.prototype.getCurrZone = function(){
+	manager.prototype.getCurrZoneName = function(){
 		var x, y;
 		x = Math.floor(window.avatarNode.cell.row / 3);
 		y = Math.floor(window.avatarNode.cell.col / 3);

@@ -100,6 +100,40 @@
 		}
 	};
 
+	/**
+	* the inverse of getCellByName: given a cell that belongs to this zone, returns its
+	* relative name ("north", "center"..)
+	*/
+	Zone.prototype.getCellName = function(cell){
+		var x, y;
+		x = cell.row - this.minx;
+		y = cell.col - this.miny;
+		if(x == 1 && y == 1){
+			return "center";
+		}else if(x == 1){
+			if(y === 0){
+				return "north";
+			}else{
+				return "south";
+			}
+		}else if(y == 1){
+			if(x === 0){
+				return "west";
+			}else{
+				return "east";
+			}
+		}else{
+			var id = null;
+			if(y > 1){
+				id = "south";
+			}else{
+				 id = "north";
+			}
+			id += (x > 1)?"east":"west";
+			return id;
+		}
+	};
+
 
 	/**
 	* return true if there are objects of interest in this zone (fruits, by now)

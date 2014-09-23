@@ -611,7 +611,7 @@ var _narrationdiv = null;
 	* return the id of the zone where the avatar is currently localed.
 	* it has the form: "center", "north", "west", "northwest", ..
 	*/
-	manager.prototype.getCurrZone = function(){
+	manager.prototype.getCurrZoneName = function(){
 		var x, y;
 		x = Math.floor(window.avatarNode.cell.row / 3);
 		y = Math.floor(window.avatarNode.cell.col / 3);
@@ -781,6 +781,40 @@ var _narrationdiv = null;
 		}
 	};
 
+	/**
+	* the inverse of getCellByName: given a cell that belongs to this zone, returns its
+	* relative name ("north", "center"..)
+	*/
+	Zone.prototype.getCellName = function(cell){
+		var x, y;
+		x = cell.row - this.minx;
+		y = cell.col - this.miny;
+		if(x == 1 && y == 1){
+			return "center";
+		}else if(x == 1){
+			if(y === 0){
+				return "north";
+			}else{
+				return "south";
+			}
+		}else if(y == 1){
+			if(x === 0){
+				return "west";
+			}else{
+				return "east";
+			}
+		}else{
+			var id = null;
+			if(y > 1){
+				id = "south";
+			}else{
+				 id = "north";
+			}
+			id += (x > 1)?"east":"west";
+			return id;
+		}
+	};
+
 
 	/**
 	* return true if there are objects of interest in this zone (fruits, by now)
@@ -858,7 +892,7 @@ var _narrationdiv = null;
 			this._worldman.say("_world_description_");
 		}
 		else if(args.entryid === "describir_zona"){
-			this._worldman.say("_zone_description_", this._worldman.getCurrZone());
+			this._worldman.say("_zone_description_", this._worldman.getCurrZoneName());
 		}
 		else if(args.entryid === "describir_objetos"){
 			this._describe_objects();
@@ -878,17 +912,17 @@ var _narrationdiv = null;
 	*@private
 	*/
 	stage.prototype._take_object = function(){
-		var zone = this._worldman.getZoneByName(this._worldman.getCurrZone());
+		var zone = this._worldman.getZoneByName(this._worldman.getCurrZoneName());
 		if(zone.hasObjects()){
 			var cell = zone.getCellByName(zone.fruit.cellname);
 			cell.removeChild(zone.fruit.spriteNode);
 			this._worldman.say("_object_taked_", zone.fruit.name);
 			cell.fruit = undefined;
-			zone.fruit = undefined;
 			//pending: remove the fruit from the fruits array, or at least mark it as taken
 			zone.fruit.zonename = undefined;
 			zone.fruit.cellname = undefined;
 			zone.fruit.spriteNode = undefined;
+			zone.fruit = undefined;
 		}
 	};
 
@@ -898,7 +932,7 @@ var _narrationdiv = null;
 	*@private
 	*/
 	stage.prototype._describe_object = function(){
-		var zone = this._worldman.getZoneByName(this._worldman.getCurrZone());
+		var zone = this._worldman.getZoneByName(this._worldman.getCurrZoneName());
 		if(zone.hasObjects()){
 			var cell = zone.getCellByName(zone.fruit.cellname);
 
@@ -922,7 +956,7 @@ var _narrationdiv = null;
 	* @private
 	*/
 	stage.prototype._describe_objects = function(){
-		var zone = this._worldman.getZoneByName(this._worldman.getCurrZone());
+		var zone = this._worldman.getZoneByName(this._worldman.getCurrZoneName());
 		if(zone.hasObjects()){
 			this._worldman.say("_objects_in_zone_", zone.fruit.name);
 		}else{
@@ -941,7 +975,7 @@ var _narrationdiv = null;
       console.log("stage._move_avatar: avatar is yet walking. ignoring walk command.");
       return;
     }
-    var oldzone = this._worldman.getCurrZone();
+    var oldzone = this._worldman.getZoneByName(this._worldman.getCurrZoneName());
 		var self = this;
     var errcode = this._avatarNode.move(dir, function(){
       //what to do here?
@@ -949,11 +983,13 @@ var _narrationdiv = null;
       if changed_zone: say "you had entered the zone XXX "
       else say: "you are now in the cell XXX of the zone XXX".
       * */
-      var newzone = self._worldman.getCurrZone();
+      var newzone = self._worldman.getZoneByName(self._worldman.getCurrZoneName());
+
       if(oldzone != newzone){
-  			console.log("new zone!");
+  			self._worldman.say("_entered_new_zone_", newzone.name);
       }else{
-				console.log("same zone..");
+ 				var cellname = newzone.getCellName(self._worldman.avatarNode.cell);
+				self._worldman.say("_same_zone_new_cell_", newzone.name, cellname);
       }
     });
     if(errcode === MuEngine.err.OK){
