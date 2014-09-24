@@ -307,6 +307,40 @@ var _narrationdiv = null;
   };
 
 
+	 /**
+   * helper method
+   * @param zonename
+   * @param cellname (relative to zone center)
+   * @param tiley
+   */
+  manager.prototype.putTree = function(zonename, cellname, tilex){
+    var sprite = new MuEngine.Sprite("assets/"+this.profile.engine.assetdetail+"/trees.png");
+    sprite.width = 2.0;
+    sprite.height = 3.5;
+    sprite.anchor = sprite.ANCHOR_BOTTOM;
+		var tilew;
+		if(tilex === 0){
+		}else if(tilex === 1){
+
+		}else if(tilex === 2){
+
+		}else if(tilex === 3){
+
+		}else if(tilex === 4){
+
+		}
+    sprite.tilew = 113;
+    sprite.tileh = 172;
+    sprite.tilex = tilex;
+    var spriteNode = new MuEngine.Node(sprite);
+    spriteNode.transform.setPos(0.3, 0, 0.0);
+		var zone = this.getZoneByName(zonename);
+		var cell = zone.getCellByName(cellname);
+    cell.addChild(spriteNode);
+  };
+
+
+
 	/**
 	* return the zone object based on its name
 	*/
@@ -352,6 +386,14 @@ var _narrationdiv = null;
 
 		//pera zona nor este
 		fruits.push(this.putFruit("pear", "northeast", "center", 4));
+
+
+		//lets add some trees here
+		this.putTree("center", "northwest", 0);
+		this.putTree("center", "southeast", 1);
+		this.putTree("south", "northwest", 2);
+		this.putTree("north", "east", 3);
+		this.putTree("northeast", "west", 4);
 
 	};
 
