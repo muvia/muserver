@@ -528,14 +528,29 @@ var _narrationdiv = null;
    * @param cellname (relative to zone center)
    * @param tiley
    */
-  manager.prototype.putTree = function(zonename, cellname, tilex){
+  manager.prototype.putTree = function(zonename, cellname, treeid){
     var sprite = new MuEngine.Sprite("assets/"+this.profile.engine.assetdetail+"/trees.png");
     sprite.width = 2.0;
     sprite.height = 3.5;
     sprite.anchor = sprite.ANCHOR_BOTTOM;
-    sprite.tilew = 113;
-    sprite.tileh = 172;
-    sprite.tilex = tilex;
+    if(treeid === 0){
+      sprite.tilex = 0;
+      sprite.w = 130;
+		}else if(treeid === 1){
+      sprite.tilex = 130;
+      sprite.w = 257-sprite.tilex;
+		}else if(treeid === 2){
+      sprite.tilex = 257;
+      sprite.w = 349-sprite.tilex;
+		}else if(treeid === 3){
+      sprite.tilex = 349;
+      sprite.w = 458-sprite.tilex;
+		}else if(treeid === 4){
+      sprite.tilex = 458;
+      sprite.w = 565-sprite.tilex;
+		}
+    sprite.tiley = 0;
+    sprite.h = 172;
     var spriteNode = new MuEngine.Node(sprite);
     spriteNode.transform.setPos(0.3, 0, 0.0);
 		var zone = this.getZoneByName(zonename);
@@ -709,6 +724,8 @@ var _narrationdiv = null;
   return manager;
 
 })(MuEngine);
+
+Displaying world01manager.js.
 //------
 'use strict';
 (function(World01Manager, MuEngine){
