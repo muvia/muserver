@@ -509,5 +509,3 @@ var _narrationdiv = null;
   return manager;
 
 })(MuEngine);
-
-Displaying world01manager.js.

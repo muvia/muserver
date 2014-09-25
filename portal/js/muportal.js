@@ -724,8 +724,6 @@ var _narrationdiv = null;
   return manager;
 
 })(MuEngine);
-
-Displaying world01manager.js.
 //------
 'use strict';
 (function(World01Manager, MuEngine){

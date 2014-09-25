@@ -585,10 +585,23 @@ MuEngine.Node.prototype.multP = function(p, out){
       //how about the anchor?
       var offy = ((1 & sprite.anchor) > 0) ? 0 : (((2 & sprite.anchor) > 0)? -wpy :-(wpy>>1));
       var offx = ((4 & sprite.anchor) > 0) ? 0 : (((8 & sprite.anchor) > 0)? -wpx :-(wpx>>1));
-      if(sprite.tilew != null && sprite.tileh != null)
-        g_ctx.drawImage(img, sprite.tilex*sprite.tilew, sprite.tiley*sprite.tileh, sprite.tilew, sprite.tileh, node.ep[0]+offx, node.ep[1]+offy, wpx, wpy);
-		  else
-			  g_ctx.drawImage(img, node.ep[0]+offx, node.ep[1]+offy, wpx, wpy);
+      if(sprite.tilew/* != null && sprite.tileh != null*/){
+        g_ctx.drawImage(img,
+            sprite.tilex*sprite.tilew, sprite.tiley*sprite.tileh,
+            sprite.tilew, sprite.tileh,
+            node.ep[0]+offx, node.ep[1]+offy,
+            wpx, wpy);
+      }
+      else if(sprite.w){
+        g_ctx.drawImage(img,
+            sprite.tilex, sprite.tiley,
+            sprite.w, sprite.h,
+            node.ep[0]+offx, node.ep[1]+offy,
+            wpx, wpy);
+      }
+		  else{
+        g_ctx.drawImage(img, node.ep[0]+offx, node.ep[1]+offy, wpx, wpy);
+      }
 	  }
     else{
         //this is a 3d sprite!
@@ -1226,8 +1239,20 @@ MuEngine.Avatar.prototype.pickIdleAnimation = function(){
 		this.anchor = 0;
 		this.tilex = 0;
 		this.tiley = 0;
-		this.tilew = null;
-		this.tileh = null;
+
+		/*(w,h) and (tilew, tileh) are mutually exclusive set of arguments.
+		 if tilew, tileh are present, we asume it is an animated sprite with equally-spaced tiles,
+		 and tilex, tiley are assumed the indexes while tilew, tileh constant dimensions in pixels.
+
+		 if(w,h) are present, we assume tilex, tiley are pixel original coordinates, and w, y pixel arbitrary dimensions.
+		 use this for map to static tilesets with arbitrary dimensions/positions
+
+		 @see Camera.renderSprite method
+		*/
+		//this.w = null;
+    //this.h = null;
+		//this.tilew = null;
+		//this.tileh = null;
     this._3d = false; //flag that force the sprite to be rendered in 3d mode
 	};
 
