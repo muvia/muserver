@@ -423,11 +423,21 @@ var _narrationdiv = null;
     MuNarrator.update();
     MuEngine.clear();
 
-    //update of camera position. it is a feature that must be offered by the engine.
-    MuEngine.p0[0] = this.avatarNode.wp[0];
-    MuEngine.p0[1] = camera.center[1];
-    MuEngine.p0[2] = Math.min(this.avatarNode.wp[2]+CAMERA_DISTANCE, CAMERA_DISTANCE);
-    camera.setCenter(MuEngine.p0);
+
+    if(this.profile.engine.cam3d){
+      MuEngine.p0[0] = this.avatarNode.wp[0];
+      MuEngine.p0[1] = this.avatarNode.wp[1];
+      MuEngine.p0[2] = this.avatarNode.wp[2]-CAMERA_DISTANCE;
+      camera.lookAt(MuEngine.p0);
+    }else{
+      MuEngine.p0[0] = this.avatarNode.wp[0];
+      MuEngine.p0[1] = camera.center[1];
+      MuEngine.p0[2] = Math.min(this.avatarNode.wp[2]+CAMERA_DISTANCE, CAMERA_DISTANCE);
+      camera.setCenter(MuEngine.p0);
+    }
+
+
+
     camera.update();
 
     MuEngine.updateNode(root, dt);

@@ -220,6 +220,14 @@
     "value":"Black and white high contrast",
     "description":"graphic engine: asset detail low"
   },
+    {
+    "key":"_engine.cam3d_",
+    "value":"3D View"
+  },
+  {
+    "key":"_engine.cam3d_desc_",
+    "value":"Habilitate camera rotation for 3D projection view"
+  },
   {
     "key":"_engine.clicktowalk_",
     "value":"point to walk",

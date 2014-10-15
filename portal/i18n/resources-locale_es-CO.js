@@ -223,6 +223,14 @@
     "description":"graphic engine: asset detail low"
   },
   {
+    "key":"_engine.cam3d_",
+    "value":"Vista 3D"
+  },
+  {
+    "key":"_engine.cam3d_desc_",
+    "value":"habilitar rotación de cámara para vista con proyección 3D"
+  },
+  {
     "key":"_engine.clicktowalk_",
     "value":"Click para caminar",
     "description":"graphic engine: click to walk"
