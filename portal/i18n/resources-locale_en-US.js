@@ -289,6 +289,7 @@
   { "key":"south", "value":"south" },
   { "key":"east", "value":"east" },
   { "key":"west", "value":"west" },
+  { "key":"center", "value":"center" },
   { "key":"_youre_moving_towards_", "value":"you are moving towards the %1"},
   { "key":"_world_edge_", "value":"can't walk on that dir. you reached the %1 edge of the world"},
   { "key":"_cell_unwalkable_", "value":"can't walk on that dir. there is an obstacle in the %1 cell"},
@@ -296,7 +297,6 @@
 	{ "key":"_same_zone_new_cell_", "value":"You are yet in zone %1, but you had moved to the cell %2 in this zone."},
 
 	{ "key":"executed_root", "value":"Main Menu" },
-
 
 	{ "key":"menucaminar", "value":"Walk" },
     { "key":"selected_menucaminar", "value":"Walk: Enter this menu to be able to move your character through the world" },

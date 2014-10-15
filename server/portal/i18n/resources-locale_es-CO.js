@@ -292,6 +292,12 @@
   { "key":"south", "value":"sur" },
   { "key":"east", "value":"oriente" },
   { "key":"west", "value":"occidente" },
+  { "key":"center", "value":"centro" },
+  { "key":"southeast", "value":"suroriente" },
+  { "key":"northeast", "value":"nororiente" },
+  { "key":"northwest", "value":"noroccidente" },
+  { "key":"southwest", "value":"suroccidente" },
+
   { "key":"_youre_moving_towards_", "value":"Te estas moviendo hacia el %1"},
   { "key":"_world_edge_", "value":"No puedes caminar en esa dirección. Alcanzaste el borde %1 del mundo"},
   { "key":"_cell_unwalkable_", "value":"No puedes caminar en esa dirección. Hay un obstáculo en la casilla %1"},
@@ -307,7 +313,6 @@
 		{ "key":"selected_caminar_sur", "value":"Caminar al sur" },
 		{ "key":"selected_caminar_oriente", "value":"Caminar al oriente" },
 		{ "key":"selected_caminar_occidente", "value":"Caminar al occidente" },
-
 
 
   { "key":"menudescribir", "value":"Describir" },
@@ -327,20 +332,22 @@
 		{ "key":"selected_describir_personas", "value":"Describir personas: Esta acción te dirà que otros usuarios hay en el mundo" },
 				{ "key":"_zone_description_", "value":"Estas en la zona %1"},
 
+	{ "key":"_personas_", "value":"Personas" },
+		{ "key":"selected_describir_personas", "value":"Describir personas: esta acción te dirá que otros usuarios hay en el mundo" },
 
 	{ "key":"menuobjeto", "value":"Objeto" },
 	  { "key":"selected_menuobjeto", "value":"Objeto: activando este menú podrás interactuar con el objeto más cercano a tu personaje" },
   	{ "key":"executed_menuobjeto", "value":"Objeto: aquí puedes describir, tomar o activar el objeto más cercano a tu personaje" },
-		{ "key":"describe_describe_object", "value":"Describir" },
+		{ "key":"_describe_object_", "value":"Describir" },
 			{ "key":"selected_describe_object", "value":"Describir el objeto más cercano" },
 				{ "key":"_distance_to_object_", "value":"La fruta %1 está a %2 casillas de distancia, hacia el %3" },
 				{ "key":"_same_cell_than_object_", "value":"Estas en la misma casilla de la fruta %1! puedes tomarla ahora!"},
 				{ "key":"_object_taked_", "value":"Genial! la %1 es tuya!"},
 
-		{ "key":"describe_take_object", "value":"Tomar" },
-			{ "key":"_take_object_", "value":"Tomar el objeto más cercano" },
-		{ "key":"describe_activate_object", "value":"Activar" },
-			{ "key":"_activate_object_", "value":"Activar el objeto más cercano" },
+		{ "key":"_take_object_", "value":"Tomar" },
+			{ "key":"selected_take_object", "value":"Tomar el objeto más cercano" },
+		{ "key":"_activate_object_", "value":"Activar" },
+			{ "key":"selected_activate_object", "value":"Activar el objeto más cercano" },
 
 	{ "key":"pear", "value":"pera" },
 	{ "key":"strawberry", "value":"fresa" },
