@@ -370,6 +370,19 @@ var _narrationdiv = null;
 
 		this.initZones();
 
+    var self = this;
+    //manage click events
+    this.canvas.addEventListener('click', function(ev){
+      var x = ev.x || ev.clientX;
+      var y = ev.y || ev.clientY;
+      var _cell = self.grid.collision(x, y, root, camera);
+      if(_cell){
+        console.log(x, y, _cell.row, _cell.col);
+      }else{
+        console.log(x, y);
+      }
+}, false);
+
 
     //temporal, just for debug!
     window.avatarNode = this.avatarNode;

@@ -70,6 +70,7 @@ MuEngine  = (function(){
   MuEngine.p2 = vec3.create();
   MuEngine.p3 = vec3.create();
 
+
   /**
   * a few error code constants to better describe error conditions when invoking methods
   */
@@ -388,7 +389,7 @@ MuEngine.Node.prototype.update = function(dt){
 		}
 	}
 	if(this.primitive){
-		this.primitive.update(dt);
+		this.primitive.update(this, dt);
 	}
 	for(var i=0; i<this.children.length; ++i){
 		this.children[i].update(dt);
@@ -570,90 +571,25 @@ MuEngine.Node.prototype.multP = function(p, out){
 		g_ctx.stroke();
 	};
 
-	/**
-	* render a sprite.
-	* @param ori: point in 3d world coords of the anchor position
-
-	*/
-	MuEngine.Camera.prototype.renderSprite = function(node, sprite){
-   var img = sprite.imghandler.img;
-   if(!sprite._3d){
-     //use node.ep instead of this: this.project(node.wp, MuEngine.p0);
-      //w, h are in world coords.. transform to pixels:
-      var wpx = (sprite.width * g_canvas.width) / (this.right - this.left);
-      var wpy = (sprite.height * g_canvas.height) / (this.top - this.bottom);
-      //how about the anchor?
-      var offy = ((1 & sprite.anchor) > 0) ? 0 : (((2 & sprite.anchor) > 0)? -wpy :-(wpy>>1));
-      var offx = ((4 & sprite.anchor) > 0) ? 0 : (((8 & sprite.anchor) > 0)? -wpx :-(wpx>>1));
-      if(sprite.tilew/* != null && sprite.tileh != null*/){
-        g_ctx.drawImage(img,
-            sprite.tilex*sprite.tilew, sprite.tiley*sprite.tileh,
-            sprite.tilew, sprite.tileh,
-            node.ep[0]+offx, node.ep[1]+offy,
-            wpx, wpy);
-      }
-      else if(sprite.w){
-        g_ctx.drawImage(img,
-            sprite.tilex, sprite.tiley,
-            sprite.w, sprite.h,
-            node.ep[0]+offx, node.ep[1]+offy,
-            wpx, wpy);
-      }
-		  else{
-        g_ctx.drawImage(img, node.ep[0]+offx, node.ep[1]+offy, wpx, wpy);
-      }
-	  }
-    else{
-        //this is a 3d sprite!
-
-        var w2 =sprite.width*0.5;
-        var h2 = sprite.height*0.5;
-
-        //compute the projected corners and paint as lines
-        //notice that for 2dsprites the anchor computation is done in screen space (pixels) but for 3d it must be done in world space
-        var offy = ((1 & sprite.anchor) > 0) ? 0 : (((2 & sprite.anchor) > 0)? 0:h2);
-        var offx = ((4 & sprite.anchor) > 0) ? 0 : (((8 & sprite.anchor) > 0)? -sprite.width:-w2);
-
-        //lower left corner:
-        vec3.set(MuEngine.p0, offx, offy, 0);
-        node.multP(MuEngine.p0, MuEngine.p0);
-        this.project(MuEngine.p0, MuEngine.p0);
-        //lower right corner:
-        vec3.set(MuEngine.p1, sprite.width+offx, offy, 0);
-        node.multP(MuEngine.p1, MuEngine.p1);
-        this.project(MuEngine.p1, MuEngine.p1);
-       //upper left corner:
-       vec3.set(MuEngine.p2, sprite.width+offx, sprite.height+offy, 0);
-       node.multP(MuEngine.p2, MuEngine.p2);
-        this.project(MuEngine.p2, MuEngine.p2);
-       //upper right corner:
-       vec3.set(MuEngine.p3, offx, sprite.height+offy, 0);
-       node.multP(MuEngine.p3, MuEngine.p3);
-        this.project(MuEngine.p3, MuEngine.p3);
 
 
-        this.drawTriangle(img,
-            MuEngine.p0[0],MuEngine.p0[1], MuEngine.p1[0],MuEngine.p1[1], MuEngine.p2[0],MuEngine.p2[1],
-            0, img.height, img.width, img.height, img.width, 0);
-
-        this.drawTriangle(img,
-            MuEngine.p0[0],MuEngine.p0[1], MuEngine.p2[0],MuEngine.p2[1], MuEngine.p3[0],MuEngine.p3[1],
-            0, img.height, img.width, 0, 0, 0);
-
-            /*
-            //for debugging
-           g_ctx.beginPath();
-           g_ctx.moveTo(MuEngine.p0[0],MuEngine.p0[1]);
-           g_ctx.lineTo(MuEngine.p1[0],MuEngine.p1[1]);
-           g_ctx.lineTo(MuEngine.p2[0],MuEngine.p2[1]);
-           g_ctx.lineTo(MuEngine.p3[0],MuEngine.p3[1]);
-           g_ctx.lineTo(MuEngine.p0[0],MuEngine.p0[1]);
-           g_ctx.closePath();
-           g_ctx.strokeStyle =  "#00FFFF";
-           g_ctx.stroke();
-            */
-       }
-    };
+  /**
+  * @param points {Array} array of vec3 points with world coordinates
+  */
+  MuEngine.Camera.prototype.renderPolygon = function(points){
+    g_ctx.save();
+    g_ctx.fillStyle = '#f00';
+    g_ctx.beginPath();
+    this.project(points[0], MuEngine.p0);
+    g_ctx.moveTo(MuEngine.p0[0], MuEngine.p0[1]);
+    for(var i = 1; i<points.length; ++i){
+      this.project(points[i], MuEngine.p0);
+		  g_ctx.lineTo(MuEngine.p0[0], MuEngine.p0[1]);
+    }
+    g_ctx.closePath();
+    g_ctx.fill();
+    g_ctx.restore();
+  };
 
 
     /*
@@ -758,10 +694,21 @@ MuEngine.Cell = function(i, j, cellsize){
 	this.row = i;
 	this.col = j;
 	//a vector to store eye coordinates. it is using for render sorting
-	this.eyePos = vec3.create();
-    MuEngine.Cell.cellsize = cellsize;
-	this.transform.setPos(i*MuEngine.Cell.cellsize, 0, j*MuEngine.Cell.cellsize);
+	 MuEngine.Cell.cellsize = cellsize;
+
+  //transform points to the center of the cell
+  this.transform.setPos(i*MuEngine.Cell.cellsize + (MuEngine.Cell.cellsize*0.5), 0, j*MuEngine.Cell.cellsize + (MuEngine.Cell.cellsize*0.5));
 	this.transform.update();
+
+  //wcorners are the corners of the cell in world coorlds (local coords are to easy to compute, no sense to store them)
+  //they are computed at start time and on demand (not on each cell update tick)
+  this.wcorners = [
+    vec3.create(),
+    vec3.create(),
+    vec3.create(),
+    vec3.create()
+  ];
+
   /**
    * binary field. if zero, means the cell is walkable (no blocking flags)
    * we expect this field to be used for types of terrain.. water, mud..
@@ -879,13 +826,62 @@ MuEngine.Cell.prototype.render = function(mat){
 		this.children[i].render(this.wm);
 	};
 };
+
+
+
+MuEngine.Cell.prototype._updateCorners = function(node){
+  var _s2 = MuEngine.Cell.cellsize * 0.5;
+  //lower left corner:
+  vec3.set(MuEngine.p0, this.transform.pos[0] - _s2, this.transform.pos[1], this.transform.pos[2] - _s2);
+  node.multP(MuEngine.p0, this.wcorners[0]);
+
+  //lower right corner:
+  vec3.set(MuEngine.p0, this.transform.pos[0] + _s2, this.transform.pos[1], this.transform.pos[2] - _s2);
+  node.multP(MuEngine.p0, this.wcorners[1]);
+
+  //upper left corner:
+  vec3.set(MuEngine.p0, this.transform.pos[0] + _s2, this.transform.pos[1], this.transform.pos[2] + _s2);
+  node.multP(MuEngine.p0, this.wcorners[2]);
+
+  //upper right corner:
+  vec3.set(MuEngine.p0, this.transform.pos[0] - _s2, this.transform.pos[1], this.transform.pos[2] + _s2);
+  node.multP(MuEngine.p0, this.wcorners[3]);
+
+};
+
+/**
+* returns true if the given pixel coordinates are into this cell projected region
+*/
+MuEngine.Cell.prototype.collision= function(px, py, node, cam){
+
+  //lower left corner:
+  cam.project(this.wcorners[0], MuEngine.p0);
+  //lower right corner:
+  cam.project(this.wcorners[1], MuEngine.p1);
+  //upper left corner:
+  cam.project(this.wcorners[2], MuEngine.p2);
+  //upper right corner:
+  cam.project(this.wcorners[3], MuEngine.p3);
+
+  /*console.log("cell.collision", px, py,
+              MuEngine.p0[0], MuEngine.p0[1],
+              MuEngine.p1[0],MuEngine.p1[1],
+              MuEngine.p2[0],MuEngine.p2[1],
+              MuEngine.p3[0],MuEngine.p3[1], this.transform);
+  */
+  return MuEngine.pointInOOBBox(px, py,
+      MuEngine.p0[0],MuEngine.p0[1],
+      MuEngine.p1[0],MuEngine.p1[1],
+      MuEngine.p2[0],MuEngine.p2[1],
+      MuEngine.p3[0],MuEngine.p3[1]);
+};
 	//------- GRID CLASS ------------------
 
 	/**
 	 * helper sort function for the render queue of the grid
 	 */
 	var _compareCellsByEyePos = function(cellA, cellB){
-    return cellA.eyePos[2] < cellB.eyePos[2]? 1 : cellA.eyePos[2] > cellB.eyePos[2]? -1 : 0;
+    return cellA.ep[2] < cellB.ep[2]? 1 : cellA.ep[2] > cellB.ep[2]? -1 : 0;
 	};
 
 	/**
@@ -939,7 +935,7 @@ MuEngine.Cell.prototype.render = function(mat){
 		this._renderGrid(node, cam);
     for(var i=0; i<this.cells.length; ++i){
 			var cell = this.cells[i];
-			cam.world2eye(cell.wp, cell.eyePos);
+			cam.world2eye(cell.wp, cell.ep);
       //here its a good point to perform occlusion culling..
 			//this.queue.push(cell);
 		}
@@ -961,10 +957,10 @@ MuEngine.Cell.prototype.render = function(mat){
  * @param {Object} cam
  */
 	MuEngine.Grid.prototype._renderGrid = function(node, cam){
-		var w = this.width*this.cellsize;
+		var w = this.height*this.cellsize;
 		//draw rows
 		var aux = 0;
-		for(var i=0; i<=this.height; ++i){
+		for(var i=0; i<=this.width; ++i){
 			vec3.set(this.g_p0, aux, 0, 0);
 			vec3.set(this.g_p1, aux, 0, w);
 			node.multP(this.g_p0, this.g_p0);
@@ -972,9 +968,9 @@ MuEngine.Cell.prototype.render = function(mat){
 			cam.renderLine(this.g_p0, this.g_p1, this.color);
 			aux += this.cellsize;
 		};
-		var h = this.height*this.cellsize;
+		var h = this.width*this.cellsize;
 		aux = 0;
-		for(var j=0; j<=this.width; ++j){
+		for(var j=0; j<=this.height; ++j){
 			vec3.set(this.g_p0, 0, 0, aux);
 			vec3.set(this.g_p1, h, 0, aux);
 			node.multP(this.g_p0, this.g_p0);
@@ -982,14 +978,39 @@ MuEngine.Cell.prototype.render = function(mat){
 			cam.renderLine(this.g_p0, this.g_p1, this.color);
 			aux += this.cellsize;
 		};
+    //there is some selected cell?
+    if(this.selectedCell){
+      cam.renderPolygon(this.selectedCell.wcorners);
+    }
 	};
 
 
-	MuEngine.Grid.prototype.update = function(dt){
-		for(var i=0; i<this.cells.length; i++){
-			this.cells[i].update(dt);
-		}
-	};
+  /**
+    *
+    */
+  MuEngine.Grid.prototype.update = function(node, dt){
+    for(var i=0; i<this.cells.length; i++){
+      this.cells[i]._updateCorners(node);
+      this.cells[i].update(dt);
+    }
+  };
+
+
+  /**
+  * return a cell if it is under the given coord. null if not.
+  * note: it did not take into account collisions with sprites!
+  */
+  MuEngine.Grid.prototype.collision = function(x, y, node, cam){
+    //@todo: implement some kind of frustum-culling to avoid testing all the cells
+     for(var i=0; i<this.cells.length; i++){
+      if(this.cells[i].collision(x, y, node, cam)){
+        this.selectedCell = this.cells[i];
+        return this.selectedCell;
+      }
+    }
+    return this.selectedCell = null;
+  };
+
 //------- AVATAR CLASS EXTENDS NODE ------------
 
 /**
@@ -1177,20 +1198,20 @@ MuEngine.Avatar.prototype.pickIdleAnimation = function(){
 
 
 	//------- LINE CLASS -------------------
-	
+
 
 	/**
-	 * Line is a primitive. it holds two points of type Vector3. 
+	 * Line is a primitive. it holds two points of type Vector3.
 	 */
 	MuEngine.Line	= function(ori, end,  color){
 		this.ori =ori;
 	  this.end = end;
-		this.color = color || "#cccccc"; 
+		this.color = color || "#cccccc";
  	};
 
 	/*
 	 * renders the primitive (line)
-	 * @param: node: The node this primitive belongs to 
+	 * @param: node: The node this primitive belongs to
 	 */
 	MuEngine.Line.prototype.render = function(node, cam){
 
@@ -1200,7 +1221,7 @@ MuEngine.Avatar.prototype.pickIdleAnimation = function(){
 	};
 
 	/*do nothing*/
-	MuEngine.Line.prototype.update = function(dt){
+	MuEngine.Line.prototype.update = function(node, dt){
 	};
 
 	//-------- IMAGE HANDLER CLASS -----------------
@@ -1268,11 +1289,10 @@ MuEngine.Avatar.prototype.pickIdleAnimation = function(){
 	MuEngine.Sprite.prototype.ANCHOR_LEFT = 4;
 	MuEngine.Sprite.prototype.ANCHOR_RIGHT = 8;
 
-	MuEngine.Sprite.prototype.render = function(node, cam){
-		cam.renderSprite(node, this);
 
-	};
-
+  /**
+  *
+  */
 	MuEngine.Sprite.prototype.play = function(anim, loop){
 		if(!this["anims"]){
 			throw "calling play in sprite without animation data";
@@ -1301,8 +1321,10 @@ MuEngine.Avatar.prototype.pickIdleAnimation = function(){
 	};
 
 
-
-	MuEngine.Sprite.prototype.update = function(dt){
+  /**
+  *
+  */
+	MuEngine.Sprite.prototype.update = function(node, dt){
 		if(!this.animctrl) return;
 		var anim = this.animctrl.curranim;
 		if(!anim) return;
@@ -1319,6 +1341,143 @@ MuEngine.Avatar.prototype.pickIdleAnimation = function(){
 		}
 		this.tilex = anim.tiles[Math.floor((anim.tiles.length-1)*(this.animctrl.elapsed/anim.duration))];
 		//console.log("anim x "+ this.tilex + " y "+ this.tiley + " elapsed "+ this.animctrl.elapsed + " duration "+ anim.duration);
+	};
+
+
+  /**
+  *
+  */
+	MuEngine.Sprite.prototype.render = function(node, cam){
+
+   var img = this.imghandler.img;
+   if(!this._3d){
+     //use node.ep instead of this: this.project(node.wp, MuEngine.p0);
+      //w, h are in world coords.. transform to pixels:
+      var wpx = (this.width * g_canvas.width) / (cam.right - cam.left);
+      var wpy = (this.height * g_canvas.height) / (cam.top - cam.bottom);
+      //how about the anchor?
+      var offy = ((1 & this.anchor) > 0) ? 0 : (((2 & this.anchor) > 0)? -wpy :-(wpy>>1));
+      var offx = ((4 & this.anchor) > 0) ? 0 : (((8 & this.anchor) > 0)? -wpx :-(wpx>>1));
+      if(this.tilew){
+        g_ctx.drawImage(img,
+            this.tilex*this.tilew, this.tiley*this.tileh,
+            this.tilew, this.tileh,
+            node.ep[0]+offx, node.ep[1]+offy,
+            wpx, wpy);
+      }
+      else if(this.w){
+        g_ctx.drawImage(img,
+            this.tilex, this.tiley,
+            this.w, this.h,
+            node.ep[0]+offx, node.ep[1]+offy,
+            wpx, wpy);
+      }
+		  else{
+        g_ctx.drawImage(img, node.ep[0]+offx, node.ep[1]+offy, wpx, wpy);
+      }
+	  }
+    else{
+        //this is a 3d sprite!
+
+        var w2 =this.width*0.5;
+        var h2 = this.height*0.5;
+
+        //compute the projected corners and paint as lines
+        //notice that for 2dsprites the anchor computation is done in screen space (pixels) but for 3d it must be done in world space
+        var offy = ((1 & this.anchor) > 0) ? 0 : (((2 & this.anchor) > 0)? 0:h2);
+        var offx = ((4 & this.anchor) > 0) ? 0 : (((8 & this.anchor) > 0)? -this.width:-w2);
+
+        //lower left corner:
+        vec3.set(MuEngine.p0, offx, offy, 0);
+        node.multP(MuEngine.p0, MuEngine.p0);
+        cam.project(MuEngine.p0, MuEngine.p0);
+        //lower right corner:
+        vec3.set(MuEngine.p1, sprite.width+offx, offy, 0);
+        node.multP(MuEngine.p1, MuEngine.p1);
+        cam.project(MuEngine.p1, MuEngine.p1);
+       //upper left corner:
+       vec3.set(MuEngine.p2, this.width+offx, this.height+offy, 0);
+       node.multP(MuEngine.p2, MuEngine.p2);
+        cam.project(MuEngine.p2, MuEngine.p2);
+       //upper right corner:
+       vec3.set(MuEngine.p3, offx, this.height+offy, 0);
+       node.multP(MuEngine.p3, MuEngine.p3);
+        cam.project(MuEngine.p3, MuEngine.p3);
+
+
+        cam.drawTriangle(img,
+            MuEngine.p0[0],MuEngine.p0[1], MuEngine.p1[0],MuEngine.p1[1], MuEngine.p2[0],MuEngine.p2[1],
+            0, img.height, img.width, img.height, img.width, 0);
+
+        cam.drawTriangle(img,
+            MuEngine.p0[0],MuEngine.p0[1], MuEngine.p2[0],MuEngine.p2[1], MuEngine.p3[0],MuEngine.p3[1],
+            0, img.height, img.width, 0, 0, 0);
+       }
+
+      /* //for debugging
+           g_ctx.beginPath();
+           g_ctx.moveTo(MuEngine.p0[0],MuEngine.p0[1]);
+           g_ctx.lineTo(MuEngine.p1[0],MuEngine.p1[1]);
+           g_ctx.lineTo(MuEngine.p2[0],MuEngine.p2[1]);
+           g_ctx.lineTo(MuEngine.p3[0],MuEngine.p3[1]);
+           g_ctx.lineTo(MuEngine.p0[0],MuEngine.p0[1]);
+           g_ctx.closePath();
+           g_ctx.strokeStyle =  "#00FFFF";
+           g_ctx.stroke();
+           */
+	};
+
+
+  /**
+  * check collision with point in screen coordinates (pixel)
+  */
+	MuEngine.Sprite.prototype.collision = function(px, py, node, cam){
+
+   if(!sprite._3d){
+      //w, h are in world coords.. transform to pixels:
+      var wpx = (this.width * g_canvas.width) / (cam.right - cam.left);
+      var wpy = (this.height * g_canvas.height) / (cam.top - cam.bottom);
+      //how about the anchor?
+      var offy = ((1 & this.anchor) > 0) ? 0 : (((2 & this.anchor) > 0)? -wpy :-(wpy>>1));
+      var offx = ((4 & this.anchor) > 0) ? 0 : (((8 & this.anchor) > 0)? -wpx :-(wpx>>1));
+
+      return MuEngine.pointInAABBox(px, py, node.ep[0]+offx, node.ep[1]+offy, wpx, wpy);
+
+	  }
+    else{
+        //this is a 3d sprite!
+          var w2 =this.width*0.5;
+        var h2 = this.height*0.5;
+
+        //compute the projected corners and paint as lines
+        //notice that for 2dsprites the anchor computation is done in screen space (pixels) but for 3d it must be done in world space
+        var offy = ((1 & this.anchor) > 0) ? 0 : (((2 & this.anchor) > 0)? 0:h2);
+        var offx = ((4 & this.anchor) > 0) ? 0 : (((8 & this.anchor) > 0)? -this.width:-w2);
+
+        //lower left corner:
+        vec3.set(MuEngine.p0, offx, offy, 0);
+        node.multP(MuEngine.p0, MuEngine.p0);
+        cam.project(MuEngine.p0, MuEngine.p0);
+        //lower right corner:
+        vec3.set(MuEngine.p1, sprite.width+offx, offy, 0);
+        node.multP(MuEngine.p1, MuEngine.p1);
+        cam.project(MuEngine.p1, MuEngine.p1);
+       //upper left corner:
+       vec3.set(MuEngine.p2, this.width+offx, this.height+offy, 0);
+       node.multP(MuEngine.p2, MuEngine.p2);
+        cam.project(MuEngine.p2, MuEngine.p2);
+       //upper right corner:
+       vec3.set(MuEngine.p3, offx, this.height+offy, 0);
+       node.multP(MuEngine.p3, MuEngine.p3);
+        cam.project(MuEngine.p3, MuEngine.p3);
+
+       return MuEngine.pointInOOBBox(px, py,
+                                     MuEngine.p0[0],MuEngine.p0[1],
+                                     MuEngine.p1[0],MuEngine.p1[1],
+                                     MuEngine.p2[0],MuEngine.p2[1],
+                                     MuEngine.p3[0],MuEngine.p3[1]);
+
+    }
 	};
 
 /**
@@ -1346,7 +1505,7 @@ MuEngine.mat4centerLog= function(label, mat){
 };
 
 /**
-* utility method 
+* utility method
 */
 MuEngine.deg2rad = function(deg){
   return  deg * (Math.PI / 180);
@@ -1358,6 +1517,39 @@ MuEngine.rad2deg= function(rad){
 };
 
 
+/**
+* check if the given point is inside the rectangle
+*/
+MuEngine.pointInAABBox = function(x, y, rx, ry, rw, rh){
+  return x >= rx && x <= (rx+rw) && y >= ry && y <= (ry+rh);
+};
+
+/**
+* check if the given point is inside the polygon defined by the other points
+* the idea is to check the z-axis of the cross product of each edge with vectors from each
+* corner to the given point. if all the signs are equals, it is inside.
+*/
+MuEngine.pointInOOBBox = function(x, y, x0, y0, x1, y1, x2, y2, x3, y3){
+  /**
+  * a is the common point, root of both vectors. b,c are the ends of each vector.
+  * return -1 or 1
+  */
+  function _cross(ax, ay, bx, by, cx, cy){
+    vec3.set(MuEngine.p0, bx-ax, by-ay, 0);
+    vec3.set(MuEngine.p1, cx-ax, cy-ay, 0);
+    vec3.cross(MuEngine.p2, MuEngine.p0, MuEngine.p1);
+    return MuEngine.p2[2] > 0?1:-1;
+  };
+  var c = 0;
+
+  c += _cross(x0, y0, x, y, x1, y1);
+  c += _cross(x1, y1, x, y, x2, y2);
+  if(Math.abs(c)<2) return false;
+  c += _cross(x2, y2, x, y, x3, y3);
+  if(Math.abs(c)<3) return false;
+  c += _cross(x3, y3, x, y, x0, y0);
+  return Math.abs(c) === 4;
+};
 
 				//------- PRIORITY QUEUE CLASS ------------
 
