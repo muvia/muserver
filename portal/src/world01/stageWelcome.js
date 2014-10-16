@@ -53,10 +53,10 @@
       this._move_avatar("south");
     }
     else if(args.entryid === "caminar_oriente"){
-      this._move_avatar("west");
+      this._move_avatar("east");
     }
     else if(args.entryid === "caminar_occidente"){
-      this._move_avatar("east");
+      this._move_avatar("west");
     }
 		else if(args.entryid === "describir_mundo"){
 			this._worldman.say("_world_description_");
@@ -74,6 +74,20 @@
 			this._take_object();
 		}
 
+  };
+
+  /**
+  * check if clicked cell is in the same row or col (not both!) of avatar, and make it walk one cell toward the new direction
+  */
+  stage.prototype.on_cell_clicked = function(args){
+    var dx, dy, zone;
+    dx = args.cell.row - this._avatarNode.cell.row;
+    dy = args.cell.col - this._avatarNode.cell.col;
+    zone = this._worldman.getVectorDirection(dx, dy);
+    console.log(dx, dy, zone);
+    if((dx === 0 || dy === 0) && zone != "center"){
+      this._move_avatar(zone);
+    }
   };
 
 

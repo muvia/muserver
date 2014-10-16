@@ -140,8 +140,8 @@ var _narrationdiv = null;
     this.avatarNode.primitive = avatarSprite;
     this.avatarNode.mapWalkAnimation("walk-front","south");
     this.avatarNode.mapWalkAnimation("walk-back","north");
-    this.avatarNode.mapWalkAnimation("walk-right","west");
-    this.avatarNode.mapWalkAnimation("walk-left","east");
+    this.avatarNode.mapWalkAnimation("walk-right","east");
+    this.avatarNode.mapWalkAnimation("walk-left","west");
 
     //avatarNode.addIdleAnimation("wave-front");
     this.avatarNode.addIdleAnimation("idle1");
@@ -158,13 +158,24 @@ var _narrationdiv = null;
     var self = this;
     //manage click events
     this.canvas.addEventListener('click', function(ev){
-      var x = ev.x || ev.clientX;
-      var y = ev.y || ev.clientY;
+
+      if(!self.profile.engine.mouse){
+        console.log("world01manager.addEventListener:click: ignoring clicks due to profile setting: self.profile.engine.mouse", self.profile.engine.mouse);
+        return;
+      }
+
+      if(!self.profile.engine.clicktowalk){
+        console.log("world01manager.addEventListener:click: ignoring click to walk due to profile setting: self.profile.engine.clicktowalk", self.profile.engine.clicktowalk);
+        return;
+      }
+
+      var rect = self.canvas.getBoundingClientRect();
+      var x = ev.clientX - rect.left;
+      var y = ev.clientY - rect.top;
       var _cell = self.grid.collision(x, y, root, camera);
       if(_cell){
         console.log(x, y, _cell.row, _cell.col);
-      }else{
-        console.log(x, y);
+        MuNarrator.send("cell_clicked", {cell: _cell});
       }
 }, false);
 

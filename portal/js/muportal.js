@@ -355,8 +355,8 @@ var _narrationdiv = null;
     this.avatarNode.primitive = avatarSprite;
     this.avatarNode.mapWalkAnimation("walk-front","south");
     this.avatarNode.mapWalkAnimation("walk-back","north");
-    this.avatarNode.mapWalkAnimation("walk-right","west");
-    this.avatarNode.mapWalkAnimation("walk-left","east");
+    this.avatarNode.mapWalkAnimation("walk-right","east");
+    this.avatarNode.mapWalkAnimation("walk-left","west");
 
     //avatarNode.addIdleAnimation("wave-front");
     this.avatarNode.addIdleAnimation("idle1");
@@ -373,13 +373,24 @@ var _narrationdiv = null;
     var self = this;
     //manage click events
     this.canvas.addEventListener('click', function(ev){
-      var x = ev.x || ev.clientX;
-      var y = ev.y || ev.clientY;
+
+      if(!self.profile.engine.mouse){
+        console.log("world01manager.addEventListener:click: ignoring clicks due to profile setting: self.profile.engine.mouse", self.profile.engine.mouse);
+        return;
+      }
+
+      if(!self.profile.engine.clicktowalk){
+        console.log("world01manager.addEventListener:click: ignoring click to walk due to profile setting: self.profile.engine.clicktowalk", self.profile.engine.clicktowalk);
+        return;
+      }
+
+      var rect = self.canvas.getBoundingClientRect();
+      var x = ev.clientX - rect.left;
+      var y = ev.clientY - rect.top;
       var _cell = self.grid.collision(x, y, root, camera);
       if(_cell){
         console.log(x, y, _cell.row, _cell.col);
-      }else{
-        console.log(x, y);
+        MuNarrator.send("cell_clicked", {cell: _cell});
       }
 }, false);
 
@@ -952,10 +963,10 @@ var _narrationdiv = null;
       this._move_avatar("south");
     }
     else if(args.entryid === "caminar_oriente"){
-      this._move_avatar("west");
+      this._move_avatar("east");
     }
     else if(args.entryid === "caminar_occidente"){
-      this._move_avatar("east");
+      this._move_avatar("west");
     }
 		else if(args.entryid === "describir_mundo"){
 			this._worldman.say("_world_description_");
@@ -973,6 +984,20 @@ var _narrationdiv = null;
 			this._take_object();
 		}
 
+  };
+
+  /**
+  * check if clicked cell is in the same row or col (not both!) of avatar, and make it walk one cell toward the new direction
+  */
+  stage.prototype.on_cell_clicked = function(args){
+    var dx, dy, zone;
+    dx = args.cell.row - this._avatarNode.cell.row;
+    dy = args.cell.col - this._avatarNode.cell.col;
+    zone = this._worldman.getVectorDirection(dx, dy);
+    console.log(dx, dy, zone);
+    if((dx === 0 || dy === 0) && zone != "center"){
+      this._move_avatar(zone);
+    }
   };
 
 

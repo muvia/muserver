@@ -1080,7 +1080,7 @@ MuEngine.Avatar.prototype.move = function(_dir, cbDone){
   }
 
     var col = this.cell.col + ((_dir === "south")?1:((_dir === "north")?-1:0));
-    var row = this.cell.row + ((_dir === "west")?1:((_dir === "east")?-1:0));
+    var row = this.cell.row + ((_dir === "east")?1:((_dir === "west")?-1:0));
     this.nextCell = this.grid.getCell(row, col);
     if(!this.nextCell){
         //out of boundaries!
