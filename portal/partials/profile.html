@@ -86,10 +86,33 @@
 
     <div class="form-group">
 
-
-
         <label id="engine.cam3d_label"  class="col-sm-2 control-label" for="engine.cam3d" data-i18n="_engine.cam3d_"></label>
         <div class="col-sm-10">
+
+            <div class="row">
+
+                <div class="col-sm-5 ">
+                <div class="thumbnail" ng-click='profile.engine.cam3d = false'>
+                    <div class="thumbnail-2d" >
+                    </div>
+                  <div class="caption">
+                    <p >2d</p>
+                  </div>
+                </div>
+              </div>
+
+                <div class="col-sm-5 ">
+                    <div class="thumbnail" ng-click='profile.engine.cam3d = true'>
+                    <div class="thumbnail-3d" >
+                    </div>
+                  <div class="caption">
+                    <p >3d</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
             <input id="engine.cam3d" type="checkbox" ng-model="profile.engine.cam3d" aria-labelledby="engine.cam3d_label" aria-describedby="engine.cam3d_desc">
             <span id="engine.cam3d_desc" data-i18n="_engine.cam3d_desc_" ></span>
         </div>

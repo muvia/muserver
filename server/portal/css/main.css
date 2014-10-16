@@ -37,3 +37,15 @@
   width:60px;
   height:60px;
 }
+
+.thumbnail-2d{
+  background: url('../img/muvia2d.png')  no-repeat;
+  width:200px;
+  height:110px;
+}
+
+.thumbnail-3d{
+  background: url('../img/muvia3d.png') no-repeat;
+  width:200px;
+  height:110px;
+}
