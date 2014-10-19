@@ -204,6 +204,23 @@ var _narrationdiv = null;
       });
     }
 
+		//by now, ignore locale..
+		function _load_speech(symbol){
+			sounds[symbol] = new Howl({
+        urls: ['assets/speech/'+symbol+".ogg"],
+        autoplay: false,
+        loop: false,
+        volume: 1.0
+      });
+			console.log("_load_speech loading ", symbol);
+		}
+
+		if(this.profile.sounds.narration){
+			_load_speech("_say_loading_");
+			_load_speech("_say_welcome_");
+			_load_speech("_say_goal_");
+		}
+
   };
 
   /**
@@ -461,6 +478,13 @@ var _narrationdiv = null;
 
     if(_narrationdiv)
       _narrationdiv.innerHTML = localsymbol;
+
+
+		//speech enabled?
+		if(this.profile.sounds.narration){
+			this.playSound(symbol);
+		}
+
     return localsymbol;
   };
 
