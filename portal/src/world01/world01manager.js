@@ -232,6 +232,25 @@ var _narrationdiv = null;
     }
   };
 
+	/**
+	* experimental. play in sequence a list of sounds
+	*/
+	manager.prototype.playSounds = function(names){
+		sounds["_say_loading_"].onend = function(){
+			sounds["_say_welcome_"].onend = function(){
+				sounds["_say_goal_is_"].onend = function(){
+					sounds["_say_loading_"].onend = undefined;
+					sounds["_say_welcome_"].onend = undefined;
+					sounds["_say_goal_is_"].onend = undefined;
+				};
+				sounds["_say_goal_is_"].play();
+			};
+			sounds["_say_welcome_"].play();
+		};
+		sounds["_say_loading_"].play();
+
+	};
+
   /**
   *
   */
