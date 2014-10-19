@@ -433,7 +433,7 @@ var _narrationdiv = null;
 		if(this.profile.sounds.narration){
 			_load_speech("_say_loading_");
 			_load_speech("_say_welcome_");
-			_load_speech("_say_goal_");
+			_load_speech("_say_goal_is_");
 		}
 
   };
