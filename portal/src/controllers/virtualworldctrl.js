@@ -38,6 +38,9 @@ muPortalApp.controller('virtualworldController', ["$scope", "profilesrv", "local
     this.manager.buildStages();
     this.manager.start();
 
+    //for debugging..
+    window.g_worldman = this.manager;
+
     $scope.$on('$destroy', function () {
       self.manager.stop();
     });

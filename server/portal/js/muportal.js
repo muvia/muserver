@@ -259,6 +259,8 @@ var World01Manager = (function(engine){
     background: null
   };
 
+  var sound_queue = [];
+
 
 var _narrationdiv = null;
 
@@ -405,6 +407,18 @@ var _narrationdiv = null;
   };
 
 
+
+  /**
+  * remove the current sound and process the next in the queue
+  */
+  manager.prototype._processSoundQueue = function(){
+    var nextsound = sound_queue.shift();
+    if(nextsound){
+      nextsound.play();
+    }
+  };
+
+
   /**
   *
   */
@@ -419,13 +433,18 @@ var _narrationdiv = null;
       });
     }
 
+    var self = this;
+
+    var _onend = function(){ self._processSoundQueue();}
+
 		//by now, ignore locale..
 		function _load_speech(symbol){
 			sounds[symbol] = new Howl({
         urls: ['assets/speech/'+symbol+".ogg"],
         autoplay: false,
         loop: false,
-        volume: 1.0
+        volume: 1.0,
+        onend: _onend
       });
 			console.log("_load_speech loading ", symbol);
 		}
@@ -505,35 +524,6 @@ var _narrationdiv = null;
 
   };
 
-  /**
-  *
-  */
-  manager.prototype.playSound = function(name){
-    if(sounds[name]){
-      sounds[name].play();
-    }else{
-			console.log("world01manager.playSound not found sound ", name);
-		}
-  };
-
-	/**
-	* experimental. play in sequence a list of sounds
-	*/
-	manager.prototype.playSounds = function(names){
-		sounds["_say_loading_"].onend = function(){
-			sounds["_say_welcome_"].onend = function(){
-				sounds["_say_goal_is_"].onend = function(){
-					sounds["_say_loading_"].onend = undefined;
-					sounds["_say_welcome_"].onend = undefined;
-					sounds["_say_goal_is_"].onend = undefined;
-				};
-				sounds["_say_goal_is_"].play();
-			};
-			sounds["_say_welcome_"].play();
-		};
-		sounds["_say_loading_"].play();
-
-	};
 
   /**
   *
@@ -764,6 +754,15 @@ var _narrationdiv = null;
    * @return {String} translated string (for testing)
   */
   manager.prototype.say = function(symbol){
+    var sound;
+
+    if(this.profile.sounds.narration){
+      //empty the sound queue!
+      do{
+        sound = sound_queue.shift();
+        if(sound) sound.stop();
+      }while(sound_queue.length > 0);
+    }
 
     var localsymbol = this.localizeSrv.getLocalizedString(symbol);
 
@@ -785,8 +784,16 @@ var _narrationdiv = null;
 
 		//speech enabled?
 		if(this.profile.sounds.narration){
-			this.playSound(symbol);
+
+      for(i=0; i<arguments.length; ++i){
+        sound = sounds[arguments[i]];
+       if(sound)
+          sound_queue.push(sound);
+      }
 		}
+
+    //start the sound queue playing..
+   this._processSoundQueue();
 
     return localsymbol;
   };
@@ -1697,6 +1704,9 @@ muPortalApp.controller('virtualworldController', ["$scope", "profilesrv", "local
     MuNarrator.clear();
     this.manager.buildStages();
     this.manager.start();
+
+    //for debugging..
+    window.g_worldman = this.manager;
 
     $scope.$on('$destroy', function () {
       self.manager.stop();
