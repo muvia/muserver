@@ -26,11 +26,7 @@ phas(password).hash(function(error, hash) {
             firstname: "first name here",
             lastname: "last name here",
             email: "email here",
-            created_at: Date.now(),
-            profile:{
-                renderer: "default",
-                controller: "default"
-            }
+            created_at: Date.now()
         };
 
         console.log(JSON.stringify(user));
