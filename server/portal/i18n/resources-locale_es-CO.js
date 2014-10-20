@@ -360,7 +360,7 @@
 	{ "key":"pear", "value":"pera" },
 	{ "key":"strawberry", "value":"fresa" },
 	{ "key":"orange", "value":"naranja" },
-	{ "key":"lemon", "value":"limón" },
+	{ "key":"lemon", "value":"lima" },
 	{ "key":"cherry", "value":"cereza" }
 
 

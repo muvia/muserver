@@ -434,6 +434,73 @@ var _narrationdiv = null;
 			_load_speech("_say_loading_");
 			_load_speech("_say_welcome_");
 			_load_speech("_say_goal_is_");
+			_load_speech("1");
+			_load_speech("2");
+			_load_speech("3");
+			_load_speech("_activate_object_");
+			_load_speech("_cell_unwalkable_0");
+			_load_speech("center");
+			_load_speech("cherry");
+			_load_speech("_describe_object_");
+			_load_speech("_distance_to_object_0");
+			_load_speech("_distance_to_object_1");
+			_load_speech("_distance_to_object_2");
+			_load_speech("east");
+			_load_speech("_entered_new_zone_0");
+			_load_speech("executed_menucaminar");
+			_load_speech("executed_menudescribir");
+			_load_speech("executed_menuobjeto");
+			_load_speech("executed_root");
+			_load_speech("lemon");
+			_load_speech("menucaminar");
+			_load_speech("menudescribir");
+			_load_speech("menuobjeto");
+			_load_speech("_mundo_");
+			_load_speech("_no_objects_in_zone_");
+			_load_speech("northeast");
+			_load_speech("north");
+			_load_speech("northwest");
+			_load_speech("_objects_in_zone_0");
+			_load_speech("_objects_in_zone_1");
+			_load_speech("_object_taked_1");
+			_load_speech("_objetos_");
+			_load_speech("orange");
+			_load_speech("pear");
+			_load_speech("_personas_");
+			_load_speech("_same_cell_than_object_1");
+			_load_speech("_same_cell_than_object_0");
+			_load_speech("_same_zone_new_cell_0");
+			_load_speech("_same_zone_new_cell_1");
+			_load_speech("_same_zone_new_cell_2");
+			_load_speech("_say_explore_menu_");
+			_load_speech("_say_goal_is_");
+			_load_speech("_say_loading_");
+			_load_speech("_say_welcome_");
+			_load_speech("selected_activate_object");
+			_load_speech("selected_caminar_norte");
+			_load_speech("selected_caminar_occidente");
+			_load_speech("selected_caminar_oriente");
+			_load_speech("selected_caminar_sur");
+			_load_speech("selected_describe_object");
+			_load_speech("selected_describir_mundo");
+			_load_speech("selected_describir_mundos");
+			_load_speech("selected_describir_personas");
+			_load_speech("selected_describir_zona");
+			_load_speech("selected_menucaminar");
+			_load_speech("selected_menudescribir");
+			_load_speech("selected_menuobjeto");
+			_load_speech("selected_take_object");
+			_load_speech("southeast");
+			_load_speech("southwest");
+			_load_speech("strawberry");
+			_load_speech("_take_object_");
+			_load_speech("west");
+			_load_speech("_world_description_");
+			_load_speech("_world_edge_0");
+			_load_speech("_world_edge_1");
+			_load_speech("_youre_moving_towards_");
+			_load_speech("_zona_");
+			_load_speech("_zonedescription_0");
 		}
 
   };
@@ -444,7 +511,9 @@ var _narrationdiv = null;
   manager.prototype.playSound = function(name){
     if(sounds[name]){
       sounds[name].play();
-    }
+    }else{
+			console.log("world01manager.playSound not found sound ", name);
+		}
   };
 
 	/**
