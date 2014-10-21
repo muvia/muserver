@@ -243,15 +243,15 @@ var _narrationdiv = null;
 			_load_speech("2");
 			_load_speech("3");
 			_load_speech("_activate_object_");
-			_load_speech("_cell_unwalkable_0");
+			_load_speech("_cell_unwalkable_1");
 			_load_speech("center");
 			_load_speech("cherry");
 			_load_speech("_describe_object_");
-			_load_speech("_distance_to_object_0");
 			_load_speech("_distance_to_object_1");
 			_load_speech("_distance_to_object_2");
+			_load_speech("_distance_to_object_3");
 			_load_speech("east");
-			_load_speech("_entered_new_zone_0");
+			_load_speech("_entered_new_zone_1");
 			_load_speech("executed_menucaminar");
 			_load_speech("executed_menudescribir");
 			_load_speech("executed_menuobjeto");
@@ -265,18 +265,18 @@ var _narrationdiv = null;
 			_load_speech("northeast");
 			_load_speech("north");
 			_load_speech("northwest");
-			_load_speech("_objects_in_zone_0");
 			_load_speech("_objects_in_zone_1");
+			_load_speech("_objects_in_zone_2");
 			_load_speech("_object_taked_1");
 			_load_speech("_objetos_");
 			_load_speech("orange");
 			_load_speech("pear");
 			_load_speech("_personas_");
 			_load_speech("_same_cell_than_object_1");
-			_load_speech("_same_cell_than_object_0");
-			_load_speech("_same_zone_new_cell_0");
+			_load_speech("_same_cell_than_object_2");
 			_load_speech("_same_zone_new_cell_1");
 			_load_speech("_same_zone_new_cell_2");
+			_load_speech("_same_zone_new_cell_3");
 			_load_speech("_say_explore_menu_");
 			_load_speech("_say_goal_is_");
 			_load_speech("_say_loading_");
@@ -288,6 +288,7 @@ var _narrationdiv = null;
 			_load_speech("selected_caminar_sur");
 			_load_speech("selected_describe_object");
 			_load_speech("selected_describir_mundo");
+			_load_speech("selected_describir_objetos");
 			_load_speech("selected_describir_personas");
 			_load_speech("selected_describir_zona");
 			_load_speech("selected_menucaminar");
@@ -295,6 +296,7 @@ var _narrationdiv = null;
 			_load_speech("selected_menuobjeto");
 			_load_speech("selected_take_object");
 			_load_speech("southeast");
+			_load_speech("south");
 			_load_speech("southwest");
 			_load_speech("strawberry");
 			_load_speech("_take_object_");
@@ -304,7 +306,7 @@ var _narrationdiv = null;
 			_load_speech("_world_edge_1");
 			_load_speech("_youre_moving_towards_");
 			_load_speech("_zona_");
-			_load_speech("_zone_description_0");
+			_load_speech("_zone_description_1");
 		}
 
   };
@@ -531,6 +533,18 @@ var _narrationdiv = null;
 	};
 
 
+	/**
+	* helper
+	*/
+	function _addSound(name){
+				if(sounds[name]){
+					console.log("pushing ", name);
+					sound_queue.push(sounds[name]);
+				}else{
+					console.log("sound not found: ", name);
+				}
+			}
+
 
   /**
   * supports interpolation of parameters into the localized strings!
@@ -554,7 +568,8 @@ var _narrationdiv = null;
       }while(sound_queue.length > 0);
     }
 
-    var localsymbol = this.localizeSrv.getLocalizedString(symbol);
+    var localsymbol0 = this.localizeSrv.getLocalizedString(symbol);
+		var localsymbol = localsymbol0;
 
     if(arguments.length > 1){
       //time to interpolate!
@@ -571,15 +586,42 @@ var _narrationdiv = null;
     if(_narrationdiv)
       _narrationdiv.innerHTML = localsymbol;
 
-
 		//speech enabled?
 		if(this.profile.sounds.narration){
 
-      for(i=0; i<arguments.length; ++i){
+
+
+			if(arguments.length === 1){
+			 //just play it!
+				sound_queue.push(sounds[symbol]);
+			}else{
+				//uh! need advanced parsing..
+				var tokens = localsymbol0.split(" ");
+				//look for "%x" tokens.. they may be at any point!
+				var argcounter = 0;
+				var symbolcounter = 0;
+				var insymbol = false;
+				for(i=0; i<tokens.length; ++i){
+					var token = tokens[i];
+					if(token[0] === "%"){
+						argcounter++;
+						insymbol = false;
+						_addSound(arguments[argcounter]);
+					}else{
+						if(!insymbol){
+							symbolcounter++;
+							_addSound(symbol + symbolcounter);
+							insymbol = true;
+						}
+					}
+				}
+			}
+
+      /*for(i=0; i<arguments.length; ++i){
         sound = sounds[arguments[i]];
        if(sound)
           sound_queue.push(sound);
-      }
+      }*/
 
 			//start the sound queue playing..
 		  if(sound_queue[0]){
