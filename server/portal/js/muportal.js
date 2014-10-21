@@ -412,9 +412,10 @@ var _narrationdiv = null;
   * remove the current sound and process the next in the queue
   */
   manager.prototype._processSoundQueue = function(){
-    var nextsound = sound_queue.shift();
-    if(nextsound){
-      nextsound.play();
+    //remove the played sound
+		sound_queue.shift();
+    if(sound_queue[0]){
+      sound_queue[0].play();
     }
   };
 
@@ -435,7 +436,7 @@ var _narrationdiv = null;
 
     var self = this;
 
-    var _onend = function(){ self._processSoundQueue();}
+    var _onend = function(){ self._processSoundQueue();};
 
 		//by now, ignore locale..
 		function _load_speech(symbol){
@@ -502,7 +503,6 @@ var _narrationdiv = null;
 			_load_speech("selected_caminar_sur");
 			_load_speech("selected_describe_object");
 			_load_speech("selected_describir_mundo");
-			_load_speech("selected_describir_mundos");
 			_load_speech("selected_describir_personas");
 			_load_speech("selected_describir_zona");
 			_load_speech("selected_menucaminar");
@@ -519,7 +519,7 @@ var _narrationdiv = null;
 			_load_speech("_world_edge_1");
 			_load_speech("_youre_moving_towards_");
 			_load_speech("_zona_");
-			_load_speech("_zonedescription_0");
+			_load_speech("_zone_description_0");
 		}
 
   };
@@ -754,13 +754,18 @@ var _narrationdiv = null;
    * @return {String} translated string (for testing)
   */
   manager.prototype.say = function(symbol){
-    var sound;
+    var sound, i;
+
+		console.log("saying ", symbol, "queue size ", sound_queue.length);
 
     if(this.profile.sounds.narration){
       //empty the sound queue!
       do{
         sound = sound_queue.shift();
-        if(sound) sound.stop();
+        if(sound){
+					console.log("stopping sound", sound);
+					sound.stop();
+				}
       }while(sound_queue.length > 0);
     }
 
@@ -768,7 +773,7 @@ var _narrationdiv = null;
 
     if(arguments.length > 1){
       //time to interpolate!
-      for(var i=1; i<arguments.length; ++i){
+      for(i=1; i<arguments.length; ++i){
         var arg = arguments[i];
         if(typeof arg === "string"){
           arg = this.localizeSrv.getLocalizedString(arg);
@@ -790,10 +795,14 @@ var _narrationdiv = null;
        if(sound)
           sound_queue.push(sound);
       }
+
+			//start the sound queue playing..
+		  if(sound_queue[0]){
+				sound_queue[0].play();
+			}
+
 		}
 
-    //start the sound queue playing..
-   this._processSoundQueue();
 
     return localsymbol;
   };
