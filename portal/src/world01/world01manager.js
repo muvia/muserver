@@ -538,7 +538,7 @@ var _narrationdiv = null;
 	*/
 	function _addSound(name){
 				if(sounds[name]){
-					console.log("pushing ", name);
+					//console.log("pushing ", name);
 					sound_queue.push(sounds[name]);
 				}else{
 					console.log("sound not found: ", name);
@@ -562,7 +562,7 @@ var _narrationdiv = null;
       do{
         sound = sound_queue.shift();
         if(sound){
-					console.log("stopping sound", sound);
+					//console.log("stopping sound", sound);
 					sound.stop();
 				}
       }while(sound_queue.length > 0);

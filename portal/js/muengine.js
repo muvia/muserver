@@ -800,9 +800,10 @@ MuEngine.Cell.prototype.getRandomPos = function(absolute, padding){
     var p = vec3.create();
     var border = padding*MuEngine.Cell.cellsize;
     var valid = MuEngine.Cell.cellsize - (border+border);
-    p[0] = (absolute?this.wp[0]:0) + border + Math.random()*valid;
+	//TEMPORAL! TESTING
+    p[0] = (absolute?this.wp[0]:0) - (MuEngine.Cell.cellsize*0.5) + border + Math.random()*valid;
     p[1] = this.wp[1];
-    p[2] = (absolute?this.wp[2]:0) + border + Math.random()*valid;
+    p[2] = (absolute?this.wp[2]:0) - (MuEngine.Cell.cellsize*0.5) + border + Math.random()*valid;
     return p;
 }
 
