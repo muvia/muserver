@@ -350,7 +350,7 @@
 			{ "key":"selected_describe_object", "value":"Describir el objeto más cercano" },
 				{ "key":"_distance_to_object_", "value":"La fruta %1 está a %2 casillas de distancia, hacia el %3" },
 				{ "key":"_same_cell_than_object_", "value":"Estas en la misma casilla de la fruta %1! puedes tomarla ahora!"},
-				{ "key":"_object_taked_", "value":"Genial! la %1 es tuya!"},
+				{ "key":"_object_taked_", "value":"Genial! la %1 es tuya! Te falta encontrar %2 mas"},
 
 		{ "key":"_take_object_", "value":"Tomar" },
 			{ "key":"selected_take_object", "value":"Tomar el objeto más cercano" },
@@ -361,8 +361,9 @@
 	{ "key":"strawberry", "value":"fresa" },
 	{ "key":"orange", "value":"naranja" },
 	{ "key":"lemon", "value":"lima" },
-	{ "key":"cherry", "value":"cereza" }
+	{ "key":"cherry", "value":"cereza" },
 
-
+  { "key":"_hello_", "value":"hola!" },
+  { "key":"_finished_", "value":"Felicitaciones! has completado la prueba!" }
 
 ]

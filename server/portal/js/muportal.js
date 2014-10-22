@@ -648,8 +648,22 @@ var _narrationdiv = null;
 		};
 		zone.fruit = fruit;
 		cell.fruit = fruit;
-		//sprite.fruit = fruitname;
     return fruit;
+  };
+
+  /**
+  * remove a fruit structure from the array
+  * @param fruit {object} fruit structure
+  * @returns {number} number of fruits remaining
+  */
+  manager.prototype.removeFruit = function(fruit){
+    for(var i=0; i<fruits.length; ++i){
+      if(fruits[i] === fruit){
+        fruits.splice(i, 1);
+        break;
+      }
+    }
+    return fruits.length;
   };
 
 
@@ -1101,7 +1115,6 @@ var _narrationdiv = null;
    * required method for muController, muNarrator conventions
    */
   stage.prototype.on_selected_menu = function(args){
-    //console.log("on_selected_menu", args);
     this._worldman.say("selected_"+args.entryid);
   };
 
@@ -1109,7 +1122,6 @@ var _narrationdiv = null;
    * required method for muController, muNarrator conventions
    */
   stage.prototype.on_executed_menu = function(args){
-    //console.log("on_executed_menu", args);
     this._worldman.say("executed_"+args.entryid);
   };
 
@@ -1117,7 +1129,6 @@ var _narrationdiv = null;
    * required method for muController, muNarrator conventions
    */
   stage.prototype.on_selected_entry = function(args){
-    //console.log("on_selected_entry", args);
     this._worldman.say("selected_"+args.entryid);
   };
 
@@ -1158,15 +1169,27 @@ var _narrationdiv = null;
 
   /**
   * check if clicked cell is in the same row or col (not both!) of avatar, and make it walk one cell toward the new direction
+  * else, if the avatar is in the clicked cell, AND the cell has a fruit, TAKE the fruit! (smart, eh?)
   */
   stage.prototype.on_cell_clicked = function(args){
     var dx, dy, zone;
     dx = args.cell.row - this._avatarNode.cell.row;
     dy = args.cell.col - this._avatarNode.cell.col;
-    zone = this._worldman.getVectorDirection(dx, dy);
-    console.log(dx, dy, zone);
-    if((dx === 0 || dy === 0) && zone != "center"){
-      this._move_avatar(zone);
+
+    if(dx === 0 && dy === 0){
+      //same cell as avatar.. but, does it has a fruit?
+      if(args.cell.fruit){
+        this._take_object();
+      }else{
+        this._worldman.say("_hello_");
+        this._avatarNode.primitive.play("wave-front", false);
+      }
+    }else{
+      //different cell.. but, it is in the same row or column?
+      zone = this._worldman.getVectorDirection(dx, dy);
+      if((dx === 0 || dy === 0) && zone != "center"){
+        this._move_avatar(zone);
+      }
     }
   };
 
@@ -1180,9 +1203,14 @@ var _narrationdiv = null;
 		if(zone.hasObjects()){
 			var cell = zone.getCellByName(zone.fruit.cellname);
 			cell.removeChild(zone.fruit.spriteNode);
-			this._worldman.say("_object_taked_", zone.fruit.name);
-			cell.fruit = undefined;
-			//pending: remove the fruit from the fruits array, or at least mark it as taken
+      var remaining = this._worldman.removeFruit(zone.fruit);
+      if(remaining > 0){
+        this._worldman.say("_object_taked_", zone.fruit.name, remaining+"");
+			}else{
+        this._worldman.say("_finished_");
+        this._avatarNode.primitive.play("wave-front", false);
+			}
+      cell.fruit = undefined;
 			zone.fruit.zonename = undefined;
 			zone.fruit.cellname = undefined;
 			zone.fruit.spriteNode = undefined;

@@ -340,7 +340,7 @@
 			{ "key":"selected_describe_object", "value":"Describe the nearest object" },
 				{ "key":"_distance_to_object_", "value":"The %1 is at %2 cells towards the %3" },
 				{ "key":"_same_cell_than_object_", "value":"You are in the same cell than fruit %1! take it now!"},
-			  { "key":"_object_taked_", "value":"Great! the %1 is yours!"},
+			  { "key":"_object_taked_", "value":"Great! the %1 is yours! There are %2 more"},
 
 		{ "key":"_take_object_", "value":"Take" },
 			{ "key":"selected_take_object", "value":"Take the nearest object" },
@@ -351,7 +351,11 @@
 	{ "key":"strawberry", "value":"strawberry" },
 	{ "key":"orange", "value":"orange" },
 	{ "key":"lemon", "value":"lemon" },
-	{ "key":"cherry", "value":"cherry" }
+	{ "key":"cherry", "value":"cherry" },
+
+  { "key":"_hello_", "value":"hello!" },
+  { "key":"_finished_", "value":"Congratulations! you had finished the test!" }
+
 
 
 ]

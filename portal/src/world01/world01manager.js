@@ -433,8 +433,22 @@ var _narrationdiv = null;
 		};
 		zone.fruit = fruit;
 		cell.fruit = fruit;
-		//sprite.fruit = fruitname;
     return fruit;
+  };
+
+  /**
+  * remove a fruit structure from the array
+  * @param fruit {object} fruit structure
+  * @returns {number} number of fruits remaining
+  */
+  manager.prototype.removeFruit = function(fruit){
+    for(var i=0; i<fruits.length; ++i){
+      if(fruits[i] === fruit){
+        fruits.splice(i, 1);
+        break;
+      }
+    }
+    return fruits.length;
   };
 
 
