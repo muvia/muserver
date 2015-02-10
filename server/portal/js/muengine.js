@@ -1,6 +1,6 @@
 /**
  MuEngine: accesible multiplayer game engine
- Copyright (C) 2014 mundopato inc
+ Copyright (C) 2014 cesar pachon
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU Affero General Public License as published
@@ -15,7 +15,7 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
- contact: http://www.mundopato.com
+ contact: http://www.cesarpachon.com cesarpachon@gmail.com
  */
 MuEngine  = (function(){
     'use strict';
@@ -95,9 +95,9 @@ MuEngine  = (function(){
 	//--- CONSTRUCTORS AND METHODS ---
 
 
-						
+
 	//------- TRANSFORM CLASS --------
-	
+
 	MuEngine.Transform = function(){
 		this._dirty = true;
 		this.pos = vec3.create();
@@ -112,7 +112,7 @@ MuEngine  = (function(){
 	 */
 	MuEngine.Transform.prototype.update = function(){
 		mat4.fromRotationTranslation(this.mat, this.rot, this.pos);
-	
+
 	/*instead of using glmatrix scale method, we implement a direct transform
   to take adventage of the uniform scale feature*/
 		this.mat[0] = this.mat[0] * this.scale;
@@ -146,36 +146,36 @@ MuEngine  = (function(){
 	*/
 	MuEngine.Transform.prototype.multP = function(p, out){
 		if(this._dirty) this.update();
-		vec3.transformMat4(out, p, this.mat); 		
+		vec3.transformMat4(out, p, this.mat);
 	};
 
  /*
- * 
+ *
  */
  MuEngine.Transform.prototype.setPos= function(x, y, z){
- 	vec3.set(this.pos, x, y, z); 
+ 	vec3.set(this.pos, x, y, z);
   this._dirty = true;
  };
 
  /**
- * rotation over axis Z is the usual rotation used to 
+ * rotation over axis Z is the usual rotation used to
  * rotate in 2d. we expect it to be the most used (maybe the unique?)
  * kind of rotation employed in this engine.
  */
  MuEngine.Transform.prototype.setRotZ= function(anglerad){
 	quat.identity(this.rot);
- 	quat.rotateZ(this.rot, this.rot, anglerad); 
-	this._dirty = true; 
+ 	quat.rotateZ(this.rot, this.rot, anglerad);
+	this._dirty = true;
 };
 
  /**
- * rotation over axis Y is used to rotate some 3d objects, like nodes and grids, 
+ * rotation over axis Y is used to rotate some 3d objects, like nodes and grids,
  around the vertical axis.
  */
  MuEngine.Transform.prototype.setRotY= function(anglerad){
 	quat.identity(this.rot);
- 	quat.rotateY(this.rot, this.rot, anglerad); 
-	this._dirty = true; 
+ 	quat.rotateY(this.rot, this.rot, anglerad);
+	this._dirty = true;
 };
 
 
@@ -183,7 +183,7 @@ MuEngine  = (function(){
 * we assume uniform scale
 */
 MuEngine.Transform.prototype.setScale = function(scale){
-	this.scale = scale; 
+	this.scale = scale;
   this._dirty = true;
 };
 
@@ -192,8 +192,8 @@ MuEngine.Transform.prototype.setScale = function(scale){
 
 /**
  * Animator class constructor
-	 parameters as attributes of a config object: 
-		target, startVal, endVal, type, duration, loops 
+	 parameters as attributes of a config object:
+		target, startVal, endVal, type, duration, loops
  * @param target: one of Animator.prototype.TARGET_XXX
  * @param type: One of Animator.prototype.TYPE_XXX
  * @param  loops
@@ -202,7 +202,7 @@ MuEngine.Transform.prototype.setScale = function(scale){
  */
 MuEngine.Animator  = function(config){
   //prototype chaining will call this method with empty parameters
-  if(config === undefined) return;	
+  if(config === undefined) return;
   //configuration parameters
   this.target = config.target ||  "pos";
   this.loops = config.loops || 0;
@@ -261,7 +261,7 @@ MuEngine.Animator.prototype.update = function(dt, node){
         this.apply(node);
 	}
 	else if(this.status === MuEngine.Animator.STATUS_FINISHED){
-	}else throw "unknown animator status: " + this.status; 	
+	}else throw "unknown animator status: " + this.status;
 };
 
 
@@ -291,7 +291,7 @@ MuEngine.AnimatorPos.prototype.apply = function(node){
 //---------------- class AnimatorRotY extends Animator ----------------
 MuEngine.AnimatorRotY  = function(config){
 	config.target =  MuEngine.Animator.TARGET_ROTY;
-	MuEngine.Animator.call(this, config);	
+	MuEngine.Animator.call(this, config);
 	this.val = this.startVal;
 };
 
@@ -299,7 +299,7 @@ MuEngine.AnimatorRotY  = function(config){
 MuEngine.AnimatorRotY.prototype = new MuEngine.Animator;
 
 MuEngine.AnimatorRotY.prototype.apply = function(node){
-		this.val = this.startVal + this.step*(this.endVal - this.startVal);	
+		this.val = this.startVal + this.step*(this.endVal - this.startVal);
 		node.transform.setRotY(this.val);
 };
 
@@ -1230,7 +1230,7 @@ MuEngine.Avatar.prototype.pickIdleAnimation = function(){
 	/**
 	 * Image Handler constructor
 	 * it will load imgurl, and use g_defimg while imgurl is fully loaded.
-	 */ 
+	 */
 	var ImageHandler = function(imgurl){
 		this.img = g_defimg;
 		//start the async loading process..
@@ -1240,7 +1240,7 @@ MuEngine.Avatar.prototype.pickIdleAnimation = function(){
 			console.log("ImageHandler:loaded " + imgurl);
 			self.img = realimg;
 		};
-		realimg.src = imgurl;  		
+		realimg.src = imgurl;
 	};
 
 
@@ -1556,22 +1556,22 @@ MuEngine.pointInOOBBox = function(x, y, x0, y0, x1, y1, x2, y2, x3, y3){
 
 				/**
 				 * Priority Queue
-				 * Sort nodes by distance to camera 
+				 * Sort nodes by distance to camera
 				 * internal pnode structure is:
 				 * pnode{data, next}
 				 * @param: comparator: a function to compare elements:
 				 * comparator(a, b): return true if a > b, false if a <= b
-				 */ 
+				 */
 				MuEngine.PriorityQueue= function(comparator){
-					this.size = 0; 
-					this.head = null; 	
+					this.size = 0;
+					this.head = null;
 					this.comparator = comparator;
 				};
 
 				MuEngine.PriorityQueue.prototype.push = function(node){
 					if(this.head == null){
-						this.head = {data: node, next: null }; 
-						this.size = 1; 
+						this.head = {data: node, next: null };
+						this.size = 1;
 					}else{
 						if(this.comparator(node, this.head.data)){
 							var aux = this.head;
@@ -1579,15 +1579,15 @@ MuEngine.pointInOOBBox = function(x, y, x0, y0, x1, y1, x2, y2, x3, y3){
 						}else{
 							var prev = this.head;
 							var curr = this.head.next;
-						do{	
+						do{
 							if(curr == null){
-								prev.next = {data:node, next:null};	
+								prev.next = {data:node, next:null};
 								this.size += 1;
 								return;
 							}
 
 							if(this.comparator(node,curr.data)){
-								prev.next = {data:node, next:curr};	
+								prev.next = {data:node, next:curr};
 								this.size += 1;
 								return;
 							}
@@ -1600,38 +1600,38 @@ MuEngine.pointInOOBBox = function(x, y, x0, y0, x1, y1, x2, y2, x3, y3){
 				};
 
 				MuEngine.PriorityQueue.prototype.dump = function(){
-					var pnode = this.head; 
+					var pnode = this.head;
 					var out = "";
 					while(pnode != null){
 						out += pnode.data;
-						pnode = pnode.next; 
+						pnode = pnode.next;
 					}
 					return out;
 				};
-				
+
 				MuEngine.PriorityQueue.prototype.peek = function(){
 					if(this.head == null) return null;
-					return this.head.data; 
+					return this.head.data;
 				}
-				
+
 				MuEngine.PriorityQueue.prototype.pop = function(){
 					if(this.head == null) return null;
 					var _head = this.head;
 					this.head = this.head.next;
 					var data = _head.data;
-					this.size -= 1; 
+					this.size -= 1;
 					_head.next = _head.data = null;
-					return data; 
+					return data;
 				}
 
 /**
- * set the current canvas where the engine will draw. 
+ * set the current canvas where the engine will draw.
  * it will init both g_canvas and g_ctx module attributes.
  */
 MuEngine.setActiveCanvas = function(canvas){
 	g_canvas = canvas;
 	g_ctx = g_canvas.getContext('2d');
-}; 
+};
 
 
 /**
@@ -1639,11 +1639,11 @@ MuEngine.setActiveCanvas = function(canvas){
  */
 MuEngine.setActiveGrid = function(grid){
 	g_grid = grid;
-}; 
+};
 
 /**
  * set the active camera to be used to render the world
- */ 
+ */
 MuEngine.setActiveCamera = function(camera){
 	g_camera = camera;
 };
@@ -1658,7 +1658,7 @@ MuEngine.clear = function(){
 
 /**
  * set the target fps for running the engine
- */ 
+ */
 MuEngine.setTargetFps = function(fps){
 	g_fps = fps;
 };
@@ -1667,26 +1667,26 @@ MuEngine.setTargetFps = function(fps){
  * starts the gameloop with the given fps.
  * @see MuEngine.setTargetFps to change fps,
  * @see MuEngine.stop to terminate the loop.
- */ 
+ */
 	MuEngine.start = function(){
 	if(this.g_interval != null) return false;
 	this.g_interval = setInterval(tick, 1000.0 / this.g_fps);
 	this.g_start_time = Date.now();
-	return true;	
+	return true;
 };
 
 /**
  * stops the game loop (if it is running) and clear the interval
- */ 
+ */
 MuEngine.stop = function(){
  if(this.g_interval == null) return false;
  clearInterval(this.g_interval);
  this.g_interval = null;
  return true;
 };
-	
+
 /**
-* load a image. it will return a MuEngineImageHandler that will allow to use a 
+* load a image. it will return a MuEngineImageHandler that will allow to use a
 * dummy image while the final one is being loaded. this will simplify the coding because
 * the developer won't need to handle load callbacks
 */
@@ -1696,31 +1696,31 @@ MuEngine.getImageHandler  = function(imgpath){
 		return g_imageHandlers[imgpath];
 	}
 
-	//2. check if default image is loaded, else, create it. 
+	//2. check if default image is loaded, else, create it.
 	if(g_defimg == null){
 		g_defimg = new Image();
 		g_defimg.src = "data:image/gif;base64,R0lGODlhEAAOALMAAOazToeHh0tLS/7LZv/0jvb29t/f3//Ub//ge8WSLf/rhf/3kdbW1mxsbP//mf///yH5BAAAAAAALAAAAAAQAA4AAARe8L1Ekyky67QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjgaORCMxIC6e0CcguWw6aFjsVMkkIr7g77ZKPJjPZqIyd7sJAgVGoEGv2xsBxqNgYPj/gAwXEQA7";
-	}	
+	}
 	//3. create an image handler with the default image, and start the loading of the real one.
-	var handler = new ImageHandler(imgpath);	
-  g_imageHandlers[imgpath]= handler;	
+	var handler = new ImageHandler(imgpath);
+  g_imageHandlers[imgpath]= handler;
 	return handler;
 };
 
 /**
- * render a node and all its children. 
- * node is assumed to be the root of the world. 
- * this method will generate recursive calls. 
+ * render a node and all its children.
+ * node is assumed to be the root of the world.
+ * this method will generate recursive calls.
  */
 MuEngine.renderNode = function(node){
   //@todo: move this to private module attributes
   var mat = mat4.create();
-  node.render(mat);	
+  node.render(mat);
 };
 
 /**
- * compute the elapsed time 
- */ 
+ * compute the elapsed time
+ */
 MuEngine.tick = function(){
 	var now = Date.now();
 	var dt = now - g_start_time;
@@ -1733,7 +1733,7 @@ MuEngine.tick = function(){
 */
 MuEngine.updateNode = function(node, dt){
 	node.update(dt);
-	
+
 }
 
 return MuEngine;
