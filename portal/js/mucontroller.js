@@ -1,6 +1,6 @@
 /**
  MuController: accesible html5 input controller
- Copyright (C) 2014 mundopato inc
+ Copyright (C) 2014 cesar pachon
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU Affero General Public License as published
@@ -15,7 +15,7 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
- contact: http://www.mundopato.com
+ contact: http://www.cesarpachon.com cesarpachon@gmail.com
  */
 var MuController = (function(){
 	'use strict';
